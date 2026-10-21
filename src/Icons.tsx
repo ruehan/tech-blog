@@ -14,6 +14,7 @@ export function Icon({ name, size = 20 }: { name: string; size?: number }) {
     info: <><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v1"/></>,
     markers: <><path d="M3 12s3-7 9-7 9 7 9 7-3 7-9 7-9-7-9-7Z"/><circle cx="12" cy="12" r="3"/></>,
     focus: <><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/><circle cx="12" cy="12" r="4"/></>,
+    link: <><path d="m10 13 4-4m-5-3 2-2a4 4 0 0 1 6 6l-2 2m-6 0-2 2a4 4 0 0 0 6 6l2-2"/></>,
     steering: <><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/><path d="m10 11-6-2m10 2 6-2m-8 5v7"/></>,
     drag: <><path d="M7 12V7a2 2 0 0 1 4 0v5-8a2 2 0 0 1 4 0v8-5a2 2 0 0 1 4 0v10a5 5 0 0 1-5 5h-2a5 5 0 0 1-4-2L3 13a2 2 0 0 1 3-2l1 1Z"/></>,
     book: <><path d="M12 5C8 2 3 4 3 4v15s5-2 9 1c4-3 9-1 9-1V4s-5-2-9 1Zm0 0v15"/></>,

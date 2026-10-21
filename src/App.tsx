@@ -2,6 +2,8 @@ import { Component, Suspense, lazy, useCallback, useEffect, useRef, useState, ty
 import type { RoomHandle } from './Room';
 import { Icon } from './Icons';
 import { defaultView, worlds, type ViewId, type WorldId } from './worlds';
+import { Book, ContentMetadata, Library, ReadingPage } from './Blog';
+import { useRoute } from './navigation';
 
 const WorldScene = lazy(() => import('./WorldScene'));
 class SceneBoundary extends Component<{ children: ReactNode; onRetry: () => void; onError: () => void }, { error: boolean }> {
@@ -12,6 +14,14 @@ class SceneBoundary extends Component<{ children: ReactNode; onRetry: () => void
 }
 
 export default function App() {
+  const { route, go } = useRoute();
+  const inSpace = route.path === '/';
+  const bookOpen = route.path === '/posts' || route.path.startsWith('/posts/');
+  const libraryOpen = bookOpen || route.path === '/projects';
+  const [spaceMounted, setSpaceMounted] = useState(inSpace);
+  useEffect(() => { if (inSpace) setSpaceMounted(true); }, [inSpace]);
+  const openPosts = useCallback(() => go('/posts'), [go]);
+  const openProjects = useCallback(() => go('/projects'), [go]);
   const [world, setWorld] = useState<WorldId>('room');
   const [view, setView] = useState<ViewId>('overview');
   const [paused, setPaused] = useState(() => matchMedia('(prefers-reduced-motion: reduce)').matches);
@@ -34,21 +44,34 @@ export default function App() {
   const toggleLights = useCallback(() => setLightsOn(on => !on), []);
   useEffect(() => {
     const listener = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape') return;
+      if (event.key !== 'Escape' || !inSpace) return;
       if (busy) roomRef.current?.cancel();
       else if (world !== 'room') navigate('room');
     };
     window.addEventListener('keydown', listener); return () => window.removeEventListener('keydown', listener);
-  }, [busy, world, navigate]);
+  }, [busy, world, navigate, inSpace]);
 
-  return <main className={`app ${world} ${view}-view ${world === 'room' && !lightsOn ? 'night' : ''}`} data-world={world} data-view={view} data-ready={ready}>
+  const contentNavigate = useCallback((href: string) => {
+    if (href === '/') navigate('room');
+    go(href);
+  }, [navigate, go]);
+  const toggleFolder = useCallback(() => {
+    setFolderOpen(open => !open);
+  }, []);
+  const readFromRoom = () => {
+    if (world === 'room' && ready && roomRef.current) roomRef.current.activate('featured_book');
+    else openPosts();
+  };
+
+  return <><ContentMetadata route={route}/>{spaceMounted && <main inert={!inSpace} aria-hidden={!inSpace || undefined} className={`app ${!inSpace ? 'space-inactive' : ''} ${!inSpace && !libraryOpen ? 'space-covered' : ''} ${world} ${view}-view ${world === 'room' && !lightsOn ? 'night' : ''}`} data-world={world} data-view={view} data-ready={ready}>
     <header className="header">
       <a className="brand" href="#room" onClick={event => { event.preventDefault(); navigate('room'); }} aria-label="Hangyu's room, 메인 방으로"><span>hangyu<span className="brand-light"> / room</span></span></a>
+      <button className="icon-button library-shortcut" aria-label="글 목록 열기" disabled={ready && busy} onClick={readFromRoom}><Icon name="book"/></button>
     </header>
 
     <div className="viewport" aria-label={`${config.label} 3D 뷰어. 드래그로 회전하고 스크롤로 확대합니다.`}>
       <SceneBoundary key={world} onRetry={() => window.location.reload()} onError={() => { setFailed(true); setReady(false); }}>
-        <Suspense fallback={null}><WorldScene world={world} view={view} paused={paused} lightsOn={lightsOn} labels={labels} reset={reset} busy={busy} roomRef={roomRef} onNavigate={navigate} onReady={onReady} onBusy={setBusy} onLights={toggleLights} onResetCamera={resetCamera} folderOpen={folderOpen} onFolderToggle={() => setFolderOpen(open => !open)}/></Suspense>
+        <Suspense fallback={null}><WorldScene world={world} view={view} paused={paused || !inSpace} active={inSpace} onRead={openPosts} lightsOn={lightsOn} labels={labels} reset={reset} busy={busy} roomRef={roomRef} onNavigate={navigate} onReady={onReady} onBusy={setBusy} onLights={toggleLights} onResetCamera={resetCamera} folderOpen={folderOpen} onFolderToggle={toggleFolder} onFolderOpened={openProjects}/></Suspense>
       </SceneBoundary>
     </div>
     {!ready && !failed && <div className="loading" role="status" aria-label={`${config.label}에 들어가는 중`}><span className="loading-orbit"/></div>}
@@ -60,11 +83,11 @@ export default function App() {
     </aside>
 
     {ready && <div className="world-actions">
-      {busy ? <button className="icon-button" aria-label="연출 건너뛰기" onClick={() => roomRef.current?.cancel()}><Icon name="arrow"/></button> : world === 'room' ? <>
-        <button className="icon-button" aria-label="책" disabled={paused} onClick={() => roomRef.current?.activate('featured_book')}><Icon name="book"/></button>
+      {busy ? <button className="icon-button" aria-label="연출 건너뛰기" onClick={() => roomRef.current?.skip()}><Icon name="arrow"/></button> : world === 'room' ? <>
+        <button className="icon-button" aria-label="책" onClick={readFromRoom}><Icon name="book"/></button>
         <button className="icon-button" aria-label="음악" disabled={paused} onClick={() => roomRef.current?.activate('bass')}><Icon name="music"/></button>
         <span className="action-divider"/><button className="icon-button" aria-label={`안내 ${labels ? '숨기기' : '보기'}`} aria-pressed={labels} onClick={() => setLabels(value => !value)}><Icon name="markers"/></button>
-      </> : world === 'desktop' ? <button className="icon-button" aria-label={`Projects 폴더 ${folderOpen ? '닫기' : '열기'}`} aria-pressed={folderOpen} onClick={() => setFolderOpen(value => !value)}><Icon name="desktop"/></button> : <div className="view-switch"><button className="icon-button" aria-label="운전석 시점" aria-pressed={view === 'cockpit'} onClick={() => setView('cockpit')}><Icon name="steering"/></button><button className="icon-button" aria-label="서킷 전체" aria-pressed={view === 'overview'} onClick={() => setView('overview')}><Icon name="circuit"/></button><button className="icon-button" aria-label="차량 가까이" aria-pressed={view === 'car'} onClick={() => setView('car')}><Icon name="focus"/></button></div>}
+      </> : world === 'desktop' ? <button className="icon-button" aria-label={`Projects 폴더 ${folderOpen ? '닫기' : '열기'}`} aria-pressed={folderOpen} onClick={toggleFolder}><Icon name="desktop"/></button> : <div className="view-switch"><button className="icon-button" aria-label="운전석 시점" aria-pressed={view === 'cockpit'} onClick={() => setView('cockpit')}><Icon name="steering"/></button><button className="icon-button" aria-label="서킷 전체" aria-pressed={view === 'overview'} onClick={() => setView('overview')}><Icon name="circuit"/></button><button className="icon-button" aria-label="차량 가까이" aria-pressed={view === 'car'} onClick={() => setView('car')}><Icon name="focus"/></button></div>}
     </div>}
 
     <footer className="footer">
@@ -74,5 +97,10 @@ export default function App() {
       </nav>
     </footer>
     <span className="sr-only" role="status">{failed ? `${config.label} 로딩 실패` : ready ? `${config.label} 준비 완료` : `${config.label} 로딩 중`}</span>
-  </main>;
+  </main>}
+    {!spaceMounted && libraryOpen && <div className="library-background"><span className="brand">hangyu<span className="brand-light"> / room</span></span></div>}
+    {bookOpen && <Book route={route} go={contentNavigate} onClose={() => go('/')}/>}
+    {route.path === '/projects' && <Library route={route} go={contentNavigate} onClose={() => go('/')}/>}
+    {!inSpace && !libraryOpen && <ReadingPage route={route} go={contentNavigate} onReturn={() => go('/')}/>}
+  </>;
 }

@@ -10,12 +10,17 @@ import { applyRoomCamera, applyRoomRestZoom, ROOM_SETTLE_SECONDS } from './room-
 import { Icon } from './Icons';
 
 RectAreaLightUniformsLib.init();
-export interface RoomHandle { activate: (id: string) => void; cancel: () => void }
-interface Props { ref?: Ref<RoomHandle>; paused: boolean; lightsOn: boolean; labels: boolean; onNavigate: (world: WorldId) => void; onReady: () => void; onBusy: (busy: boolean) => void; onLights: () => void; onResetCamera: () => void }
+export interface RoomHandle { activate: (id: string) => void; cancel: () => void; skip: () => void }
+interface Props { ref?: Ref<RoomHandle>; active: boolean; paused: boolean; lightsOn: boolean; labels: boolean; onNavigate: (world: WorldId) => void; onReady: () => void; onBusy: (busy: boolean) => void; onLights: () => void; onRead: () => void; onResetCamera: () => void }
 type Playing = { name: string; time: number; duration: number; loop: boolean; action?: AnimationAction; done?: () => void; finished?: boolean };
 const prefixes: Record<string, string> = { featured_book: 'Book', bass: 'Music', monitor: 'Monitor', racing: 'Simulator' };
 const HOVER_BLEND_SECONDS = 0.16;
 const HOVER_LEAVE_MS = 100;
+// Stop as soon as the cover and loose pages have opened, before page enlargement.
+// At 323/24s every authored transform matches the 5s pose; the next sample starts
+// closing the book. Skip the enlargement/retraction without a visible pose jump.
+const BOOK_READ_TIME = 5;
+const BOOK_RETURN_TIME = 323 / 24;
 const labelInfo = [
   { id: 'featured_book', root: 'INT_FeatureBook', text: '책 펼치기', icon: 'book', offset: [0, 0.45, 0] },
   { id: 'monitor', root: 'INT_Monitor', text: '컴퓨터 속으로', icon: 'desktop', offset: [0, 0.75, 0] },
@@ -31,7 +36,8 @@ export function Room(props: Props) {
   const { camera } = useThree();
   const playing = useRef(new Map<string, Playing>());
   const cinematic = useRef(false);
-  const openingSettle = useRef<number | null>(null);
+  const restSettle = useRef<number | null>(null);
+  const bookPhase = useRef<'entering' | 'reading' | 'returning' | null>(null);
   const hovered = useRef<string | null>(null);
   const pointerTargets = useRef<{ mesh: string | null; label: string | null }>({ mesh: null, label: null });
   const hoverLeaveTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -105,7 +111,8 @@ export function Room(props: Props) {
     if (item.action) { item.action.time = item.duration; item.action.paused = true; }
   }
   function clear() {
-    openingSettle.current = null;
+    restSettle.current = null;
+    bookPhase.current = null;
     clearTimeout(hoverLeaveTimer.current);
     pointerTargets.current = { mesh: null, label: null };
     for (const [group, item] of playing.current) if (hoverMaterials.has(group) && item.action) {
@@ -122,21 +129,50 @@ export function Room(props: Props) {
   }
   function activate(id: string) {
     if (cinematic.current) return;
+    if (id === 'featured_book' && latest.current.paused) { latest.current.onRead(); return; }
     if (id === 'room_lighting') { latest.current.onLights(); return; }
     const prefix = prefixes[id]; if (!prefix) return;
-    if (latest.current.paused && (id === 'featured_book' || id === 'bass')) return;
+    if (latest.current.paused && id === 'bass') return;
     // Navigation stays usable when reduced motion or pause is selected.
     if (latest.current.paused && (id === 'monitor' || id === 'racing')) {
       latest.current.onNavigate(id === 'monitor' ? 'desktop' : 'circuit'); return;
     }
     clear(); cinematic.current = true; setBusy(true); latest.current.onBusy(true);
+    if (id === 'featured_book') {
+      bookPhase.current = 'entering';
+      play('cinematic', 'Book_Click', false, () => { restSettle.current = 0; });
+      return;
+    }
     const portal = id === 'monitor' || id === 'racing';
     play('cinematic', portal ? `${prefix}_Portal_Approach` : `${prefix}_Click`, false, () => {
       finish();
       if (portal) latest.current.onNavigate(id === 'monitor' ? 'desktop' : 'circuit');
     });
   }
-  useImperativeHandle(props.ref, () => ({ activate, cancel: finish }));
+  function holdBook() {
+    const item = playing.current.get('cinematic');
+    if (!item || bookPhase.current !== 'entering') return;
+    if (item.action) item.action.paused = true;
+    bookPhase.current = 'reading';
+    latest.current.onRead();
+  }
+  function skip() {
+    const item = playing.current.get('cinematic');
+    if (bookPhase.current === 'entering' && item) {
+      item.time = BOOK_READ_TIME;
+      if (item.action) item.action.time = BOOK_READ_TIME;
+      updateAnimation(0);
+    } else finish();
+  }
+  useImperativeHandle(props.ref, () => ({ activate, cancel: finish, skip }));
+  useEffect(() => {
+    if (!props.active || bookPhase.current !== 'reading') return;
+    if (props.paused) { finish(); return; }
+    const item = playing.current.get('cinematic')!;
+    item.time = BOOK_RETURN_TIME;
+    if (item.action) { item.action.time = BOOK_RETURN_TIME; item.action.paused = false; }
+    bookPhase.current = 'returning';
+  }, [props.active]);
   useEffect(() => { if (!cinematic.current) syncSwitch(); }, [props.lightsOn]);
   useLayoutEffect(() => {
     if (latest.current.paused) idle();
@@ -144,7 +180,7 @@ export function Room(props: Props) {
       setBusy(true); latest.current.onBusy(true); cinematic.current = true;
       // Hold the final pose while easing into the closer resting view. Stopping
       // the action here would restore the model before its final frame renders.
-      play('opening', 'Room_Opening', false, () => { openingSettle.current = 0; });
+      play('opening', 'Room_Opening', false, () => { restSettle.current = 0; });
     }
     // Evaluate frame zero before revealing the room, including its camera,
     // lights and materials, so the static model cannot flash ahead of the intro.
@@ -171,6 +207,9 @@ export function Room(props: Props) {
     }
   }
   function updateAnimation(dt: number) {
+    if (bookPhase.current === 'entering') {
+      dt = Math.min(dt, Math.max(0, BOOK_READ_TIME - playing.current.get('cinematic')!.time));
+    } else if (bookPhase.current === 'reading') dt = 0;
     model.mixer.update(dt);
     for (const [action, remaining] of fading.current) {
       if (remaining <= dt) {
@@ -208,12 +247,13 @@ export function Room(props: Props) {
       model.root.updateMatrixWorld(true);
       const lensTrack = runtime[active.name]?.camera_lens_mm_and_sensor_width_mm;
       applyRoomCamera(camera, sourceCamera, lensTrack ? sample(lensTrack, active.time) : undefined);
-      if (openingSettle.current !== null) {
-        openingSettle.current = Math.min(openingSettle.current + dt, ROOM_SETTLE_SECONDS);
-        applyRoomRestZoom(camera, openingSettle.current / ROOM_SETTLE_SECONDS);
-        if (openingSettle.current >= ROOM_SETTLE_SECONDS) completed.push(finish);
+      if (restSettle.current !== null) {
+        restSettle.current = Math.min(restSettle.current + dt, ROOM_SETTLE_SECONDS);
+        applyRoomRestZoom(camera, restSettle.current / ROOM_SETTLE_SECONDS);
+        if (restSettle.current >= ROOM_SETTLE_SECONDS) completed.push(finish);
       }
     }
+    if (bookPhase.current === 'entering' && active && active.time >= BOOK_READ_TIME) completed.push(holdBook);
     completed.forEach(done => done());
   }
   useFrame((_, delta) => updateAnimation(props.paused ? 0 : Math.min(delta, 0.05)));
@@ -260,7 +300,7 @@ export function Room(props: Props) {
     <primitive object={lights.group} />
     <primitive object={model.root} dispose={null} onClick={click} onPointerMove={(event: ThreeEvent<PointerEvent>) => { event.stopPropagation(); pointerHover(interaction(event.object), 'mesh'); }} onPointerOut={() => pointerHover(null, 'mesh')} />
     {props.labels && !busy && hotspots.map(label => <Html key={label.id} position={label.position} center zIndexRange={[20, 0]}>
-      <button className="hotspot" aria-label={label.text} disabled={props.paused && ['featured_book', 'bass'].includes(label.id)} onPointerEnter={() => pointerHover(label.id, 'label')} onPointerLeave={() => pointerHover(null, 'label')} onClick={() => activate(label.id)}><Icon name={label.icon} size={18}/></button>
+      <button className="hotspot" aria-label={label.text} disabled={props.paused && label.id === 'bass'} onPointerEnter={() => pointerHover(label.id, 'label')} onPointerLeave={() => pointerHover(null, 'label')} onClick={() => activate(label.id)}><Icon name={label.icon} size={18}/></button>
     </Html>)}
   </group>;
 }

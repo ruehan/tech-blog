@@ -68,3 +68,22 @@ export function readWorldCamera() {
   const camera = _roots.get(canvas)!.store.getState().camera as PerspectiveCamera;
   return { position: camera.position.toArray(), quaternion: camera.quaternion.toArray(), fov: camera.fov, zoom: camera.zoom, near: camera.near };
 }
+
+export function readBookPose() {
+  const canvas = document.querySelector('canvas')!;
+  const { scene } = _roots.get(canvas)!.store.getState();
+  return {
+    pageScale: scene.getObjectByName('WEB_ArticlePage_Control')!.scale.toArray(),
+    cover: scene.getObjectByName('WEB_Pivot_BookFrontCover')!.quaternion.toArray(),
+  };
+}
+
+export function readFolderPose() {
+  const canvas = document.querySelector('canvas')!;
+  const { scene } = _roots.get(canvas)!.store.getState();
+  let rotation: number[] | undefined;
+  scene.traverse(object => {
+    if (object.userData.desktop_component === 'Projects front hinge') rotation = object.quaternion.toArray();
+  });
+  return rotation;
+}

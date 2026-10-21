@@ -61,6 +61,8 @@ test('room lighting, animated portal, folder, circuit closeup and return', async
   await expect(page.locator('main')).toHaveAttribute('data-world', 'desktop', { timeout: 20_000 });
   await expect(page.locator('main')).toHaveAttribute('data-ready', 'true');
   await page.getByRole('button', { name: 'Projects 폴더 열기' }).click();
+  await expect(page.getByRole('dialog')).toContainText('만들며 배우는 것들.');
+  await page.getByRole('button', { name: '목록 닫기' }).click();
   await expect(page.getByRole('button', { name: 'Projects 폴더 닫기' })).toHaveAttribute('aria-pressed', 'true');
   await page.screenshot({ path: '.local/desktop-world.png' });
   await page.getByRole('button', { name: 'Projects 폴더 닫기' }).click();
