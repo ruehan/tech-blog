@@ -5,7 +5,9 @@ import { Icon } from './Icons';
 import { RouteLink, type Navigate, type Route } from './navigation';
 import { asset } from './worlds';
 import { DeskObjects } from './DeskObjects';
+import { JournalToc } from './JournalToc';
 import './journal.css';
+import './journal-theme.css';
 
 const number = (value: number) => String(value).padStart(2, '0');
 
@@ -20,6 +22,16 @@ export function Journal({ route, go }: { route: Route; go: Navigate }) {
   const search = query.get('q') ?? '';
   const [draftSearch, setDraftSearch] = useState(search);
   const [deskArrangement] = useState(() => Math.floor(Math.random() * 3));
+  const [night, setNight] = useState(() => {
+    try { return localStorage.getItem('journal-theme') === 'night'; }
+    catch { return false; }
+  });
+  function toggleTheme() {
+    const next = !night;
+    setNight(next);
+    try { localStorage.setItem('journal-theme', next ? 'night' : 'day'); }
+    catch { /* Reading still works when browser storage is unavailable. */ }
+  }
   const searchInput = useRef<HTMLInputElement>(null);
   const restoreSearchFocus = useRef(false);
   useEffect(() => setDraftSearch(search), [search]);
@@ -50,7 +62,7 @@ export function Journal({ route, go }: { route: Route; go: Navigate }) {
     searchInput.current?.focus({ preventScroll: true });
   }
 
-  return <div className="journal" ref={scroll}>
+  return <div className="journal" data-theme={night ? 'night' : 'day'} ref={scroll}>
     <a className="journal-skip" href="#journal-main">본문으로 건너뛰기</a>
     <header className="journal-header">
       <RouteLink className="brand" to="/journal" go={go}>hangyu<span className="brand-light"> / room</span></RouteLink>
@@ -59,10 +71,11 @@ export function Journal({ route, go }: { route: Route; go: Navigate }) {
       <RouteLink className="rail-button" to="/journal" go={go} aria-label="글 기록" aria-current={isIndex || post ? 'page' : undefined} title="글 기록"><Icon name="notes"/><span className="journal-tooltip">글 기록</span></RouteLink>
       <RouteLink className="rail-button" to="/journal/projects" go={go} aria-label="프로젝트" aria-current={isProjects || isProject ? 'page' : undefined} title="프로젝트"><Icon name="folder"/><span className="journal-tooltip">프로젝트</span></RouteLink>
       <span className="journal-rail-divider"/>
+      <button className="rail-button" type="button" onClick={toggleTheme} aria-label="밤에 읽기" aria-pressed={night} title={night ? '밝게 읽기' : '밤에 읽기'}><Icon name={night ? 'sun' : 'moon'}/><span className="journal-tooltip">{night ? '밝게 읽기' : '밤에 읽기'}</span></button>
       <RouteLink className="rail-button" to="/" go={go} aria-label="3D 방으로" title="3D 방으로"><Icon name="room"/><span className="journal-tooltip">3D 방으로</span></RouteLink>
     </nav>
 
-    <main className={`journal-main${isIndex ? ' journal-with-desk' : ''}`} id="journal-main" tabIndex={-1}>
+    <main className={`journal-main${isIndex ? ' journal-with-desk' : ''}${post?.sections.length ? ' journal-with-toc' : ''}`} id="journal-main" tabIndex={-1}>
       {isIndex ? <div className="journal-index-layout">
           <section className="journal-entries" aria-labelledby="entries-heading">
             <div className="journal-section-heading"><h1 id="entries-heading" tabIndex={-1}>글 <span>{posts.length}</span></h1></div>
@@ -71,7 +84,7 @@ export function Journal({ route, go }: { route: Route; go: Navigate }) {
             {(search || tag) && <div className="journal-results" role="status"><span>{search && `“${search}” · `}{visiblePosts.length}개의 기록</span><RouteLink to="/journal" go={go}>필터 지우기 <Icon name="close" size={13}/></RouteLink></div>}
             <div className="journal-post-list">{visiblePosts.map(item => <RouteLink key={item.slug} className="journal-entry" to={`/journal/posts/${item.slug}${route.search}`} go={go}>
               <div className={`journal-spine journal-spine-${posts.indexOf(item) % 3}`} aria-hidden="true"><Icon name={['book', 'focus', 'steering'][posts.indexOf(item) % 3]} size={22}/><span>{number(posts.indexOf(item) + 1)}</span></div>
-              <div className="journal-entry-body"><div className="journal-entry-meta"><span>{item.tags.join(' / ')}</span><span>초안</span></div><h2>{item.title}</h2><p>{item.description}</p><div className="journal-entry-bottom"><time dateTime={item.date}>{formatDate(item.date)}</time><span>{item.minutes}분 읽기</span><Icon name="arrow" size={18}/></div></div>
+              <div className="journal-entry-body"><div className="journal-entry-meta"><span>{item.tags.join(' / ')}</span>{item.draft && <span className="draft-label">초안</span>}</div><h2>{item.title}</h2><p>{item.description}</p><div className="journal-entry-bottom"><time dateTime={item.date}>{formatDate(item.date)}</time><span>{item.minutes}분 읽기</span><Icon name="arrow" size={18}/></div></div>
             </RouteLink>)}</div>
             {!visiblePosts.length && <div className="journal-empty"><Icon name="search" size={28}/><h3>아직 찾는 기록이 없어요.</h3><p>다른 단어나 태그로 찾아보세요.</p><RouteLink to="/journal" go={go}>전체 기록 보기 <Icon name="arrow" size={16}/></RouteLink></div>}
           </section>
@@ -81,7 +94,7 @@ export function Journal({ route, go }: { route: Route; go: Navigate }) {
         <RouteLink className="journal-project-card" to={`/journal/projects/${project.slug}`} go={go}><div className="journal-project-image"><img src={asset('interactive/room-glb-verified.png')} alt="책장과 컴퓨터, 심레이싱 장비가 놓인 hangyu의 방"/></div><div className="journal-project-info"><span className="status-badge">진행 중 · 개인 프로젝트</span><h2>{project.title}</h2><p>{project.description}</p><div className="article-tags">{project.tags.map(value => <span key={value}>{value}</span>)}</div><span className="journal-note-link">만드는 과정 보기 <Icon name="arrow" size={18}/></span></div></RouteLink>
       </> : post ? <div className="journal-reading">
         <div className="journal-reading-margin"><RouteLink to={`/journal${route.search}`} go={go}><Icon name="back" size={16}/> 기록 목록</RouteLink></div>
-        <PostArticle key={post.slug} post={post} go={go} listPath="/journal" articleBase="/journal/posts" footer={
+        <PostArticle key={post.slug} post={post} go={go} listPath="/journal" articleBase="/journal/posts" toc={<JournalToc key={post.slug} post={post} scrollRef={scroll}/>} footer={
           <nav className="journal-pagination" aria-label="글 이동">
             <div className="journal-neighbours">
               {previousPost && <RouteLink className="journal-previous" to={`/journal/posts/${previousPost.slug}${route.search}`} go={go}><span><Icon name="back" size={15}/> 이전 글</span><strong>{previousPost.title}</strong></RouteLink>}

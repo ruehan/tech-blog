@@ -1,8 +1,9 @@
 import { useEffect, useLayoutEffect, useRef, useState, type RefObject, type ReactNode } from 'react';
-import { allTags, formatDate, posts, project, type ContentBlock, type Post } from './content';
+import { allTags, formatDate, posts, project, type Post } from './content';
 import { Icon } from './Icons';
 import { RouteLink, type Navigate, type Route } from './navigation';
 import { asset } from './worlds';
+import { MarkdownBody } from './MarkdownBody';
 import './blog.css';
 
 const scrollPositions = new Map<string, number>();
@@ -13,7 +14,8 @@ export function useReadingPosition(ref: RefObject<HTMLElement | null>, key: stri
     element.scrollTop = scrollPositions.get(key) ?? 0;
     const heading = element.querySelector<HTMLElement>('h1');
     if (heading?.getClientRects().length) heading.focus({ preventScroll: true });
-    const hash = window.location.hash.slice(1);
+    let hash = window.location.hash.slice(1);
+    try { hash = decodeURIComponent(hash); } catch { /* Keep malformed fragments harmless. */ }
     if (hash) document.getElementById(hash)?.scrollIntoView();
     // Capture before a shorter replacement article can clamp the old scroll offset.
     const save = () => { scrollPositions.set(key, element.scrollTop); };
@@ -51,13 +53,6 @@ export function Library({ route, go, onClose }: { route: Route; go: Navigate; on
   </dialog>;
 }
 
-function Block({ block }: { block: ContentBlock }) {
-  if (block.type === 'paragraph') return <p>{block.text}</p>;
-  if (block.type === 'list') return <ul>{block.items.map(item => <li key={item}>{item}</li>)}</ul>;
-  if (block.type === 'code') return <figure className="code-block"><figcaption>{block.language}</figcaption><pre><code>{block.text}</code></pre></figure>;
-  return <aside className="article-note"><Icon name="info" size={19}/><p>{block.text}</p></aside>;
-}
-
 export function Book({ route, go, onClose }: { route: Route; go: Navigate; onClose: () => void }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const listScroll = useRef<HTMLDivElement>(null);
@@ -79,8 +74,9 @@ export function Book({ route, go, onClose }: { route: Route; go: Navigate; onClo
     const previous = document.activeElement as HTMLElement | null;
     const element = dialog.current!;
     element.showModal();
-    const heading = [...element.querySelectorAll<HTMLElement>('h1, .book-intro h2')].find(item => item.getClientRects().length && item.tagName === 'H1') ?? element.querySelector<HTMLElement>('.book-intro h2');
-    heading?.focus({ preventScroll: true });
+    const focusTarget = [...element.querySelectorAll<HTMLElement>('h1')].find(item => item.getClientRects().length)
+      ?? element.querySelector<HTMLElement>('.book-posts a[aria-current=page], .tag-filters a');
+    focusTarget?.focus({ preventScroll: true });
     return () => { element.close(); if (previous?.isConnected) previous.focus({ preventScroll: true }); };
   }, []);
   useReadingPosition(listScroll, `book-list:${tag ?? ''}`);
@@ -97,9 +93,8 @@ export function Book({ route, go, onClose }: { route: Route; go: Navigate; onClo
     <div className="book-spread">
       <aside className="book-index" aria-label="글 목록">
         <div className="book-index-scroll" ref={listScroll}>
-          <div className="book-intro"><span className="content-kicker">FROM MY BOOKSHELF</span><h2 tabIndex={-1}>생각을 쌓아두는 곳.</h2><p>만들고, 막히고, 다시 풀어낸 기록.</p></div>
           <div className="tag-filters" aria-label="태그 필터"><RouteLink to="/posts" go={go} aria-current={!tag ? 'true' : undefined}>전체 <span>{posts.length}</span></RouteLink>{allTags.map(value => <RouteLink key={value} to={`/posts?tag=${encodeURIComponent(value)}`} go={go} aria-current={tag === value ? 'true' : undefined}>{value}</RouteLink>)}</div>
-          <div className="library-count">{visiblePosts.length}개의 글 <span>작업 기록 · 초안</span></div>
+          <div className="library-count">{visiblePosts.length}개의 글 </div>
           <nav className="book-posts" aria-label="글 선택">{visiblePosts.map(item => <RouteLink key={item.slug} className="post-card" to={`/posts/${item.slug}${route.search}`} go={go} aria-current={item.slug === post?.slug ? 'page' : undefined}>
             <span className="post-number">{String(posts.indexOf(item) + 1).padStart(2, '0')}</span><div><div className="post-meta"><span>{item.tags.join(' / ')}</span></div><h3>{item.title}</h3><time dateTime={item.date}>{formatDate(item.date)} · {item.minutes}분 읽기</time></div><Icon name="arrow" size={16}/>
           </RouteLink>)}</nav>
@@ -120,7 +115,7 @@ export function Book({ route, go, onClose }: { route: Route; go: Navigate; onClo
   </dialog>;
 }
 
-export function PostArticle({ post, go, listPath = '/posts', articleBase = '/posts', footer }: { post: Post; go: Navigate; listPath?: string; articleBase?: string; footer?: ReactNode }) {
+export function PostArticle({ post, go, listPath = '/posts', articleBase = '/posts', footer, toc }: { post: Post; go: Navigate; listPath?: string; articleBase?: string; footer?: ReactNode; toc?: ReactNode }) {
   const [share, setShare] = useState('');
   const [copyFallback, setCopyFallback] = useState('');
   async function copyLink() {
@@ -131,10 +126,10 @@ export function PostArticle({ post, go, listPath = '/posts', articleBase = '/pos
   return <article className="article" >
         <header className="article-heading"><div className="article-tags">{post.tags.map(tag => <RouteLink key={tag} to={`${listPath}?tag=${encodeURIComponent(tag)}`} go={go}>{tag}</RouteLink>)}</div>
           <h1 tabIndex={-1}>{post.title}</h1><p className="article-deck">{post.description}</p>
-          <div className="article-byline"><span>hangyu <span className="byline-separator">/</span> <time dateTime={post.date}>{formatDate(post.date)}</time></span><span>{post.minutes}분 읽기</span><span className="draft-label">초안</span></div>
+          <div className="article-byline"><span>hangyu <span className="byline-separator">/</span> <time dateTime={post.date}>{formatDate(post.date)}</time></span><span>{post.minutes}분 읽기</span>{post.draft && <span className="draft-label">초안</span>}</div>
         </header>
-        <nav className="book-toc" aria-label="목차"><span className="content-kicker">이 글의 순서</span>{post.sections.map(section => <a href={`#${section.id}`} key={section.id}>{section.title}</a>)}</nav>
-        <div className="article-body">{post.sections.map(section => <section key={section.id} id={section.id}><h2>{section.title}</h2>{section.blocks.map((block, index) => <Block key={index} block={block}/>)}</section>)}</div>
+        {toc ?? (post.sections.length > 0 && <nav className="book-toc" aria-label="목차"><span className="content-kicker">이 글의 순서</span>{post.sections.map(section => <a href={`#${section.id}`} key={section.id}>{section.title}</a>)}</nav>)}
+        <MarkdownBody key={post.slug} body={post.body}/>
         <div className="article-end"><button className="share-button" onClick={copyLink}><Icon name="link" size={17}/> 링크 복사</button><span role="status">{share}</span>{copyFallback && <input className="copy-fallback" aria-label="글 주소" readOnly value={copyFallback} onFocus={event => event.target.select()}/>}</div>
         {footer ?? <section className="related-posts"><span className="content-kicker">함께 읽기</span>{posts.filter(item => item.slug !== post.slug).map(item => <RouteLink key={item.slug} to={`${articleBase}/${item.slug}`} go={go}>{item.title}<Icon name="arrow" size={18}/></RouteLink>)}</section>}
       </article>;

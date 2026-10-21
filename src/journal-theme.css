@@ -1,0 +1,68 @@
+/* Scoped to the ordinary blog; the room and its book retain their own lighting. */
+.journal[data-theme=night]{
+  color-scheme:dark;
+  --journal-paper:#1c2b25;
+  --journal-ink:#e6e5d5;
+  --journal-muted:#b2bcaa;
+  --journal-border:#3b4d40;
+  --journal-active:#334b3c;
+  background:var(--journal-paper);color:var(--journal-ink);
+  scrollbar-color:#52654e var(--journal-paper)
+}
+.journal[data-theme=night]::before{background-image:radial-gradient(#d4dac012 .65px,transparent .65px)}
+.journal[data-theme=night] :is(a,button,input):focus-visible{outline-color:#b6ca9e}
+.journal[data-theme=night] .brand-light{color:#a7b4a1}
+.journal[data-theme=night] .journal-rail{background:#24372eed;border-color:#405344;box-shadow:0 8px 30px #0c181b30}
+.journal[data-theme=night] .journal-rail-divider{background:var(--journal-border)}
+.journal[data-theme=night] .rail-button{color:#b7c5ad}
+.journal[data-theme=night] .rail-button:hover{color:#edf0de;background:#3a5040}
+.journal[data-theme=night] .rail-button[aria-current=page]{background:#c3d2ad;color:#21372a}
+.journal[data-theme=night] .rail-button[aria-pressed=true]{background:#3a5040;color:#e1e7ca}
+.journal[data-theme=night] .journal-tooltip{background:#2c4034;border-color:#52654c;color:#e6e5d5}
+.journal[data-theme=night] :is(.journal-section-heading h1 span,.journal-search input::placeholder,.journal-results,.journal-entry-meta,.journal-entry-bottom,.journal-entry-bottom>svg,.journal-reading-margin>a,.journal-note-link,.journal-neighbours>a>span){color:#b2c1a3}
+.journal[data-theme=night] .journal-search{border-color:var(--journal-border)}
+.journal[data-theme=night] .journal-search input{color:var(--journal-ink)}
+.journal[data-theme=night] .journal-search button{color:#b2c1a3}
+.journal[data-theme=night] :is(.journal-tags a,.article-tags a,.article-tags>span){background:#293e31;border-color:#465b44;color:#bfceae}
+.journal[data-theme=night] .journal-tags a:hover{background:#3b5140}
+.journal[data-theme=night] .journal-tags a[aria-current=true]{background:#c3d2ad;border-color:#c3d2ad;color:#21372a}
+.journal[data-theme=night] .journal-spine{background:#334832;border-color:#536b46;border-left-color:#8ca678;color:#bfd0a4}
+.journal[data-theme=night] .journal-spine-1{background:#454431;border-color:#6f6c49;border-left-color:#a99d6d;color:#d4c899}
+.journal[data-theme=night] .journal-spine-2{background:#304740;border-color:#496b5d;border-left-color:#7ba594;color:#b0cebf}
+.journal[data-theme=night] .journal-entry:hover h2{color:#c1d6a8}
+.journal[data-theme=night] :is(.draft-label,.journal-entry-meta>.draft-label){color:#bac4af;border-color:#52624b}
+.journal[data-theme=night] .journal-project-card{background:#26392e;border-color:var(--journal-border)}
+.journal[data-theme=night] .journal-project-image{background:#344534}
+.journal[data-theme=night] :is(.journal-empty,.article-deck,.journal-reading .article-deck,.article-byline,.journal-reading .article-byline,.article-image figcaption,.article-end>span,.content-kicker){color:var(--journal-muted)}
+.journal[data-theme=night] :is(.article-body,.journal-reading .article-body){color:#ccd3c0}
+.journal[data-theme=night] .article-body :is(h2,h3,h4,h5,h6){color:var(--journal-ink)}
+.journal[data-theme=night] :is(.article-byline,.article-end,.related-posts,.related-posts>a,.markdown-body hr){border-color:var(--journal-border)}
+.journal[data-theme=night] :is(.article-back,.related-posts>a,.journal-empty>a,.share-button){color:#bfd0a7;border-color:#52664b}
+.journal[data-theme=night] :is(.journal-neighbours>a:hover,.journal-list-link:hover,.share-button:hover){background:var(--journal-active)}
+.journal[data-theme=night] .byline-separator{color:#74836a}
+.journal[data-theme=night] .status-badge{color:#c9d7b2;background:#354b37}
+.journal[data-theme=night] .markdown-body a{color:#c1d7a5}
+.journal[data-theme=night] .markdown-body :not(pre)>code{color:#d7e0bc;background:#354630}
+.journal[data-theme=night] .markdown-body blockquote{background:#293e30;border-color:#8ea975;color:#bdcbaa}
+.journal[data-theme=night] .article-table :is(th,td){border-color:#4b6046}
+.journal[data-theme=night] .article-table th{background:#2d4231}
+.journal[data-theme=night] .code-block{border:1px solid #40523c}
+.journal[data-theme=night] .copy-fallback{background:#26392e;color:#e6e5d5;border-color:#52664b}
+.journal[data-theme=night] .content-primary{background:#c3d2ad;color:#21372a}
+
+.journal[data-theme=night] .desk-clock{color:#bac9a7}
+.journal[data-theme=night] .desk-clock::before{background:#465b3e;border-color:#5f7351;box-shadow:0 7px 12px #0b191b30}
+.journal[data-theme=night] .desk-clock-face{background:#2a3d2e;border-color:#4c6141;box-shadow:inset 0 0 0 1px #758762,0 2px 0 1px #354d30,4px 9px 18px #0b191b30}
+.journal[data-theme=night] .clock-hour-mark{stroke:#bccba8}
+.journal[data-theme=night] .clock-minute-mark{stroke:#6c825c}
+.journal[data-theme=night] .clock-hour-hand{stroke:#dfdfc3}
+.journal[data-theme=night] .clock-minute-hand{stroke:#b7c99d}
+.journal[data-theme=night] .clock-second-hand{stroke:#d7aa83}
+.journal[data-theme=night] .clock-pin{fill:#dfdfc3}
+.journal[data-theme=night] .desk-calendar{background:#2e3e2d;border-color:#59694b;box-shadow:0 3px 0 #263723,0 4px 0 #59694b,0 7px 0 #263723,0 8px 0 #43553a,5px 14px 20px #0b191b30}
+.journal[data-theme=night] .desk-calendar-rings i{background:linear-gradient(90deg,#718464,#b2bda1,#6e805d);border-color:#8d9d7a}
+.journal[data-theme=night] .desk-calendar caption{color:#d2d9bc;border-color:#526246}
+.journal[data-theme=night] .desk-calendar th{color:#afbd9e}
+.journal[data-theme=night] .desk-calendar td{color:#d0d7bd}
+.journal[data-theme=night] .desk-calendar td:first-child{color:#d5ab8c}
+.journal[data-theme=night] .desk-calendar time[aria-current=date]{background:#c3d2ad;color:#21372a}
