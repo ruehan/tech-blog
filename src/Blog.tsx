@@ -36,10 +36,7 @@ export function Library({ route, go, onClose }: { route: Route; go: Navigate; on
     const rect = event.currentTarget.getBoundingClientRect();
     if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) onClose();
   }}>
-    <div className="library-bar"><nav aria-label="콘텐츠 종류">
-      <RouteLink to="/posts" go={go} ><Icon name="book" size={16}/> 글</RouteLink>
-      <RouteLink to="/projects" go={go} aria-current="page"><Icon name="desktop" size={16}/> 프로젝트</RouteLink>
-    </nav><button className="icon-button" aria-label="목록 닫기" onClick={onClose}><Icon name="close"/></button></div>
+    <div className="library-bar"><span className="library-label"><Icon name="desktop" size={16}/> 프로젝트</span><button className="icon-button" aria-label="목록 닫기" onClick={onClose}><Icon name="close"/></button></div>
     <div className="library-scroll" ref={scroll}>
       <div className="library-intro"><span className="content-kicker">ON MY DESKTOP</span>
         <h1 id="library-title" tabIndex={-1}>만들며 배우는 것들.</h1>
@@ -93,7 +90,7 @@ export function Book({ route, go, onClose }: { route: Route; go: Navigate; onClo
   }, [isList, route.path]);
   return <dialog ref={dialog} className={`library book ${isList ? 'book-browsing' : 'book-reading'}`} aria-label="글 기록" onCancel={event => { event.preventDefault(); onClose(); }}>
     <header className="library-bar book-bar">
-      <nav aria-label="콘텐츠 종류"><RouteLink to="/posts" go={go} aria-current="page"><Icon name="book" size={16}/> 글</RouteLink><RouteLink to="/projects" go={go}><Icon name="desktop" size={16}/> 프로젝트</RouteLink></nav>
+      <span className="library-label"><Icon name="book" size={16}/> 글</span>
       <span className="book-signature">hangyu / room</span>
       <button className="icon-button" aria-label="목록 닫기" onClick={onClose}><Icon name="close"/></button>
     </header>

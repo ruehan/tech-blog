@@ -1,0 +1,44 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { Group, Mesh, MeshStandardMaterial, PerspectiveCamera, RectAreaLight } from 'three';
+import { blendRoomPose, captureRoomPose } from '../src/room-transition.ts';
+
+test('alignment preserves the displayed frame and reaches the exact authored pose, including hover and lens', () => {
+  const root = new Group();
+  const mesh = new Mesh();
+  root.add(mesh);
+  const material = new MeshStandardMaterial();
+  const light = new RectAreaLight();
+  const camera = new PerspectiveCamera(40, 16 / 9, 0.1, 200);
+  camera.position.set(12, 6, 8); camera.lookAt(0, 1, 0); camera.zoom = 1.1;
+  mesh.position.z = 0.23; mesh.scale.setScalar(1.2); mesh.rotation.y = 0.4; mesh.morphTargetInfluences = [0.8];
+  material.color.setRGB(0.6, 0.7, 0.8); material.emissiveIntensity = 2; light.intensity = 4;
+  const from = captureRoomPose(root, camera, [material], [light]);
+  camera.position.set(9, 8, 11); camera.lookAt(1, 2, 0); camera.zoom = 1; camera.fov = 28;
+  mesh.position.z = 0.16; mesh.scale.setScalar(1); mesh.rotation.y = 0; mesh.morphTargetInfluences[0] = 0;
+  material.color.setRGB(0.2, 0.3, 0.4); material.emissiveIntensity = 0.5; light.intensity = 2;
+  const to = captureRoomPose(root, camera, [material], [light]);
+
+  blendRoomPose(from, to, 0);
+  assert.deepEqual(camera.position, from.camera.position);
+  assert.deepEqual(camera.quaternion.toArray(), from.camera.quaternion.toArray());
+  assert.equal(camera.zoom, 1.1);
+  assert.equal(mesh.position.z, 0.23);
+  assert.equal(mesh.morphTargetInfluences[0], 0.8);
+  assert.deepEqual(material.color, from.materials[0].color);
+  blendRoomPose(from, to, 0.5);
+  assert.equal(camera.zoom, 1.05);
+  assert.ok(camera.position.distanceTo(from.camera.position) > 0);
+  assert.ok(camera.position.distanceTo(to.camera.position) > 0);
+  assert.equal(mesh.morphTargetInfluences[0], 0.4);
+  assert.equal(light.intensity, 3);
+  blendRoomPose(from, to, 1);
+  assert.deepEqual(camera.position, to.camera.position);
+  assert.deepEqual(camera.quaternion.toArray(), to.camera.quaternion.toArray());
+  assert.equal(camera.zoom, 1);
+  assert.equal(camera.fov, 28);
+  assert.equal(mesh.position.z, 0.16);
+  assert.equal(mesh.morphTargetInfluences[0], 0);
+  assert.ok(material.color.toArray().every((value, i) => Math.abs(value - to.materials[0].color.toArray()[i]) < 1e-12));
+  assert.equal(light.intensity, 2);
+});

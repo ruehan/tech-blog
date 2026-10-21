@@ -2,7 +2,7 @@
 import { _roots, addAfterEffect } from '@react-three/fiber';
 import { Box3, Object3D, PerspectiveCamera, Raycaster, Vector2, Vector3 } from 'three';
 
-type RoomFrame = { zoom: number; position: number[]; controlsEnabled: boolean; editorScale: number; time: number; hover: { book: number; monitor: number; simulator: number; music: number[] } };
+type RoomFrame = { zoom: number; fov: number; quaternion: number[]; position: number[]; controlsEnabled: boolean; editorScale: number; time: number; hover: { book: number; monitor: number; simulator: number; music: number[] } };
 let frames: RoomFrame[] = [];
 let unsubscribe: (() => void) | undefined;
 
@@ -17,6 +17,8 @@ export function startRoomCapture() {
     if (!editor) return;
     frames.push({
       zoom: state.camera.zoom,
+      fov: state.camera.fov,
+      quaternion: state.camera.quaternion.toArray(),
       position: state.camera.position.toArray(),
       controlsEnabled: state.controls?.enabled ?? false,
       editorScale: editor.scale.x,

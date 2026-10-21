@@ -195,5 +195,6 @@ test('table of contents and browser history preserve independent reading positio
   expect(await page.locator('.book-index-scroll').evaluate(element => element.scrollTop)).toBe(indexPosition);
   await page.goBack();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('내 방을 웹으로 옮기는 일');
-  await expect.poll(() => page.locator('.book-page-scroll').evaluate(element => element.scrollTop)).toBeCloseTo(position, 0);
+  // Native fragment alignment can round by one CSS pixel after the page transform.
+  await expect.poll(async () => Math.abs(await page.locator('.book-page-scroll').evaluate(element => element.scrollTop) - position)).toBeLessThanOrEqual(1);
 });

@@ -6,7 +6,8 @@ import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUnifo
 import { useModel } from './models';
 import { asset, type WorldId } from './worlds';
 import { sample, type RoomManifest, type RuntimeClip } from './animation';
-import { applyRoomCamera, applyRoomRestZoom, ROOM_SETTLE_SECONDS } from './room-camera';
+import { applyRoomCamera, applyRoomRestZoom } from './room-camera';
+import { blendRoomPose, captureRoomPose, ROOM_ALIGNMENT_SECONDS, type RoomPose } from './room-transition';
 import { Icon } from './Icons';
 
 RectAreaLightUniformsLib.init();
@@ -36,7 +37,15 @@ export function Room(props: Props) {
   const { camera } = useThree();
   const playing = useRef(new Map<string, Playing>());
   const cinematic = useRef(false);
-  const restSettle = useRef<number | null>(null);
+  const alignment = useRef<{ from: RoomPose; to: RoomPose; elapsed: number; done?: () => void } | null>(null);
+  const restingCamera = useMemo(() => {
+    const source = model.root.getObjectByName('WEB_Camera_Main');
+    if (!(source instanceof PerspectiveCamera)) throw new Error('The room GLB is missing WEB_Camera_Main.');
+    const snapshot = source.clone();
+    source.getWorldPosition(snapshot.position);
+    source.getWorldQuaternion(snapshot.quaternion);
+    return snapshot;
+  }, [model]);
   const bookPhase = useRef<'entering' | 'reading' | 'returning' | null>(null);
   const hovered = useRef<string | null>(null);
   const pointerTargets = useRef<{ mesh: string | null; label: string | null }>({ mesh: null, label: null });
@@ -111,7 +120,7 @@ export function Room(props: Props) {
     if (item.action) { item.action.time = item.duration; item.action.paused = true; }
   }
   function clear() {
-    restSettle.current = null;
+    alignment.current = null;
     bookPhase.current = null;
     clearTimeout(hoverLeaveTimer.current);
     pointerTargets.current = { mesh: null, label: null };
@@ -127,6 +136,21 @@ export function Room(props: Props) {
     clear(); cinematic.current = false; setBusy(false); latest.current.onBusy(false);
     latest.current.onResetCamera(); idle(); model.mixer.update(0);
   }
+  function settleToRest() {
+    if (!(camera instanceof PerspectiveCamera)) { finish(); return; }
+    const from = captureRoomPose(model.root, camera, model.ownedMaterials, lights.byName.values());
+    // Prepare the idle frame offscreen, including its materials and the closer
+    // room lens. Keep controls disabled until the complete frame has converged.
+    clear(); idle(); updateAnimation(0);
+    applyRoomCamera(camera, restingCamera);
+    applyRoomRestZoom(camera);
+    const to = captureRoomPose(model.root, camera, model.ownedMaterials, lights.byName.values());
+    alignment.current = { from, to, elapsed: 0, done: () => {
+      cinematic.current = false; setBusy(false); latest.current.onBusy(false);
+      latest.current.onResetCamera();
+    } };
+    blendRoomPose(from, to, 0);
+  }
   function activate(id: string) {
     if (cinematic.current) return;
     if (id === 'featured_book' && latest.current.paused) { latest.current.onRead(); return; }
@@ -137,17 +161,26 @@ export function Room(props: Props) {
     if (latest.current.paused && (id === 'monitor' || id === 'racing')) {
       latest.current.onNavigate(id === 'monitor' ? 'desktop' : 'circuit'); return;
     }
+    const from = camera instanceof PerspectiveCamera ? captureRoomPose(model.root, camera, model.ownedMaterials, lights.byName.values()) : null;
     clear(); cinematic.current = true; setBusy(true); latest.current.onBusy(true);
     if (id === 'featured_book') {
       bookPhase.current = 'entering';
-      play('cinematic', 'Book_Click', false, () => { restSettle.current = 0; });
-      return;
+      play('cinematic', 'Book_Click', false, settleToRest);
+    } else {
+      const portal = id === 'monitor' || id === 'racing';
+      play('cinematic', portal ? `${prefix}_Portal_Approach` : `${prefix}_Click`, false, () => {
+        if (portal) { finish(); latest.current.onNavigate(id === 'monitor' ? 'desktop' : 'circuit'); }
+        else settleToRest();
+      });
     }
-    const portal = id === 'monitor' || id === 'racing';
-    play('cinematic', portal ? `${prefix}_Portal_Approach` : `${prefix}_Click`, false, () => {
-      finish();
-      if (portal) latest.current.onNavigate(id === 'monitor' ? 'desktop' : 'circuit');
-    });
+    // Evaluate the authored first frame without displaying it. Restore the
+    // currently visible pose and move to that first frame before advancing time.
+    updateAnimation(0);
+    if (from && camera instanceof PerspectiveCamera) {
+      const to = captureRoomPose(model.root, camera, model.ownedMaterials, lights.byName.values());
+      alignment.current = { from, to, elapsed: 0 };
+      blendRoomPose(from, to, 0);
+    }
   }
   function holdBook() {
     const item = playing.current.get('cinematic');
@@ -159,6 +192,7 @@ export function Room(props: Props) {
   function skip() {
     const item = playing.current.get('cinematic');
     if (bookPhase.current === 'entering' && item) {
+      alignment.current = null;
       item.time = BOOK_READ_TIME;
       if (item.action) item.action.time = BOOK_READ_TIME;
       updateAnimation(0);
@@ -178,9 +212,7 @@ export function Room(props: Props) {
     if (latest.current.paused) idle();
     else {
       setBusy(true); latest.current.onBusy(true); cinematic.current = true;
-      // Hold the final pose while easing into the closer resting view. Stopping
-      // the action here would restore the model before its final frame renders.
-      play('opening', 'Room_Opening', false, () => { restSettle.current = 0; });
+      play('opening', 'Room_Opening', false, settleToRest);
     }
     // Evaluate frame zero before revealing the room, including its camera,
     // lights and materials, so the static model cannot flash ahead of the intro.
@@ -207,6 +239,16 @@ export function Room(props: Props) {
     }
   }
   function updateAnimation(dt: number) {
+    if (alignment.current) {
+      const transition = alignment.current;
+      transition.elapsed = Math.min(transition.elapsed + dt, ROOM_ALIGNMENT_SECONDS);
+      blendRoomPose(transition.from, transition.to, transition.elapsed / ROOM_ALIGNMENT_SECONDS);
+      if (transition.elapsed >= ROOM_ALIGNMENT_SECONDS) {
+        alignment.current = null;
+        transition.done?.();
+      }
+      return;
+    }
     if (bookPhase.current === 'entering') {
       dt = Math.min(dt, Math.max(0, BOOK_READ_TIME - playing.current.get('cinematic')!.time));
     } else if (bookPhase.current === 'reading') dt = 0;
@@ -247,11 +289,6 @@ export function Room(props: Props) {
       model.root.updateMatrixWorld(true);
       const lensTrack = runtime[active.name]?.camera_lens_mm_and_sensor_width_mm;
       applyRoomCamera(camera, sourceCamera, lensTrack ? sample(lensTrack, active.time) : undefined);
-      if (restSettle.current !== null) {
-        restSettle.current = Math.min(restSettle.current + dt, ROOM_SETTLE_SECONDS);
-        applyRoomRestZoom(camera, restSettle.current / ROOM_SETTLE_SECONDS);
-        if (restSettle.current >= ROOM_SETTLE_SECONDS) completed.push(finish);
-      }
     }
     if (bookPhase.current === 'entering' && active && active.time >= BOOK_READ_TIME) completed.push(holdBook);
     completed.forEach(done => done());
