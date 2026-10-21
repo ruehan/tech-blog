@@ -43,7 +43,7 @@ for (const label of ['책 펼치기', '베이스 연주', '컴퓨터 속으로',
 test('alignment pauses in place, resumes and allows skipping directly to the open book', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('button', { name: '조명 끄기', exact: true })).toBeEnabled();
-  await page.getByRole('button', { name: '책', exact: true }).click();
+  await page.getByRole('button', { name: '책 펼치기', exact: true }).click();
   await page.getByRole('button', { name: '애니메이션 일시정지', exact: true }).click();
   const held = await page.evaluate(async () => (await import('/tests/browser/room-probe.ts')).readWorldCamera());
   await page.waitForTimeout(800);
@@ -62,7 +62,7 @@ for (const action of ['book', 'music']) {
     await expect(page.getByRole('button', { name: '조명 끄기', exact: true })).toBeEnabled();
     await page.getByRole('button', { name: '조명 끄기', exact: true }).click();
     const before = await page.evaluate(async () => (await import('/tests/browser/room-probe.ts')).readWorldCamera());
-    await page.getByRole('button', { name: action === 'book' ? '책' : '음악', exact: true }).click();
+    await page.getByRole('button', { name: action === 'book' ? '책 펼치기' : '음악', exact: true }).click();
     if (action === 'book') {
       await page.getByRole('button', { name: '연출 건너뛰기' }).click();
       await expect(page.getByRole('dialog')).toBeVisible();
@@ -86,6 +86,6 @@ for (const action of ['book', 'music']) {
     }
     expect(await page.evaluate(async () => (await import('/tests/browser/room-probe.ts')).readWorldCamera())).toEqual(before);
     await expect(page.locator('main.app')).toHaveClass(/night/);
-    await expect(page.getByRole('button', { name: '책', exact: true })).toBeEnabled();
+    await expect(page.getByRole('button', { name: '책 펼치기', exact: true })).toBeEnabled();
   });
 }

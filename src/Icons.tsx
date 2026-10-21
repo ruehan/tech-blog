@@ -18,6 +18,7 @@ export function Icon({ name, size = 20 }: { name: string; size?: number }) {
     steering: <><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/><path d="m10 11-6-2m10 2 6-2m-8 5v7"/></>,
     drag: <><path d="M7 12V7a2 2 0 0 1 4 0v5-8a2 2 0 0 1 4 0v8-5a2 2 0 0 1 4 0v10a5 5 0 0 1-5 5h-2a5 5 0 0 1-4-2L3 13a2 2 0 0 1 3-2l1 1Z"/></>,
     book: <><path d="M12 5C8 2 3 4 3 4v15s5-2 9 1c4-3 9-1 9-1V4s-5-2-9 1Zm0 0v15"/></>,
+    folder: <path d="M3 7V5a1 1 0 0 1 1-1h5l2 3h9a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7Z"/>,
     music: <><path d="M9 18V5l11-2v13M9 9l11-2"/><ellipse cx="6" cy="18" rx="3" ry="2"/><ellipse cx="17" cy="16" rx="3" ry="2"/></>,
   };
   return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name] ?? paths.room}</svg>;

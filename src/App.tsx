@@ -1,4 +1,4 @@
-import { Component, Suspense, lazy, useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import { Component, Suspense, lazy, useCallback, useEffect, useRef, useState, type ReactNode, type ButtonHTMLAttributes } from 'react';
 import type { RoomHandle } from './Room';
 import { Icon } from './Icons';
 import { defaultView, worlds, type ViewId, type WorldId } from './worlds';
@@ -13,15 +13,24 @@ class SceneBoundary extends Component<{ children: ReactNode; onRetry: () => void
   render() { return this.state.error ? <div className="error-panel" role="alert"><Icon name="info"/><span className="sr-only">공간을 불러오지 못했어요. 연결 상태를 확인한 뒤 다시 시도해주세요.</span><button className="icon-button" aria-label="다시 불러오기" onClick={this.props.onRetry}><Icon name="reset"/></button></div> : this.props.children; }
 }
 
+function RailButton({ icon, label, ...props }: ButtonHTMLAttributes<HTMLButtonElement> & { icon: string; label: string }) {
+  return <button className="rail-button" aria-label={label} title={label} {...props}><Icon name={icon}/></button>;
+}
+
 export default function App() {
   const { route, go } = useRoute();
   const inSpace = route.path === '/';
   const bookOpen = route.path === '/posts' || route.path.startsWith('/posts/');
   const libraryOpen = bookOpen || route.path === '/projects';
   const [spaceMounted, setSpaceMounted] = useState(inSpace);
+  const folderPending = useRef(false);
   useEffect(() => { if (inSpace) setSpaceMounted(true); }, [inSpace]);
   const openPosts = useCallback(() => go('/posts'), [go]);
-  const openProjects = useCallback(() => go('/projects'), [go]);
+  const openProjects = useCallback(() => {
+    if (!folderPending.current) return;
+    folderPending.current = false;
+    go('/projects');
+  }, [go]);
   const [world, setWorld] = useState<WorldId>('room');
   const [view, setView] = useState<ViewId>('overview');
   const [paused, setPaused] = useState(() => matchMedia('(prefers-reduced-motion: reduce)').matches);
@@ -36,6 +45,7 @@ export default function App() {
   const config = worlds[world];
   const navigate = useCallback((next: WorldId) => {
     if (next === world) return;
+    folderPending.current = false;
     setWorld(next); setReady(false); setFailed(false); setBusy(false); setView(defaultView(next)); setFolderOpen(false);
     document.body.style.cursor = '';
   }, [world]);
@@ -56,17 +66,29 @@ export default function App() {
     go(href);
   }, [navigate, go]);
   const toggleFolder = useCallback(() => {
-    setFolderOpen(open => !open);
-  }, []);
-  const readFromRoom = () => {
-    if (world === 'room' && ready && roomRef.current) roomRef.current.activate('featured_book');
-    else openPosts();
+    folderPending.current = !folderOpen;
+    setFolderOpen(!folderOpen);
+  }, [folderOpen]);
+  const cancelPendingFolder = () => {
+    if (!folderPending.current) return;
+    folderPending.current = false;
+    setFolderOpen(false);
+  };
+  const jumpToWorld = (next: WorldId) => {
+    cancelPendingFolder();
+    if (world === 'room' && busy) roomRef.current?.cancel();
+    if (next === world) { setView(defaultView(next)); resetCamera(); }
+    else navigate(next);
+  };
+  const openContent = (href: string) => {
+    cancelPendingFolder();
+    if (world === 'room' && busy) roomRef.current?.cancel();
+    go(href);
   };
 
   return <><ContentMetadata route={route}/>{spaceMounted && <main inert={!inSpace} aria-hidden={!inSpace || undefined} className={`app ${!inSpace ? 'space-inactive' : ''} ${!inSpace && !libraryOpen ? 'space-covered' : ''} ${world} ${view}-view ${world === 'room' && !lightsOn ? 'night' : ''}`} data-world={world} data-view={view} data-ready={ready}>
     <header className="header">
-      <a className="brand" href="#room" onClick={event => { event.preventDefault(); navigate('room'); }} aria-label="Hangyu's room, 메인 방으로"><span>hangyu<span className="brand-light"> / room</span></span></a>
-      <button className="icon-button library-shortcut" aria-label="글 목록 열기" disabled={ready && busy} onClick={readFromRoom}><Icon name="book"/></button>
+      <a className="brand" href="#room" onClick={event => { event.preventDefault(); jumpToWorld('room'); }} aria-label="Hangyu's room, 메인 방으로"><span>hangyu<span className="brand-light"> / room</span></span></a>
     </header>
 
     <div className="viewport" aria-label={`${config.label} 3D 뷰어. 드래그로 회전하고 스크롤로 확대합니다.`}>
@@ -76,26 +98,27 @@ export default function App() {
     </div>
     {!ready && !failed && <div className="loading" role="status" aria-label={`${config.label}에 들어가는 중`}><span className="loading-orbit"/></div>}
 
-    <aside className="tools" aria-label="화면 설정">
-      {world === 'room' && <button className="icon-button" disabled={!ready || busy} aria-label={lightsOn ? '조명 끄기' : '조명 켜기'} onClick={toggleLights}><Icon name={lightsOn ? 'sun' : 'moon'}/></button>}
-      <button className="icon-button" aria-label={paused ? '애니메이션 재생' : '애니메이션 일시정지'} aria-pressed={paused} onClick={() => setPaused(value => !value)}><Icon name={paused ? 'play' : 'pause'}/></button>
-      <button className="icon-button" disabled={!ready} aria-label="시점 초기화" onClick={() => { if (busy) roomRef.current?.cancel(); setView(defaultView(world)); resetCamera(); }}><Icon name="reset"/></button>
-    </aside>
-
-    {ready && <div className="world-actions">
-      {busy ? <button className="icon-button" aria-label="연출 건너뛰기" onClick={() => roomRef.current?.skip()}><Icon name="arrow"/></button> : world === 'room' ? <>
-        <button className="icon-button" aria-label="책" onClick={readFromRoom}><Icon name="book"/></button>
-        <button className="icon-button" aria-label="음악" disabled={paused} onClick={() => roomRef.current?.activate('bass')}><Icon name="music"/></button>
-        <span className="action-divider"/><button className="icon-button" aria-label={`안내 ${labels ? '숨기기' : '보기'}`} aria-pressed={labels} onClick={() => setLabels(value => !value)}><Icon name="markers"/></button>
-      </> : world === 'desktop' ? <button className="icon-button" aria-label={`Projects 폴더 ${folderOpen ? '닫기' : '열기'}`} aria-pressed={folderOpen} onClick={toggleFolder}><Icon name="desktop"/></button> : <div className="view-switch"><button className="icon-button" aria-label="운전석 시점" aria-pressed={view === 'cockpit'} onClick={() => setView('cockpit')}><Icon name="steering"/></button><button className="icon-button" aria-label="서킷 전체" aria-pressed={view === 'overview'} onClick={() => setView('overview')}><Icon name="circuit"/></button><button className="icon-button" aria-label="차량 가까이" aria-pressed={view === 'car'} onClick={() => setView('car')}><Icon name="focus"/></button></div>}
-    </div>}
-
-    <footer className="footer">
-      {world !== 'room' && <button className="icon-button back-button" aria-label="방으로 돌아가기" onClick={() => navigate('room')}><Icon name="back"/></button>}
-      <nav className="world-nav" aria-label="월드 선택">
-        {(Object.entries(worlds) as [WorldId, typeof config][]).map(([id, item]) => <button key={id} aria-label={`${item.label} ${item.number}`} aria-current={id === world ? 'page' : undefined} onClick={() => navigate(id)}><Icon name={id}/></button>)}
+    <aside className="room-rail" aria-label="공간 메뉴">
+      <nav className="rail-group" aria-label="빠른 이동">
+        <RailButton icon="room" label="나의 방 01" aria-current={world === 'room' ? 'page' : undefined} onClick={() => jumpToWorld('room')}/>
+        <RailButton icon="book" label="글 목록 열기" onClick={() => openContent('/posts')}/>
+        <RailButton icon="folder" label="프로젝트 목록 열기" onClick={() => openContent('/projects')}/>
+        <RailButton icon="desktop" label="컴퓨터 02" aria-current={world === 'desktop' ? 'page' : undefined} onClick={() => jumpToWorld('desktop')}/>
+        <RailButton icon="circuit" label="서킷 03" aria-current={world === 'circuit' ? 'page' : undefined} onClick={() => jumpToWorld('circuit')}/>
       </nav>
-    </footer>
+      {ready && <div className="rail-group" role="group" aria-label="공간 조작">
+        {busy ? <RailButton icon="arrow" label="연출 건너뛰기" onClick={() => roomRef.current?.skip()}/> : world === 'room' ?
+          <RailButton icon="music" label="음악" disabled={paused} onClick={() => roomRef.current?.activate('bass')}/>
+        : world === 'desktop' ? <RailButton icon="folder" label={`Projects 폴더 ${folderOpen ? '닫기' : '열기'}`} aria-pressed={folderOpen} onClick={toggleFolder}/>
+        : <><RailButton icon="steering" label="운전석 시점" aria-pressed={view === 'cockpit'} onClick={() => setView('cockpit')}/><RailButton icon="circuit" label="서킷 전체" aria-pressed={view === 'overview'} onClick={() => setView('overview')}/><RailButton icon="focus" label="차량 가까이" aria-pressed={view === 'car'} onClick={() => setView('car')}/></>}
+      </div>}
+      <div className="rail-group rail-settings" role="group" aria-label="화면 설정">
+        {world === 'room' && <RailButton icon={lightsOn ? 'sun' : 'moon'} label={lightsOn ? '조명 끄기' : '조명 켜기'} disabled={!ready || busy} onClick={toggleLights}/>}
+        <RailButton icon={paused ? 'play' : 'pause'} label={paused ? '애니메이션 재생' : '애니메이션 일시정지'} aria-pressed={paused} onClick={() => setPaused(value => !value)}/>
+        <RailButton icon="reset" label="시점 초기화" disabled={!ready} onClick={() => { if (busy) roomRef.current?.cancel(); setView(defaultView(world)); resetCamera(); }}/>
+        {world === 'room' && <RailButton icon="markers" label={`안내 ${labels ? '숨기기' : '보기'}`} aria-pressed={labels} disabled={!ready || busy} onClick={() => setLabels(value => !value)}/>}
+      </div>
+    </aside>
     <span className="sr-only" role="status">{failed ? `${config.label} 로딩 실패` : ready ? `${config.label} 준비 완료` : `${config.label} 로딩 중`}</span>
   </main>}
     {!spaceMounted && libraryOpen && <div className="library-background"><span className="brand">hangyu<span className="brand-light"> / room</span></span></div>}

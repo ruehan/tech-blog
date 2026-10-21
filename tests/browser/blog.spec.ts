@@ -45,12 +45,12 @@ test('posts appear when the book opens and closing posts immediately starts clos
 test('book entry can be cancelled or skipped without losing the reading destination', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('button', { name: '조명 끄기', exact: true })).toBeEnabled();
-  await page.getByRole('button', { name: '책', exact: true }).click();
+  await page.getByRole('button', { name: '책 펼치기', exact: true }).click();
   await expect(page.getByRole('button', { name: '연출 건너뛰기' })).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(page.getByRole('button', { name: '연출 건너뛰기' })).toHaveCount(0);
   await expect(page).toHaveURL(/\/$/);
-  await page.getByRole('button', { name: '글 목록 열기' }).click();
+  await page.getByRole('button', { name: '책 펼치기', exact: true }).click();
   await page.getByRole('button', { name: '연출 건너뛰기' }).click();
   await expect(page.getByRole('dialog')).toBeVisible();
   const book = await page.evaluate(async () => (await import('/tests/browser/room-probe.ts')).readBookPose());

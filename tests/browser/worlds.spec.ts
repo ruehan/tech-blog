@@ -92,7 +92,7 @@ test('mobile and reduced motion navigation stay available', async ({ page }) => 
   await expect(page.locator('main')).toHaveAttribute('data-world', 'desktop');
   await expect(page.locator('main')).toHaveAttribute('data-ready', 'true');
   await page.screenshot({ path: '.local/mobile-desktop.png' });
-  await page.getByRole('button', { name: '방으로 돌아가기' }).click();
+  await page.getByRole('button', { name: '나의 방 01' }).click();
   await expect(page.locator('main')).toHaveAttribute('data-world', 'room');
   await page.getByRole('button', { name: '서킷으로', exact: true }).click();
   await expect(page.locator('main')).toHaveAttribute('data-world', 'circuit');
