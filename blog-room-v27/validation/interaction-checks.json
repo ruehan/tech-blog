@@ -1,0 +1,179 @@
+{
+  "hold_checks": {
+    "Book": {
+      "enter_channels": 2,
+      "hold_channels": 3,
+      "missing_enter_targets": [],
+      "first_pose_mismatch": []
+    },
+    "Monitor": {
+      "enter_channels": 4,
+      "hold_channels": 5,
+      "missing_enter_targets": [],
+      "first_pose_mismatch": []
+    },
+    "Simulator": {
+      "enter_channels": 5,
+      "hold_channels": 5,
+      "missing_enter_targets": [],
+      "first_pose_mismatch": []
+    },
+    "Music": {
+      "enter_channels": 4,
+      "hold_channels": 5,
+      "missing_enter_targets": [],
+      "first_pose_mismatch": []
+    }
+  },
+  "runtime_checks": {
+    "Room_Opening": {
+      "sample_count": 73,
+      "materials": 5,
+      "lights": 5,
+      "errors": []
+    },
+    "Room_Ambient_Idle": {
+      "sample_count": 481,
+      "materials": 1,
+      "lights": 0,
+      "errors": []
+    },
+    "Book_Click": {
+      "sample_count": 433,
+      "materials": 0,
+      "lights": 0,
+      "errors": []
+    },
+    "Music_Click": {
+      "sample_count": 361,
+      "materials": 1,
+      "lights": 0,
+      "errors": []
+    },
+    "Monitor_Portal_Approach": {
+      "sample_count": 120,
+      "materials": 0,
+      "lights": 0,
+      "errors": []
+    },
+    "Simulator_Portal_Approach": {
+      "sample_count": 120,
+      "materials": 0,
+      "lights": 0,
+      "errors": []
+    },
+    "Book_Idle": {
+      "sample_count": 121,
+      "materials": 0,
+      "lights": 0,
+      "errors": []
+    },
+    "Book_Hover_Enter": {
+      "sample_count": 13,
+      "materials": 0,
+      "lights": 0,
+      "errors": []
+    },
+    "Book_Hover_Hold": {
+      "sample_count": 49,
+      "materials": 0,
+      "lights": 0,
+      "errors": []
+    },
+    "Book_Hover_Exit": {
+      "sample_count": 13,
+      "materials": 0,
+      "lights": 0,
+      "errors": []
+    },
+    "Monitor_Idle": {
+      "sample_count": 121,
+      "materials": 0,
+      "lights": 0,
+      "errors": []
+    },
+    "Monitor_Hover_Enter": {
+      "sample_count": 13,
+      "materials": 1,
+      "lights": 0,
+      "errors": []
+    },
+    "Monitor_Hover_Hold": {
+      "sample_count": 49,
+      "materials": 1,
+      "lights": 0,
+      "errors": []
+    },
+    "Monitor_Hover_Exit": {
+      "sample_count": 13,
+      "materials": 1,
+      "lights": 0,
+      "errors": []
+    },
+    "Simulator_Idle": {
+      "sample_count": 121,
+      "materials": 0,
+      "lights": 0,
+      "errors": []
+    },
+    "Simulator_Hover_Enter": {
+      "sample_count": 13,
+      "materials": 0,
+      "lights": 0,
+      "errors": []
+    },
+    "Simulator_Hover_Hold": {
+      "sample_count": 49,
+      "materials": 0,
+      "lights": 0,
+      "errors": []
+    },
+    "Simulator_Hover_Exit": {
+      "sample_count": 13,
+      "materials": 0,
+      "lights": 0,
+      "errors": []
+    },
+    "Music_Idle": {
+      "sample_count": 121,
+      "materials": 1,
+      "lights": 0,
+      "errors": []
+    },
+    "Music_Hover_Enter": {
+      "sample_count": 13,
+      "materials": 1,
+      "lights": 0,
+      "errors": []
+    },
+    "Music_Hover_Hold": {
+      "sample_count": 49,
+      "materials": 1,
+      "lights": 0,
+      "errors": []
+    },
+    "Music_Hover_Exit": {
+      "sample_count": 13,
+      "materials": 1,
+      "lights": 0,
+      "errors": []
+    },
+    "Lights_Off": {
+      "sample_count": 2,
+      "materials": 2,
+      "lights": 5,
+      "errors": []
+    },
+    "Lights_On": {
+      "sample_count": 2,
+      "materials": 2,
+      "lights": 5,
+      "errors": []
+    }
+  },
+  "errors": [],
+  "opening_final_camera_rotation_delta": 1.4901161193847656e-08,
+  "status": "PASS",
+  "asset": "interactive/room.glb",
+  "sha256": "7afdd8b0374ce219d38a7c6fbae7917bd5295e96afb181c8f27c05184d8c6969"
+}

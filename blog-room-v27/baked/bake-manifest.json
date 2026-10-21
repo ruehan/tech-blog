@@ -1,0 +1,61 @@
+{
+  "asset": "room-baked-preview.glb",
+  "lighting": "Static combined texture bake, KHR_materials_unlit",
+  "atlas": "room-baked-lighting-4k.png",
+  "resolution": [
+    4096,
+    4096
+  ],
+  "samples": 32,
+  "device": "CPU",
+  "source_scene": "10_Room_Opening",
+  "source_frame": 72,
+  "display_transform_baked": {
+    "view_transform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "exposure": 0.0,
+    "gamma": 1.0
+  },
+  "runtime_tone_mapping": "None; standard sRGB output. Do not apply AgX a second time.",
+  "camera_matrix_blender": [
+    [
+      0.773957371711731,
+      -0.2797873318195343,
+      0.5680749416351318,
+      9.0
+    ],
+    [
+      0.6332377791404724,
+      0.3419622778892517,
+      -0.6943138837814331,
+      -11.0
+    ],
+    [
+      2.9802322387695312e-08,
+      0.897095799446106,
+      0.44183608889579773,
+      8.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "limitations": [
+    "Static pose only; no animations or lighting toggle.",
+    "Shadows remain baked when geometry moves.",
+    "View-dependent reflections are not preserved as dynamic reflections.",
+    "Not a pixel-identical substitute for the original Blender renderer."
+  ],
+  "seconds": 137.6,
+  "glb_bytes": 10639392,
+  "embedded_image_format": "JPEG, quality 92; lossless source atlas provided as PNG",
+  "scene_count": 1,
+  "mesh_count": 1,
+  "material_count": 1,
+  "camera_count": 1,
+  "animations": 0,
+  "lights": 0
+}

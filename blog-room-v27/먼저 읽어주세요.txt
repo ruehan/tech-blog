@@ -1,0 +1,96 @@
+개인 블로그 3D 에셋 — v27
+
+이번 폴더는 Blender 제작물을 웹으로 옮기기 위한 에셋 묶음입니다.
+웹 페이지, 클릭 이벤트, 글 목록, 화면 전환 코드는 아직 만들지 않았습니다.
+편집용 전체 원본은 ../blog-room-v26/blog-room-v26.blend에 그대로 있습니다.
+
+1. 어떤 파일을 쓰면 되나요?
+
+interactive/room.glb
+  블로그 메인에 사용할 방입니다. 책·모니터·심레이싱·음악 코너의
+  움직임과 카메라 접근 애니메이션, 베이스 줄의 변형이 들어 있습니다.
+  나무 색상과 노멀 텍스처는 GLB 내부에 포함되어 있습니다.
+
+interactive/manifest.json
+interactive/runtime-tracks.json
+  오브젝트 이름, 애니메이션 목록, 카메라, 조명 배치와 밝기,
+  화면·표시등 밝기의 시간별 값입니다.
+  JSON은 연결 정보를 담은 데이터이며, GLB 뷰어가 자동 실행하는 코드는 아닙니다.
+  조명 깜빡임·토글·화면 밝기 효과는 나중에 웹에서 이 값들을 연결해야 합니다.
+  자세한 사용 조건은 interactive/README-ko.txt를 참고하세요.
+
+worlds/computer-desktop.glb
+  모니터 안으로 진입했을 때 보이는 폴더·사진·코드 창의 3D 컴퓨터 세상입니다.
+
+worlds/apex-circuit.glb
+worlds/formula-car-animated.glb
+  고저차와 여러 코너가 있는 서킷, 그리드 차량, 별도의 플레이어 F1 차량입니다.
+  플레이어 차에는 바퀴 회전, 앞바퀴 조향, 스티어링 휠 회전이 들어 있습니다.
+  원래 스타팅 그리드 위치와 카메라 정보는 worlds/worlds-manifest.json에 있습니다.
+
+worlds/development-atelier-optional.glb
+  이전에 만들었던 개발 작업실 월드입니다. 선택적으로 쓸 수 있도록 보존했습니다.
+
+baked/room-baked-preview.glb
+  방의 조명과 그림자를 4K 텍스처에 구워 넣은 정적인 비교용 버전입니다.
+  외부 조명이 없어도 명암이 보이는 Unlit 재질입니다.
+  이 파일에는 클릭·호버·조명 토글 애니메이션이 없습니다.
+  4K 텍스처는 용량을 줄인 JPEG로 GLB 안에 포함했고, 원본 PNG도 함께 제공합니다.
+
+2. “렌더링된 상태의 GLB”가 가능한가요?
+
+가능한 방식은 베이크입니다. 표면의 색과 빛·그림자 계산 결과를 이미지로
+저장하고, 그 이미지를 3D 모델 표면에 입힙니다. 카메라는 움직여 볼 수 있지만
+그림자와 반사가 원래 조명 변화에 맞춰 다시 계산되는 것은 아닙니다.
+Blender 렌더 이미지, 후처리, 모든 조명 효과를 그대로 실행하는 파일은 아닙니다.
+
+이번 베이크 비교본은 AgX 색 변환을 텍스처에 한 번 적용했습니다.
+웹에서는 이 재질에 추가 톤 매핑을 적용하지 않고 sRGB로 출력해야
+같은 색감을 유지하기 쉽습니다. 기본 PBR 방에는 이 설정을 그대로 적용하지 마세요.
+
+책이 움직이거나 불을 껐다 켜는 현재 기획에는 interactive/room.glb가 기준입니다.
+벽·바닥 같은 고정 부분은 베이크하고, 책·모니터·표시등 같은 움직이는 부분은
+실시간 재질로 두는 혼합 방식이 다음 제작 단계에 적합합니다.
+이번 baked 파일은 그 방식을 결정하기 위한 전체 정적 비교본이며,
+혼합 방식의 최종 웹 구현은 아직 하지 않았습니다.
+
+3. Blender에서 확인하는 방법
+
+기존 애니메이션 전체:
+  ../blog-room-v26/blog-room-v26.blend를 엽니다.
+  상단 장면 목록에서 15_Room_Ambient_Idle을 선택합니다.
+  숫자 키패드 0으로 방 전체 카메라를 보고, Space로 재생합니다.
+  마지막 프레임 480은 방 전체가 보이는 정지 화면입니다.
+  숫자 키패드가 없으면 View > Cameras > Active Camera를 사용합니다.
+  F12는 현재 프레임 렌더, F11은 렌더 결과 보기입니다.
+
+베이크 결과:
+  baked/room-baked-preview.blend를 엽니다.
+  방 전체 카메라로 준비되어 있습니다. Material Preview에서 색과 명암을 봅니다.
+  F12로 결과를 확인할 수도 있습니다.
+
+GLB 자체 확인:
+  새 Blender 파일에서 File > Import > glTF 2.0으로 원하는 GLB를 불러옵니다.
+  기존 전체 원본에 덧붙여 불러오면 방이 중복되므로 새 파일에서 확인하세요.
+  PBR GLB는 조명 환경에 따라 달라 보이고, 베이크 GLB는 외부 조명 없이 보입니다.
+
+4. 웹 적용 시 남은 작업
+
+방만 먼저 불러오고, 모니터·서킷 월드는 진입 시 불러오는 구성이 좋습니다.
+클릭 대상과 카메라 이동을 연결하고, 책 위의 글 UI를 배치하는 작업은 웹 단계입니다.
+이 파일들은 정적인 부품을 합쳐 오브젝트 수를 줄였으나,
+최종 모바일 품질·로딩 속도는 실제 웹 화면에서 측정해야 합니다.
+회로·카본·타이어의 일부 미세한 절차적 요철은 표준 GLB에 포함되지 않았으며,
+각 월드 manifest에 해당 재질을 적었습니다. 원본 Blender에는 유지됩니다.
+
+5. 검증과 근거
+
+validation/에는 GLB 구조·텍스처 좌표·내장 이미지·애니메이션 검사와
+새 Blender 파일에 재수입한 결과가 있습니다. 공식 Khronos 인증은 아닙니다.
+
+Blender 베이크 설명:
+https://docs.blender.org/manual/en/latest/render/cycles/baking.html?highlight=bake
+Blender glTF 내보내기:
+https://docs.blender.org/manual/en/latest/addons/scene_gltf2.html
+Khronos Unlit 재질 명세:
+https://github.com/KhronosGroup/glTF/blob/main/extensions/2.0/Khronos/KHR_materials_unlit/README.md

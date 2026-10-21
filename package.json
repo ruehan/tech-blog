@@ -1,0 +1,30 @@
+{
+  "name": "hangyu-room",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "assets": "node scripts/prepare-assets.mjs",
+    "predev": "npm run assets",
+    "dev": "vite --host 127.0.0.1",
+    "build": "npm run assets && tsc --noEmit && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "test:browser": "playwright test"
+  },
+  "dependencies": {
+    "@react-three/drei": "^10.0.0",
+    "@react-three/fiber": "^9.8.2",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@types/three": "^0.186.0",
+    "typescript": "^6.0.3",
+    "vite": "^8.3.4"
+  }
+}

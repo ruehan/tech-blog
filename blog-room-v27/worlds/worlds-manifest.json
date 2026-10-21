@@ -1,0 +1,1640 @@
+{
+  "source": "C:\\Users\\rueha\\Documents\\Codex\\2026-10-19\\new-chat\\outputs\\blog-room-v26\\blog-room-v26.blend",
+  "format": "glTF 2.0 binary",
+  "coordinate_system": "+Y up; meters",
+  "assets": [
+    {
+      "node_count": 83,
+      "mesh_count": 51,
+      "primitive_count": 111,
+      "material_count": 32,
+      "image_count": 2,
+      "triangle_count": 212180,
+      "vertex_count": 252772,
+      "bounds_min_gltf_meters": [
+        -8.8,
+        -1.3,
+        -18.4
+      ],
+      "bounds_max_gltf_meters": [
+        8.8,
+        6.335,
+        6.0
+      ],
+      "dimensions_gltf_meters": [
+        17.6,
+        7.635,
+        24.4
+      ],
+      "root_nodes": [
+        "World_ComputerDesktop"
+      ],
+      "animations": [
+        {
+          "name": "DesktopAmbient",
+          "duration_seconds": 9.958333015441895,
+          "channel_count": 78,
+          "nodes": [
+            "Desktop | Code editor window",
+            "Desktop | Music mini player",
+            "Desktop | Music waveform 1",
+            "Desktop | Music waveform 10",
+            "Desktop | Music waveform 11",
+            "Desktop | Music waveform 12",
+            "Desktop | Music waveform 13",
+            "Desktop | Music waveform 14",
+            "Desktop | Music waveform 15",
+            "Desktop | Music waveform 16",
+            "Desktop | Music waveform 17",
+            "Desktop | Music waveform 18",
+            "Desktop | Music waveform 19",
+            "Desktop | Music waveform 2",
+            "Desktop | Music waveform 20",
+            "Desktop | Music waveform 21",
+            "Desktop | Music waveform 22",
+            "Desktop | Music waveform 3",
+            "Desktop | Music waveform 4",
+            "Desktop | Music waveform 5",
+            "Desktop | Music waveform 6",
+            "Desktop | Music waveform 7",
+            "Desktop | Music waveform 8",
+            "Desktop | Music waveform 9",
+            "Desktop | Photos window",
+            "Desktop | Pixel photo window"
+          ]
+        },
+        {
+          "name": "DesktopFolderOpen",
+          "duration_seconds": 2.5,
+          "channel_count": 6,
+          "nodes": [
+            "Desktop | Projects front hinge",
+            "Desktop | Projects raised sheets"
+          ]
+        }
+      ],
+      "bytes": 11318936,
+      "embedded_images_only": true,
+      "node_names": [
+        "Desktop | Archive floating file / Geometry",
+        "Desktop | Archive floating file",
+        "Desktop | Archive folder / Geometry",
+        "Desktop | Archive front hinge / Geometry",
+        "Desktop | Archive front hinge",
+        "Desktop | Archive document sheet 1",
+        "Desktop | Archive sheet control 1",
+        "Desktop | Archive document sheet 2",
+        "Desktop | Archive sheet control 2",
+        "Desktop | Archive sheet control 3 / Geometry",
+        "Desktop | Archive sheet control 3",
+        "Desktop | Archive raised sheets",
+        "Desktop | Archive folder",
+        "Desktop | Code editor window / Geometry",
+        "Desktop | Code editor window",
+        "Desktop | Far desktop address chrome / Geometry",
+        "Desktop | Far desktop address chrome",
+        "Desktop | Music folder / Geometry",
+        "Desktop | Music front hinge / Geometry",
+        "Desktop | Music front hinge",
+        "Desktop | Music document sheet 1",
+        "Desktop | Music sheet control 1",
+        "Desktop | Music document sheet 2",
+        "Desktop | Music sheet control 2",
+        "Desktop | Music sheet control 3 / Geometry",
+        "Desktop | Music sheet control 3",
+        "Desktop | Music raised sheets",
+        "Desktop | Music folder",
+        "Desktop | Music mini player / Geometry",
+        "Desktop | Music waveform 1",
+        "Desktop | Music waveform 2",
+        "Desktop | Music waveform 3",
+        "Desktop | Music waveform 4",
+        "Desktop | Music waveform 5",
+        "Desktop | Music waveform 6",
+        "Desktop | Music waveform 7",
+        "Desktop | Music waveform 8",
+        "Desktop | Music waveform 9",
+        "Desktop | Music waveform 10",
+        "Desktop | Music waveform 11",
+        "Desktop | Music waveform 12",
+        "Desktop | Music waveform 13",
+        "Desktop | Music waveform 14",
+        "Desktop | Music waveform 15",
+        "Desktop | Music waveform 16",
+        "Desktop | Music waveform 17",
+        "Desktop | Music waveform 18",
+        "Desktop | Music waveform 19",
+        "Desktop | Music waveform 20",
+        "Desktop | Music waveform 21",
+        "Desktop | Music waveform 22",
+        "Desktop | Music mini player",
+        "Desktop | Dock Code icon / Geometry",
+        "Desktop | Dock Code icon",
+        "Desktop | Dock Files icon / Geometry",
+        "Desktop | Dock Files icon",
+        "Desktop | Dock Images icon / Geometry",
+        "Desktop | Dock Images icon",
+        "Desktop | Dock Music icon / Geometry",
+        "Desktop | Dock Music icon",
+        "Desktop | Dock Trash icon / Geometry",
+        "Desktop | Dock Trash icon",
+        "Desktop | Operating system dock / Geometry",
+        "Desktop | Operating system dock",
+        "Desktop | Photos window / Geometry",
+        "Desktop | Photos window",
+        "Desktop | Pixel photo window / Geometry",
+        "Desktop | Pixel photo window",
+        "Desktop | Projects folder / Geometry",
+        "Desktop | Projects front hinge / Geometry",
+        "Desktop | Projects front hinge",
+        "Desktop | Projects document sheet 1",
+        "Desktop | Projects sheet control 1",
+        "Desktop | Projects document sheet 2",
+        "Desktop | Projects sheet control 2",
+        "Desktop | Projects sheet control 3 / Geometry",
+        "Desktop | Projects sheet control 3",
+        "Desktop | Projects raised sheets",
+        "Desktop | Projects folder",
+        "Desktop | Readme floating file / Geometry",
+        "Desktop | Readme floating file",
+        "World_ComputerDesktop / Geometry",
+        "World_ComputerDesktop"
+      ],
+      "extensions_used": [
+        "KHR_materials_clearcoat"
+      ],
+      "file": "computer-desktop.glb",
+      "source_scene": "04_Computer_Desktop_Portal",
+      "source_root": "World_ComputerDesktop",
+      "source_origin_blender_meters": [
+        100.0,
+        0.0,
+        0.0
+      ],
+      "source_objects": 215,
+      "converted_curves_and_fonts": 53,
+      "static_mesh_reduction": 132,
+      "interactive_nodes": [
+        {
+          "node": "Desktop | Code editor window",
+          "interaction_id": "desktop.editor",
+          "role": "window_control"
+        },
+        {
+          "node": "Desktop | Music mini player",
+          "interaction_id": "desktop.music",
+          "role": "window_control"
+        },
+        {
+          "node": "Desktop | Photos window",
+          "interaction_id": "desktop.photos",
+          "role": "window_control"
+        },
+        {
+          "node": "Desktop | Pixel photo window",
+          "interaction_id": "desktop.pixel-photo",
+          "role": "window_control"
+        },
+        {
+          "node": "Desktop | Music waveform 1",
+          "interaction_id": "desktop.music",
+          "role": "window_mesh"
+        },
+        {
+          "node": "Desktop | Music waveform 10",
+          "interaction_id": "desktop.music",
+          "role": "window_mesh"
+        },
+        {
+          "node": "Desktop | Music waveform 11",
+          "interaction_id": "desktop.music",
+          "role": "window_mesh"
+        },
+        {
+          "node": "Desktop | Music waveform 12",
+          "interaction_id": "desktop.music",
+          "role": "window_mesh"
+        },
+        {
+          "node": "Desktop | Music waveform 13",
+          "interaction_id": "desktop.music",
+          "role": "window_mesh"
+        },
+        {
+          "node": "Desktop | Music waveform 14",
+          "interaction_id": "desktop.music",
+          "role": "window_mesh"
+        },
+        {
+          "node": "Desktop | Music waveform 15",
+          "interaction_id": "desktop.music",
+          "role": "window_mesh"
+        },
+        {
+          "node": "Desktop | Music waveform 16",
+          "interaction_id": "desktop.music",
+          "role": "window_mesh"
+        },
+        {
+          "node": "Desktop | Music waveform 17",
+          "interaction_id": "desktop.music",
+          "role": "window_mesh"
+        },
+        {
+          "node": "Desktop | Music waveform 18",
+          "interaction_id": "desktop.music",
+          "role": "window_mesh"
+        },
+        {
+          "node": "Desktop | Music waveform 19",
+          "interaction_id": "desktop.music",
+          "role": "window_mesh"
+        },
+        {
+          "node": "Desktop | Music waveform 2",
+          "interaction_id": "desktop.music",
+          "role": "window_mesh"
+        },
+        {
+          "node": "Desktop | Music waveform 20",
+          "interaction_id": "desktop.music",
+          "role": "window_mesh"
+        },
+        {
+          "node": "Desktop | Music waveform 21",
+          "interaction_id": "desktop.music",
+          "role": "window_mesh"
+        },
+        {
+          "node": "Desktop | Music waveform 22",
+          "interaction_id": "desktop.music",
+          "role": "window_mesh"
+        },
+        {
+          "node": "Desktop | Music waveform 3",
+          "interaction_id": "desktop.music",
+          "role": "window_mesh"
+        },
+        {
+          "node": "Desktop | Music waveform 4",
+          "interaction_id": "desktop.music",
+          "role": "window_mesh"
+        },
+        {
+          "node": "Desktop | Music waveform 5",
+          "interaction_id": "desktop.music",
+          "role": "window_mesh"
+        },
+        {
+          "node": "Desktop | Music waveform 6",
+          "interaction_id": "desktop.music",
+          "role": "window_mesh"
+        },
+        {
+          "node": "Desktop | Music waveform 7",
+          "interaction_id": "desktop.music",
+          "role": "window_mesh"
+        },
+        {
+          "node": "Desktop | Music waveform 8",
+          "interaction_id": "desktop.music",
+          "role": "window_mesh"
+        },
+        {
+          "node": "Desktop | Music waveform 9",
+          "interaction_id": "desktop.music",
+          "role": "window_mesh"
+        }
+      ],
+      "clip_definitions": [
+        {
+          "name": "DesktopAmbient",
+          "start": 121,
+          "end": 360,
+          "loop": true
+        },
+        {
+          "name": "DesktopFolderOpen",
+          "start": 150,
+          "end": 210,
+          "loop": false
+        }
+      ],
+      "source_lights": [
+        {
+          "name": "Desktop | Large soft desktop key",
+          "type": "AREA",
+          "matrix_blender_local": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.9138115644454956,
+              -0.40613844990730286,
+              3.0
+            ],
+            [
+              0.0,
+              0.40613844990730286,
+              0.9138115644454956,
+              9.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "energy": 1600.0,
+          "color_linear": [
+            0.9200000166893005,
+            0.9599999785423279,
+            1.0
+          ],
+          "shape": "DISK",
+          "size": 7.0
+        },
+        {
+          "name": "Desktop | Folder warm pool",
+          "type": "AREA",
+          "matrix_blender_local": [
+            [
+              0.7808687686920166,
+              0.6051611304283142,
+              -0.1549968421459198,
+              -5.0
+            ],
+            [
+              -0.6246951222419739,
+              0.7564512491226196,
+              -0.19374607503414154,
+              5.0
+            ],
+            [
+              -2.9875202756102226e-08,
+              0.24811603128910065,
+              0.9687303304672241,
+              6.199999809265137
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "energy": 850.0,
+          "color_linear": [
+            1.0,
+            0.9100000262260437,
+            0.800000011920929
+          ],
+          "shape": "DISK",
+          "size": 4.5
+        },
+        {
+          "name": "Desktop | Image area cool fill",
+          "type": "AREA",
+          "matrix_blender_local": [
+            [
+              0.5547000765800476,
+              -0.7827271223068237,
+              0.2822163701057434,
+              5.599998474121094
+            ],
+            [
+              0.8320503830909729,
+              0.5218179225921631,
+              -0.18814419209957123,
+              7.0
+            ],
+            [
+              -2.9899784870224266e-09,
+              0.3391818404197693,
+              0.9407208561897278,
+              7.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "energy": 1000.0,
+          "color_linear": [
+            0.7799999713897705,
+            0.8899999856948853,
+            1.0
+          ],
+          "shape": "DISK",
+          "size": 5.0
+        },
+        {
+          "name": "Desktop | Front icon fill",
+          "type": "AREA",
+          "matrix_blender_local": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.5744257569313049,
+              -0.8185566663742065,
+              -2.700000047683716
+            ],
+            [
+              0.0,
+              0.8185566663742065,
+              0.5744257569313049,
+              5.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "energy": 650.0,
+          "color_linear": [
+            0.9599999785423279,
+            0.9800000190734863,
+            1.0
+          ],
+          "shape": "DISK",
+          "size": 5.0
+        },
+        {
+          "name": "Desktop | Far interface fill",
+          "type": "AREA",
+          "matrix_blender_local": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.847998321056366,
+              -0.5299988985061646,
+              12.0
+            ],
+            [
+              0.0,
+              0.5299988985061646,
+              0.847998321056366,
+              8.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "energy": 800.0,
+          "color_linear": [
+            0.8899999856948853,
+            0.949999988079071,
+            1.0
+          ],
+          "shape": "DISK",
+          "size": 5.0
+        }
+      ],
+      "source_cameras": [
+        {
+          "name": "DesktopPortal_InsideCamera",
+          "matrix_blender_local": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              -1.0,
+              -8.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              2.799999952316284
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "lens_mm": 38.0,
+          "sensor_width_mm": 36.0,
+          "sensor_height_mm": 24.0,
+          "sensor_fit": "VERTICAL",
+          "vertical_fov_radians": 0.6117576956748962
+        }
+      ],
+      "procedural_micro_bump_omitted": [],
+      "material_animations_for_later_runtime_connection": [],
+      "material_animation_exported": false,
+      "excluded_roots": [],
+      "background_domes_excluded": true
+    },
+    {
+      "node_count": 47,
+      "mesh_count": 31,
+      "primitive_count": 65,
+      "material_count": 28,
+      "image_count": 4,
+      "triangle_count": 57183,
+      "vertex_count": 81516,
+      "bounds_min_gltf_meters": [
+        -6.1,
+        -0.84,
+        -13.6
+      ],
+      "bounds_max_gltf_meters": [
+        6.1,
+        5.68,
+        0.089
+      ],
+      "dimensions_gltf_meters": [
+        12.2,
+        6.52,
+        13.689
+      ],
+      "root_nodes": [
+        "World_DevelopmentAtelier.001"
+      ],
+      "animations": [
+        {
+          "name": "AtelierLab",
+          "duration_seconds": 8.958333015441895,
+          "channel_count": 96,
+          "nodes": [
+            "Atelier | Data packet main branch.001",
+            "Atelier | Data packet study branch.001",
+            "LAB | BUILD Progress Control",
+            "LAB | BUILD Step",
+            "LAB | BUILD caption",
+            "LAB | BUILD empty track",
+            "LAB | BUILD label",
+            "LAB | BUILD number",
+            "LAB | BUILD progress light",
+            "LAB | Experiment Branch Control",
+            "LAB | MERGE Progress Control",
+            "LAB | MERGE Step",
+            "LAB | MERGE caption",
+            "LAB | MERGE empty track",
+            "LAB | MERGE label",
+            "LAB | MERGE number",
+            "LAB | MERGE progress light",
+            "LAB | Pipeline Status Control",
+            "LAB | Pipeline brass side -1",
+            "LAB | Pipeline brass side 1",
+            "LAB | Pipeline heading",
+            "LAB | Pipeline machined housing",
+            "LAB | Pipeline recessed face",
+            "LAB | Pipeline subtitle",
+            "LAB | Study Branch Control",
+            "LAB | TEST Progress Control",
+            "LAB | TEST Step",
+            "LAB | TEST caption",
+            "LAB | TEST empty track",
+            "LAB | TEST label",
+            "LAB | TEST number",
+            "LAB | TEST progress light"
+          ]
+        },
+        {
+          "name": "AtelierNotes",
+          "duration_seconds": 8.958333015441895,
+          "channel_count": 9,
+          "nodes": [
+            "World_DevelopmentAtelier.001 | Interaction | NOTES companion reveal",
+            "World_DevelopmentAtelier.001 | Interaction | NOTES companion slip",
+            "World_DevelopmentAtelier.001 | Interaction | NOTES reading sheet"
+          ]
+        },
+        {
+          "name": "AtelierProjects",
+          "duration_seconds": 8.958333015441895,
+          "channel_count": 9,
+          "nodes": [
+            "World_DevelopmentAtelier.001 | Interaction | PROJECTS physical frame reveal",
+            "World_DevelopmentAtelier.001 | Interaction | PROJECTS pullout",
+            "World_DevelopmentAtelier.001 | Interaction | PROJECTS secondary leaf hinge"
+          ]
+        }
+      ],
+      "bytes": 5100660,
+      "embedded_images_only": true,
+      "node_names": [
+        "Atelier | Data packet main branch.001",
+        "LAB | Experiment Branch Control / Geometry",
+        "LAB | Experiment Branch Control",
+        "LAB | BUILD caption",
+        "LAB | BUILD empty track",
+        "LAB | BUILD label",
+        "LAB | BUILD number",
+        "LAB | BUILD progress light",
+        "LAB | BUILD Progress Control",
+        "LAB | BUILD Step",
+        "LAB | MERGE caption",
+        "LAB | MERGE empty track",
+        "LAB | MERGE label",
+        "LAB | MERGE number",
+        "LAB | MERGE progress light",
+        "LAB | MERGE Progress Control",
+        "LAB | MERGE Step",
+        "LAB | Pipeline brass side 1",
+        "LAB | Pipeline brass side -1",
+        "LAB | Pipeline heading",
+        "LAB | Pipeline machined housing",
+        "LAB | Pipeline recessed face",
+        "LAB | Pipeline subtitle",
+        "LAB | TEST caption",
+        "LAB | TEST empty track",
+        "LAB | TEST label",
+        "LAB | TEST number",
+        "LAB | TEST progress light",
+        "LAB | TEST Progress Control",
+        "LAB | TEST Step",
+        "LAB | Pipeline Status Control",
+        "Atelier | Data packet study branch.001",
+        "LAB | Study Branch Control / Geometry",
+        "LAB | Study Branch Control",
+        "World_DevelopmentAtelier.001 | Interaction | NOTES companion slip / Geometry",
+        "World_DevelopmentAtelier.001 | Interaction | NOTES companion slip",
+        "World_DevelopmentAtelier.001 | Interaction | NOTES companion reveal",
+        "World_DevelopmentAtelier.001 | Interaction | NOTES reading sheet / Geometry",
+        "World_DevelopmentAtelier.001 | Interaction | NOTES reading sheet",
+        "World_DevelopmentAtelier.001 | Interaction | PROJECTS physical frame reveal / Geometry",
+        "World_DevelopmentAtelier.001 | Interaction | PROJECTS secondary leaf hinge / Geometry",
+        "World_DevelopmentAtelier.001 | Interaction | PROJECTS secondary leaf hinge",
+        "World_DevelopmentAtelier.001 | Interaction | PROJECTS physical frame reveal",
+        "World_DevelopmentAtelier.001 | Interaction | PROJECTS pullout / Geometry",
+        "World_DevelopmentAtelier.001 | Interaction | PROJECTS pullout",
+        "World_DevelopmentAtelier.001 / Geometry",
+        "World_DevelopmentAtelier.001"
+      ],
+      "extensions_used": [],
+      "file": "development-atelier-optional.glb",
+      "source_scene": "03_Atelier_Interactions",
+      "source_root": "World_DevelopmentAtelier.001",
+      "source_origin_blender_meters": [
+        60.0,
+        0.0,
+        0.0
+      ],
+      "source_objects": 295,
+      "converted_curves_and_fonts": 54,
+      "static_mesh_reduction": 248,
+      "interactive_nodes": [
+        {
+          "node": "LAB | Experiment Branch Control",
+          "interaction_id": "lab",
+          "role": "branch_experiment"
+        },
+        {
+          "node": "LAB | Pipeline Status Control",
+          "interaction_id": "lab",
+          "role": "status_card"
+        },
+        {
+          "node": "LAB | Study Branch Control",
+          "interaction_id": "lab",
+          "role": "branch_study"
+        },
+        {
+          "node": "World_DevelopmentAtelier.001 | Interaction | NOTES reading sheet",
+          "interaction_id": "notes",
+          "role": ""
+        },
+        {
+          "node": "World_DevelopmentAtelier.001 | Interaction | PROJECTS pullout",
+          "interaction_id": "projects",
+          "role": ""
+        },
+        {
+          "node": "Atelier | Data packet main branch.001",
+          "interaction_id": "lab",
+          "role": "pipeline_pulse_experiment"
+        },
+        {
+          "node": "Atelier | Data packet study branch.001",
+          "interaction_id": "lab",
+          "role": "pipeline_pulse_study"
+        },
+        {
+          "node": "LAB | BUILD Step",
+          "interaction_id": "lab",
+          "role": "pipeline_step_build"
+        },
+        {
+          "node": "LAB | MERGE Step",
+          "interaction_id": "lab",
+          "role": "pipeline_step_merge"
+        },
+        {
+          "node": "LAB | Pipeline brass side -1",
+          "interaction_id": "lab",
+          "role": "Pipeline brass side -1"
+        },
+        {
+          "node": "LAB | Pipeline brass side 1",
+          "interaction_id": "lab",
+          "role": "Pipeline brass side 1"
+        },
+        {
+          "node": "LAB | Pipeline heading",
+          "interaction_id": "lab",
+          "role": "Pipeline heading"
+        },
+        {
+          "node": "LAB | Pipeline machined housing",
+          "interaction_id": "lab",
+          "role": "Pipeline machined housing"
+        },
+        {
+          "node": "LAB | Pipeline recessed face",
+          "interaction_id": "lab",
+          "role": "Pipeline recessed face"
+        },
+        {
+          "node": "LAB | Pipeline subtitle",
+          "interaction_id": "lab",
+          "role": "Pipeline subtitle"
+        },
+        {
+          "node": "LAB | TEST Step",
+          "interaction_id": "lab",
+          "role": "pipeline_step_test"
+        },
+        {
+          "node": "World_DevelopmentAtelier.001 | Interaction | NOTES companion reveal",
+          "interaction_id": "notes",
+          "role": ""
+        },
+        {
+          "node": "World_DevelopmentAtelier.001 | Interaction | PROJECTS physical frame reveal",
+          "interaction_id": "projects",
+          "role": ""
+        },
+        {
+          "node": "LAB | BUILD Progress Control",
+          "interaction_id": "lab",
+          "role": "progress_build"
+        },
+        {
+          "node": "LAB | BUILD caption",
+          "interaction_id": "lab",
+          "role": "BUILD caption"
+        },
+        {
+          "node": "LAB | BUILD empty track",
+          "interaction_id": "lab",
+          "role": "BUILD empty track"
+        },
+        {
+          "node": "LAB | BUILD label",
+          "interaction_id": "lab",
+          "role": "BUILD label"
+        },
+        {
+          "node": "LAB | BUILD number",
+          "interaction_id": "lab",
+          "role": "BUILD number"
+        },
+        {
+          "node": "LAB | MERGE Progress Control",
+          "interaction_id": "lab",
+          "role": "progress_merge"
+        },
+        {
+          "node": "LAB | MERGE caption",
+          "interaction_id": "lab",
+          "role": "MERGE caption"
+        },
+        {
+          "node": "LAB | MERGE empty track",
+          "interaction_id": "lab",
+          "role": "MERGE empty track"
+        },
+        {
+          "node": "LAB | MERGE label",
+          "interaction_id": "lab",
+          "role": "MERGE label"
+        },
+        {
+          "node": "LAB | MERGE number",
+          "interaction_id": "lab",
+          "role": "MERGE number"
+        },
+        {
+          "node": "LAB | TEST Progress Control",
+          "interaction_id": "lab",
+          "role": "progress_test"
+        },
+        {
+          "node": "LAB | TEST caption",
+          "interaction_id": "lab",
+          "role": "TEST caption"
+        },
+        {
+          "node": "LAB | TEST empty track",
+          "interaction_id": "lab",
+          "role": "TEST empty track"
+        },
+        {
+          "node": "LAB | TEST label",
+          "interaction_id": "lab",
+          "role": "TEST label"
+        },
+        {
+          "node": "LAB | TEST number",
+          "interaction_id": "lab",
+          "role": "TEST number"
+        },
+        {
+          "node": "World_DevelopmentAtelier.001 | Interaction | NOTES companion slip",
+          "interaction_id": "notes",
+          "role": ""
+        },
+        {
+          "node": "World_DevelopmentAtelier.001 | Interaction | PROJECTS secondary leaf hinge",
+          "interaction_id": "projects",
+          "role": ""
+        },
+        {
+          "node": "LAB | BUILD progress light",
+          "interaction_id": "lab",
+          "role": "BUILD progress light"
+        },
+        {
+          "node": "LAB | MERGE progress light",
+          "interaction_id": "lab",
+          "role": "MERGE progress light"
+        },
+        {
+          "node": "LAB | TEST progress light",
+          "interaction_id": "lab",
+          "role": "TEST progress light"
+        }
+      ],
+      "clip_definitions": [
+        {
+          "name": "AtelierProjects",
+          "start": 1,
+          "end": 216,
+          "loop": false
+        },
+        {
+          "name": "AtelierLab",
+          "start": 217,
+          "end": 432,
+          "loop": false
+        },
+        {
+          "name": "AtelierNotes",
+          "start": 433,
+          "end": 648,
+          "loop": false
+        }
+      ],
+      "source_lights": [
+        {
+          "name": "Atelier | Entrance soft key.001",
+          "type": "AREA",
+          "matrix_blender_local": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.7241378426551819,
+              -0.6896552443504333,
+              1.0
+            ],
+            [
+              0.0,
+              0.6896552443504333,
+              0.7241378426551819,
+              6.650000095367432
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "energy": 1000.0,
+          "color_linear": [
+            1.0,
+            0.8600000143051147,
+            0.699999988079071
+          ],
+          "shape": "DISK",
+          "size": 6.0
+        },
+        {
+          "name": "Atelier | Projects warm pool.001",
+          "type": "AREA",
+          "matrix_blender_local": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              -3.799999237060547
+            ],
+            [
+              0.0,
+              0.9607142210006714,
+              -0.27753958106040955,
+              3.799999952316284
+            ],
+            [
+              0.0,
+              0.27753958106040955,
+              0.9607142210006714,
+              5.800000190734863
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "energy": 750.0,
+          "color_linear": [
+            1.0,
+            0.8500000238418579,
+            0.6700000166893005
+          ],
+          "shape": "DISK",
+          "size": 3.799999952316284
+        },
+        {
+          "name": "Atelier | Lab soft cool pool.001",
+          "type": "AREA",
+          "matrix_blender_local": [
+            [
+              0.5812380909919739,
+              -0.7998674511909485,
+              0.1495807021856308,
+              4.5
+            ],
+            [
+              0.8137335777282715,
+              0.5713337063789368,
+              -0.1068434864282608,
+              5.300000190734863
+            ],
+            [
+              1.3136140353253722e-07,
+              0.18382033705711365,
+              0.9829598665237427,
+              6.300000190734863
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "energy": 780.0,
+          "color_linear": [
+            0.7599999904632568,
+            0.8899999856948853,
+            1.0
+          ],
+          "shape": "DISK",
+          "size": 4.199999809265137
+        },
+        {
+          "name": "Atelier | Notes reading pool.001",
+          "type": "AREA",
+          "matrix_blender_local": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.8741573095321655,
+              -0.4856429100036621,
+              10.0
+            ],
+            [
+              0.0,
+              0.4856429100036621,
+              0.8741573095321655,
+              6.099999904632568
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "energy": 700.0,
+          "color_linear": [
+            1.0,
+            0.8799999952316284,
+            0.7300000190734863
+          ],
+          "shape": "DISK",
+          "size": 4.800000190734863
+        },
+        {
+          "name": "Atelier | Rear teal reflection.001",
+          "type": "AREA",
+          "matrix_blender_local": [
+            [
+              -1.0,
+              -1.3163352718947863e-07,
+              1.0976464182022028e-07,
+              0.0
+            ],
+            [
+              1.5099580252808664e-07,
+              -0.3736107647418976,
+              0.9275855422019958,
+              13.899999618530273
+            ],
+            [
+              -8.10921036986656e-08,
+              0.9275855422019958,
+              0.3736107647418976,
+              4.900000095367432
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "energy": 450.0,
+          "color_linear": [
+            0.5899999737739563,
+            0.8799999952316284,
+            0.8299999833106995
+          ],
+          "shape": "DISK",
+          "size": 4.5
+        }
+      ],
+      "source_cameras": [
+        {
+          "name": "Camera_AtelierInteractions",
+          "matrix_blender_local": [
+            [
+              0.9939944744110107,
+              -0.04310953989624977,
+              0.10058148950338364,
+              1.0
+            ],
+            [
+              0.10943065583705902,
+              0.3915780484676361,
+              -0.9136145710945129,
+              -3.5
+            ],
+            [
+              0.0,
+              0.9191344976425171,
+              0.3939439058303833,
+              6.599999904632568
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "lens_mm": 24.0,
+          "sensor_width_mm": 36.0,
+          "sensor_height_mm": 24.0,
+          "sensor_fit": "VERTICAL",
+          "vertical_fov_radians": 0.9272952079772949
+        }
+      ],
+      "procedural_micro_bump_omitted": [],
+      "material_animations_for_later_runtime_connection": [],
+      "material_animation_exported": false,
+      "excluded_roots": [],
+      "background_domes_excluded": true
+    },
+    {
+      "node_count": 22,
+      "mesh_count": 16,
+      "primitive_count": 62,
+      "material_count": 57,
+      "image_count": 0,
+      "triangle_count": 451244,
+      "vertex_count": 357767,
+      "bounds_min_gltf_meters": [
+        -245.0,
+        -0.14238,
+        -300.0
+      ],
+      "bounds_max_gltf_meters": [
+        65.0,
+        22.17791,
+        110.0
+      ],
+      "dimensions_gltf_meters": [
+        310.0,
+        22.32029,
+        410.0
+      ],
+      "root_nodes": [
+        "Circuit | APEX PARK"
+      ],
+      "animations": [],
+      "bytes": 12676712,
+      "embedded_images_only": true,
+      "node_names": [
+        "Circuit | APEX PARK / Geometry",
+        "Circuit | Red signal lens 1-1",
+        "Circuit | Red signal lens 1-2",
+        "Circuit | Red signal lens 2-1",
+        "Circuit | Red signal lens 2-2",
+        "Circuit | Red signal lens 3-1",
+        "Circuit | Red signal lens 3-2",
+        "Circuit | Red signal lens 4-1",
+        "Circuit | Red signal lens 4-2",
+        "Circuit | Red signal lens 5-1",
+        "Circuit | Red signal lens 5-2",
+        "GridCar_01 / Geometry",
+        "GridCar_01",
+        "GridCar_02 / Geometry",
+        "GridCar_02",
+        "GridCar_03 / Geometry",
+        "GridCar_03",
+        "GridCar_04 / Geometry",
+        "GridCar_04",
+        "GridCar_05 / Geometry",
+        "GridCar_05",
+        "Circuit | APEX PARK"
+      ],
+      "extensions_used": [
+        "KHR_materials_clearcoat"
+      ],
+      "file": "apex-circuit.glb",
+      "source_scene": "05_Starting_Grid_Portal",
+      "source_root": "Circuit | APEX PARK",
+      "source_origin_blender_meters": [
+        600.0,
+        0.0,
+        0.0
+      ],
+      "source_objects": 1313,
+      "converted_curves_and_fonts": 125,
+      "static_mesh_reduction": 1291,
+      "interactive_nodes": [],
+      "clip_definitions": [],
+      "source_lights": [],
+      "source_cameras": [
+        {
+          "name": "RacingPortal_CockpitCamera",
+          "matrix_blender_local": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              -3.0
+            ],
+            [
+              0.0,
+              0.0,
+              -1.0,
+              0.10000000149011612
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              0.8500000238418579
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "lens_mm": 26.0,
+          "sensor_width_mm": 36.0,
+          "sensor_height_mm": 24.0,
+          "sensor_fit": "VERTICAL",
+          "vertical_fov_radians": 0.8648155331611633
+        }
+      ],
+      "procedural_micro_bump_omitted": [
+        "Circuit | Fine rough asphalt",
+        "GridCar_01 | carbon composite",
+        "GridCar_02 | carbon composite",
+        "GridCar_03 | carbon composite",
+        "GridCar_04 | carbon composite",
+        "GridCar_05 | carbon composite"
+      ],
+      "material_animations_for_later_runtime_connection": [
+        {
+          "material": "Circuit | Red start pair 1",
+          "action": "GridStart_Pair_01_Red",
+          "affected_objects": [
+            "Circuit | Red signal lens 1-1",
+            "Circuit | Red signal lens 1-2"
+          ],
+          "curves": [
+            {
+              "path": "nodes[\"Principled BSDF\"].inputs[29].default_value",
+              "index": 0,
+              "keys": [
+                [
+                  1.0,
+                  0.0,
+                  "CONSTANT"
+                ],
+                [
+                  121.0,
+                  0.0,
+                  "CONSTANT"
+                ],
+                [
+                  122.0,
+                  0.0,
+                  "CONSTANT"
+                ],
+                [
+                  179.0,
+                  0.0,
+                  "CONSTANT"
+                ],
+                [
+                  180.0,
+                  4.0,
+                  "CONSTANT"
+                ],
+                [
+                  360.0,
+                  4.0,
+                  "CONSTANT"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "material": "Circuit | Red start pair 2",
+          "action": "GridStart_Pair_02_Red",
+          "affected_objects": [
+            "Circuit | Red signal lens 2-1",
+            "Circuit | Red signal lens 2-2"
+          ],
+          "curves": [
+            {
+              "path": "nodes[\"Principled BSDF\"].inputs[29].default_value",
+              "index": 0,
+              "keys": [
+                [
+                  1.0,
+                  0.0,
+                  "CONSTANT"
+                ],
+                [
+                  121.0,
+                  0.0,
+                  "CONSTANT"
+                ],
+                [
+                  122.0,
+                  0.0,
+                  "CONSTANT"
+                ],
+                [
+                  203.0,
+                  0.0,
+                  "CONSTANT"
+                ],
+                [
+                  204.0,
+                  4.0,
+                  "CONSTANT"
+                ],
+                [
+                  360.0,
+                  4.0,
+                  "CONSTANT"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "material": "Circuit | Red start pair 3",
+          "action": "GridStart_Pair_03_Red",
+          "affected_objects": [
+            "Circuit | Red signal lens 3-1",
+            "Circuit | Red signal lens 3-2"
+          ],
+          "curves": [
+            {
+              "path": "nodes[\"Principled BSDF\"].inputs[29].default_value",
+              "index": 0,
+              "keys": [
+                [
+                  1.0,
+                  0.0,
+                  "CONSTANT"
+                ],
+                [
+                  121.0,
+                  0.0,
+                  "CONSTANT"
+                ],
+                [
+                  122.0,
+                  0.0,
+                  "CONSTANT"
+                ],
+                [
+                  227.0,
+                  0.0,
+                  "CONSTANT"
+                ],
+                [
+                  228.0,
+                  4.0,
+                  "CONSTANT"
+                ],
+                [
+                  360.0,
+                  4.0,
+                  "CONSTANT"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "material": "Circuit | Red start pair 4",
+          "action": "GridStart_Pair_04_Red",
+          "affected_objects": [
+            "Circuit | Red signal lens 4-1",
+            "Circuit | Red signal lens 4-2"
+          ],
+          "curves": [
+            {
+              "path": "nodes[\"Principled BSDF\"].inputs[29].default_value",
+              "index": 0,
+              "keys": [
+                [
+                  1.0,
+                  0.0,
+                  "CONSTANT"
+                ],
+                [
+                  121.0,
+                  0.0,
+                  "CONSTANT"
+                ],
+                [
+                  122.0,
+                  0.0,
+                  "CONSTANT"
+                ],
+                [
+                  251.0,
+                  0.0,
+                  "CONSTANT"
+                ],
+                [
+                  252.0,
+                  4.0,
+                  "CONSTANT"
+                ],
+                [
+                  360.0,
+                  4.0,
+                  "CONSTANT"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "material": "Circuit | Red start pair 5",
+          "action": "GridStart_Pair_05_Red",
+          "affected_objects": [
+            "Circuit | Red signal lens 5-1",
+            "Circuit | Red signal lens 5-2"
+          ],
+          "curves": [
+            {
+              "path": "nodes[\"Principled BSDF\"].inputs[29].default_value",
+              "index": 0,
+              "keys": [
+                [
+                  1.0,
+                  0.0,
+                  "CONSTANT"
+                ],
+                [
+                  121.0,
+                  0.0,
+                  "CONSTANT"
+                ],
+                [
+                  122.0,
+                  0.0,
+                  "CONSTANT"
+                ],
+                [
+                  275.0,
+                  0.0,
+                  "CONSTANT"
+                ],
+                [
+                  276.0,
+                  4.0,
+                  "CONSTANT"
+                ],
+                [
+                  360.0,
+                  4.0,
+                  "CONSTANT"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "material_animation_exported": false,
+      "excluded_roots": [
+        "PlayerFormulaCar"
+      ],
+      "background_domes_excluded": true
+    },
+    {
+      "clips": [
+        {
+          "name": "SteeringWheel",
+          "duration_seconds": 3.0,
+          "loop_endpoints_match": true,
+          "channels": [
+            {
+              "node": "Steering_Wheel_Control",
+              "path": "rotation",
+              "samples": 73,
+              "maximum_rotation_from_rest_degrees": 60.0
+            }
+          ]
+        },
+        {
+          "name": "FrontSteer",
+          "duration_seconds": 3.0,
+          "loop_endpoints_match": true,
+          "channels": [
+            {
+              "node": "Wheel_FL_Steer",
+              "path": "rotation",
+              "samples": 73,
+              "maximum_rotation_from_rest_degrees": 20.0
+            },
+            {
+              "node": "Wheel_FR_Steer",
+              "path": "rotation",
+              "samples": 73,
+              "maximum_rotation_from_rest_degrees": 20.0
+            }
+          ]
+        },
+        {
+          "name": "WheelSpin",
+          "duration_seconds": 1.0,
+          "loop_endpoints_match": true,
+          "channels": [
+            {
+              "node": "Wheel_FL_Spin",
+              "path": "rotation",
+              "samples": 25,
+              "maximum_rotation_from_rest_degrees": 180.0
+            },
+            {
+              "node": "Wheel_FR_Spin",
+              "path": "rotation",
+              "samples": 25,
+              "maximum_rotation_from_rest_degrees": 180.0
+            },
+            {
+              "node": "Wheel_RL_Spin",
+              "path": "rotation",
+              "samples": 25,
+              "maximum_rotation_from_rest_degrees": 180.0
+            },
+            {
+              "node": "Wheel_RR_Spin",
+              "path": "rotation",
+              "samples": 25,
+              "maximum_rotation_from_rest_degrees": 180.0
+            }
+          ]
+        }
+      ],
+      "node_count": 16,
+      "mesh_count": 8,
+      "primitive_count": 55,
+      "material_count": 35,
+      "triangle_count": 188548,
+      "vertex_count": 186621,
+      "bounds_min_gltf_meters": [
+        -1.01998,
+        0.0,
+        -2.565
+      ],
+      "bounds_max_gltf_meters": [
+        1.01998,
+        1.28,
+        2.495
+      ],
+      "dimensions_gltf_meters": [
+        2.03995,
+        1.28,
+        5.06
+      ],
+      "bytes": 5422204,
+      "root_at_origin": true,
+      "front_spin_children_of_steer": true,
+      "camera_count": 0,
+      "light_count": 0,
+      "coordinate_system": "glTF: +Y up, -Z forward; source Blender: +Z up, +Y forward",
+      "path": "C:\\Users\\rueha\\Documents\\Codex\\2026-10-19\\new-chat\\outputs\\blog-room-v27\\worlds\\formula-car-animated.glb",
+      "source_renderable_objects": 425,
+      "converted_curve_count": 85,
+      "procedural_micro_bump_omitted_materials": [
+        "PlayerFormulaCar | carbon composite",
+        "PlayerFormulaCar | slick tire rubber",
+        "RefinedCockpit | fine carbon composite",
+        "RefinedWheel | textured soft grip",
+        "RefinedWheel | woven graphite carbon"
+      ],
+      "native_materials_unchanged": true,
+      "all_geometry_meshes": true,
+      "static_geometry_merge": {
+        "enabled": true,
+        "meshes_before": 425,
+        "meshes_after": 8,
+        "tested_frames": [
+          0,
+          7,
+          19,
+          55
+        ],
+        "maximum_pose_bounds_or_moments_error": 2.2464596272087078e-07,
+        "controls_and_animation_hierarchy_preserved": true
+      },
+      "texture_coordinates_exported": false,
+      "file": "formula-car-animated.glb",
+      "placement_in_circuit": {
+        "position_blender_meters": [
+          -3.0,
+          0.0,
+          0.0
+        ],
+        "rotation_euler_blender_radians": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "parent_node": "Circuit | APEX PARK"
+      }
+    }
+  ]
+}

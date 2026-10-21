@@ -1,0 +1,1696 @@
+{
+  "asset": "room.glb",
+  "source": "blog-room-v26.blend",
+  "scene": "Web_Room_Assets",
+  "coordinate_system": "glTF meters, +Y up; camera looks local -Z",
+  "nodes": {
+    "ROOM": "WEB_ROOM",
+    "ANCHORS": "WEB_ANCHORS",
+    "Anchor_BookcaseCamera": "WEB_Anchor_BookcaseCamera",
+    "Anchor_BookDisplay": "WEB_Anchor_BookDisplay",
+    "Anchor_HeroCamera": "WEB_Anchor_HeroCamera",
+    "Anchor_MonitorCamera": "WEB_Anchor_MonitorCamera",
+    "Anchor_MonitorEntry": "WEB_Anchor_MonitorEntry",
+    "Anchor_MusicCamera": "WEB_Anchor_MusicCamera",
+    "Anchor_RacingCamera": "WEB_Anchor_RacingCamera",
+    "Target_Bass": "WEB_Target_Bass",
+    "Target_Book": "WEB_Target_Book",
+    "Target_Monitor": "WEB_Target_Monitor",
+    "Target_Rig": "WEB_Target_Rig",
+    "Target_Room": "WEB_Target_Room",
+    "BOOKCASE": "WEB_BOOKCASE",
+    "INT_FeatureBook": "WEB_INT_FeatureBook",
+    "Pivot_BookFrontCover": "WEB_Pivot_BookFrontCover",
+    "Pivot_BookLeftPages": "WEB_Pivot_BookLeftPages",
+    "Anchor_BlogIndexSurface": "WEB_Anchor_BlogIndexSurface",
+    "Pivot_BookLoosePage_01": "WEB_Pivot_BookLoosePage_01",
+    "FeatureBook_LoosePage_01": "WEB_FeatureBook_LoosePage_01",
+    "Pivot_BookLoosePage_02": "WEB_Pivot_BookLoosePage_02",
+    "FeatureBook_LoosePage_02": "WEB_FeatureBook_LoosePage_02",
+    "Pivot_BookLoosePage_03": "WEB_Pivot_BookLoosePage_03",
+    "FeatureBook_LoosePage_03": "WEB_FeatureBook_LoosePage_03",
+    "Pivot_BookRightPages": "WEB_Pivot_BookRightPages",
+    "ArticlePage_Control": "WEB_ArticlePage_Control",
+    "ShelfBook": "WEB_ShelfBook",
+    "ShelfBook.001": "WEB_ShelfBook_001",
+    "ShelfBook.002": "WEB_ShelfBook_002",
+    "ShelfBook.003": "WEB_ShelfBook_003",
+    "ShelfBook.004": "WEB_ShelfBook_004",
+    "ShelfBook.005": "WEB_ShelfBook_005",
+    "ShelfBook.006": "WEB_ShelfBook_006",
+    "ShelfBook.007": "WEB_ShelfBook_007",
+    "ShelfBook.008": "WEB_ShelfBook_008",
+    "ShelfBook.009": "WEB_ShelfBook_009",
+    "ShelfBook.010": "WEB_ShelfBook_010",
+    "ShelfBook.011": "WEB_ShelfBook_011",
+    "ShelfBook.012": "WEB_ShelfBook_012",
+    "ShelfBook.013": "WEB_ShelfBook_013",
+    "ShelfBook.014": "WEB_ShelfBook_014",
+    "ShelfBook.015": "WEB_ShelfBook_015",
+    "ShelfBook.016": "WEB_ShelfBook_016",
+    "ShelfBook.017": "WEB_ShelfBook_017",
+    "ShelfBook.018": "WEB_ShelfBook_018",
+    "ShelfBook.019": "WEB_ShelfBook_019",
+    "ShelfBook.020": "WEB_ShelfBook_020",
+    "ShelfBook.021": "WEB_ShelfBook_021",
+    "ShelfBook.022": "WEB_ShelfBook_022",
+    "ShelfBook.023": "WEB_ShelfBook_023",
+    "ShelfBook.024": "WEB_ShelfBook_024",
+    "Cove_Left_Diffuser": "WEB_Cove_Left_Diffuser",
+    "Cove_Rear_Diffuser": "WEB_Cove_Rear_Diffuser",
+    "DeskChair": "WEB_DeskChair",
+    "FloorLamp": "WEB_FloorLamp",
+    "Floor lamp diffuser": "WEB_Floor_lamp_diffuser",
+    "LightSwitch_Status": "WEB_LightSwitch_Status",
+    "MUSIC": "WEB_MUSIC",
+    "Bass amplifier": "WEB_Bass_amplifier",
+    "Amplifier knob": "WEB_Amplifier_knob",
+    "MUSIC_Volume knob pointer": "WEB_MUSIC_Volume_knob_pointer",
+    "MUSIC_Amber power indicator": "WEB_MUSIC_Amber_power_indicator",
+    "MUSIC_Amplifier power rocker pivot": "WEB_MUSIC_Amplifier_power_rocker_pivot",
+    "INT_Bass": "WEB_INT_Bass",
+    "Bass string": "WEB_Bass_string",
+    "Bass string.001": "WEB_Bass_string_001",
+    "Bass string.002": "WEB_Bass_string_002",
+    "Bass string.003": "WEB_Bass_string_003",
+    "INT_LightSwitch": "WEB_INT_LightSwitch",
+    "Plant": "WEB_Plant",
+    "SHELL": "WEB_SHELL",
+    "SIMRIG": "WEB_SIMRIG",
+    "Pivot_Steering": "WEB_Pivot_Steering",
+    "Sim display screen": "WEB_Sim_display_screen",
+    "Sim road edge": "WEB_Sim_road_edge",
+    "Sim road edge.001": "WEB_Sim_road_edge_001",
+    "Sim road horizon": "WEB_Sim_road_horizon",
+    "Sim road horizon.001": "WEB_Sim_road_horizon_001",
+    "Sim road horizon.002": "WEB_Sim_road_horizon_002",
+    "Sim road horizon.003": "WEB_Sim_road_horizon_003",
+    "Sim road horizon.004": "WEB_Sim_road_horizon_004",
+    "Sim road horizon.005": "WEB_Sim_road_horizon_005",
+    "Sim road horizon.006": "WEB_Sim_road_horizon_006",
+    "Sim road horizon.007": "WEB_Sim_road_horizon_007",
+    "Sim road horizon.008": "WEB_Sim_road_horizon_008",
+    "Sim road horizon.009": "WEB_Sim_road_horizon_009",
+    "Sim road horizon.010": "WEB_Sim_road_horizon_010",
+    "Sim road horizon.011": "WEB_Sim_road_horizon_011",
+    "Sim road horizon.012": "WEB_Sim_road_horizon_012",
+    "WORKSTATION": "WEB_WORKSTATION",
+    "Headphones": "WEB_Headphones",
+    "INT_Monitor": "WEB_INT_Monitor",
+    "Monitor status LED": "WEB_Monitor_status_LED",
+    "Monitor_DisplayContent": "WEB_Monitor_DisplayContent",
+    "Editor code line": "WEB_Editor_code_line",
+    "Editor code line.001": "WEB_Editor_code_line_001",
+    "Editor code line.002": "WEB_Editor_code_line_002",
+    "Editor code line.003": "WEB_Editor_code_line_003",
+    "Editor code line.004": "WEB_Editor_code_line_004",
+    "Editor code line.005": "WEB_Editor_code_line_005",
+    "Editor code line.006": "WEB_Editor_code_line_006",
+    "Editor code line.007": "WEB_Editor_code_line_007",
+    "Editor code line.008": "WEB_Editor_code_line_008",
+    "Editor code line.009": "WEB_Editor_code_line_009",
+    "Editor sidebar": "WEB_Editor_sidebar",
+    "Monitor_Screen": "WEB_Monitor_Screen",
+    "Opening_Monitor_BootOverlay": "WEB_Opening_Monitor_BootOverlay",
+    "Opening_Boot_Progress": "WEB_Opening_Boot_Progress",
+    "Monitor_Cues_Caret": "WEB_Monitor_Cues_Caret",
+    "Monitor_Cues_Hover_Top": "WEB_Monitor_Cues_Hover_Top",
+    "Monitor_Cues_Hover_Bottom": "WEB_Monitor_Cues_Hover_Bottom",
+    "Monitor_Cues_Hover_Left": "WEB_Monitor_Cues_Hover_Left",
+    "Monitor_Cues_Hover_Right": "WEB_Monitor_Cues_Hover_Right",
+    "Sim_Cues_Hover_Top": "WEB_Sim_Cues_Hover_Top",
+    "Sim_Cues_Hover_Bottom": "WEB_Sim_Cues_Hover_Bottom",
+    "Sim_Cues_Hover_Left": "WEB_Sim_Cues_Hover_Left",
+    "Sim_Cues_Hover_Right": "WEB_Sim_Cues_Hover_Right",
+    "Sim_Cues_StartHint": "WEB_Sim_Cues_StartHint",
+    "Camera_Main": "WEB_Camera_Main"
+  },
+  "clips": [
+    {
+      "source_scene": "10_Room_Opening",
+      "source_frames": [
+        1,
+        73
+      ],
+      "duration": 3.0,
+      "playback": "once",
+      "name": "Room_Opening",
+      "core_glb_channels": 34,
+      "runtime_material_tracks": 5,
+      "runtime_light_tracks": 5
+    },
+    {
+      "source_scene": "15_Room_Ambient_Idle",
+      "source_frames": [
+        1,
+        481
+      ],
+      "duration": 20.0,
+      "playback": "loop",
+      "name": "Room_Ambient_Idle",
+      "core_glb_channels": 32,
+      "runtime_material_tracks": 1,
+      "runtime_light_tracks": 0
+    },
+    {
+      "source_scene": "01_Book_and_Blog",
+      "source_frames": [
+        1,
+        433
+      ],
+      "duration": 18.0,
+      "playback": "once",
+      "name": "Book_Click",
+      "core_glb_channels": 13,
+      "runtime_material_tracks": 0,
+      "runtime_light_tracks": 0
+    },
+    {
+      "source_scene": "08_Music_Corner",
+      "source_frames": [
+        1,
+        361
+      ],
+      "duration": 15.0,
+      "playback": "once",
+      "name": "Music_Click",
+      "core_glb_channels": 10,
+      "runtime_material_tracks": 1,
+      "runtime_light_tracks": 0
+    },
+    {
+      "source_scene": "04_Computer_Desktop_Portal",
+      "source_frames": [
+        1,
+        120
+      ],
+      "duration": 4.958333333333333,
+      "playback": "once",
+      "name": "Monitor_Portal_Approach",
+      "core_glb_channels": 3,
+      "runtime_material_tracks": 0,
+      "runtime_light_tracks": 0
+    },
+    {
+      "source_scene": "05_Starting_Grid_Portal",
+      "source_frames": [
+        1,
+        120
+      ],
+      "duration": 4.958333333333333,
+      "playback": "once",
+      "name": "Simulator_Portal_Approach",
+      "core_glb_channels": 3,
+      "runtime_material_tracks": 0,
+      "runtime_light_tracks": 0
+    },
+    {
+      "source_scene": "11_Book_Idle_Hover",
+      "source_frames": [
+        1,
+        121
+      ],
+      "duration": 5.0,
+      "playback": "loop",
+      "name": "Book_Idle",
+      "core_glb_channels": 2,
+      "runtime_material_tracks": 0,
+      "runtime_light_tracks": 0
+    },
+    {
+      "source_scene": "11_Book_Idle_Hover",
+      "source_frames": [
+        133,
+        145
+      ],
+      "duration": 0.5,
+      "playback": "clamp",
+      "name": "Book_Hover_Enter",
+      "core_glb_channels": 2,
+      "runtime_material_tracks": 0,
+      "runtime_light_tracks": 0
+    },
+    {
+      "source_scene": "11_Book_Idle_Hover",
+      "source_frames": [
+        145,
+        193
+      ],
+      "duration": 2.0,
+      "playback": "clamp",
+      "name": "Book_Hover_Hold",
+      "core_glb_channels": 3,
+      "runtime_material_tracks": 0,
+      "runtime_light_tracks": 0
+    },
+    {
+      "source_scene": "11_Book_Idle_Hover",
+      "source_frames": [
+        193,
+        205
+      ],
+      "duration": 0.5,
+      "playback": "once",
+      "name": "Book_Hover_Exit",
+      "core_glb_channels": 2,
+      "runtime_material_tracks": 0,
+      "runtime_light_tracks": 0
+    },
+    {
+      "source_scene": "12_Monitor_Idle_Hover",
+      "source_frames": [
+        1,
+        121
+      ],
+      "duration": 5.0,
+      "playback": "loop",
+      "name": "Monitor_Idle",
+      "core_glb_channels": 4,
+      "runtime_material_tracks": 0,
+      "runtime_light_tracks": 0
+    },
+    {
+      "source_scene": "12_Monitor_Idle_Hover",
+      "source_frames": [
+        133,
+        145
+      ],
+      "duration": 0.5,
+      "playback": "clamp",
+      "name": "Monitor_Hover_Enter",
+      "core_glb_channels": 4,
+      "runtime_material_tracks": 1,
+      "runtime_light_tracks": 0
+    },
+    {
+      "source_scene": "12_Monitor_Idle_Hover",
+      "source_frames": [
+        145,
+        193
+      ],
+      "duration": 2.0,
+      "playback": "clamp",
+      "name": "Monitor_Hover_Hold",
+      "core_glb_channels": 5,
+      "runtime_material_tracks": 1,
+      "runtime_light_tracks": 0
+    },
+    {
+      "source_scene": "12_Monitor_Idle_Hover",
+      "source_frames": [
+        193,
+        205
+      ],
+      "duration": 0.5,
+      "playback": "once",
+      "name": "Monitor_Hover_Exit",
+      "core_glb_channels": 4,
+      "runtime_material_tracks": 1,
+      "runtime_light_tracks": 0
+    },
+    {
+      "source_scene": "13_Sim_Idle_Hover",
+      "source_frames": [
+        1,
+        121
+      ],
+      "duration": 5.0,
+      "playback": "loop",
+      "name": "Simulator_Idle",
+      "core_glb_channels": 26,
+      "runtime_material_tracks": 0,
+      "runtime_light_tracks": 0
+    },
+    {
+      "source_scene": "13_Sim_Idle_Hover",
+      "source_frames": [
+        133,
+        145
+      ],
+      "duration": 0.5,
+      "playback": "clamp",
+      "name": "Simulator_Hover_Enter",
+      "core_glb_channels": 5,
+      "runtime_material_tracks": 0,
+      "runtime_light_tracks": 0
+    },
+    {
+      "source_scene": "13_Sim_Idle_Hover",
+      "source_frames": [
+        145,
+        193
+      ],
+      "duration": 2.0,
+      "playback": "clamp",
+      "name": "Simulator_Hover_Hold",
+      "core_glb_channels": 5,
+      "runtime_material_tracks": 0,
+      "runtime_light_tracks": 0
+    },
+    {
+      "source_scene": "13_Sim_Idle_Hover",
+      "source_frames": [
+        193,
+        205
+      ],
+      "duration": 0.5,
+      "playback": "once",
+      "name": "Simulator_Hover_Exit",
+      "core_glb_channels": 5,
+      "runtime_material_tracks": 0,
+      "runtime_light_tracks": 0
+    },
+    {
+      "source_scene": "14_Music_Idle_Hover",
+      "source_frames": [
+        1,
+        121
+      ],
+      "duration": 5.0,
+      "playback": "loop",
+      "name": "Music_Idle",
+      "core_glb_channels": 0,
+      "runtime_material_tracks": 1,
+      "runtime_light_tracks": 0
+    },
+    {
+      "source_scene": "14_Music_Idle_Hover",
+      "source_frames": [
+        133,
+        145
+      ],
+      "duration": 0.5,
+      "playback": "clamp",
+      "name": "Music_Hover_Enter",
+      "core_glb_channels": 4,
+      "runtime_material_tracks": 1,
+      "runtime_light_tracks": 0
+    },
+    {
+      "source_scene": "14_Music_Idle_Hover",
+      "source_frames": [
+        145,
+        193
+      ],
+      "duration": 2.0,
+      "playback": "once",
+      "name": "Music_Hover_Hold",
+      "core_glb_channels": 5,
+      "runtime_material_tracks": 1,
+      "runtime_light_tracks": 0
+    },
+    {
+      "source_scene": "14_Music_Idle_Hover",
+      "source_frames": [
+        193,
+        205
+      ],
+      "duration": 0.5,
+      "playback": "once",
+      "name": "Music_Hover_Exit",
+      "core_glb_channels": 0,
+      "runtime_material_tracks": 1,
+      "runtime_light_tracks": 0
+    },
+    {
+      "source_scene": "09_Lighting_Toggle_Preview",
+      "source_frames": [
+        48,
+        49
+      ],
+      "duration": 0.041666666666666664,
+      "playback": "clamp",
+      "name": "Lights_Off",
+      "core_glb_channels": 1,
+      "runtime_material_tracks": 2,
+      "runtime_light_tracks": 5
+    },
+    {
+      "source_scene": "09_Lighting_Toggle_Preview",
+      "source_frames": [
+        96,
+        97
+      ],
+      "duration": 0.041666666666666664,
+      "playback": "clamp",
+      "name": "Lights_On",
+      "core_glb_channels": 1,
+      "runtime_material_tracks": 2,
+      "runtime_light_tracks": 5
+    }
+  ],
+  "interaction_roots": {
+    "INT_FeatureBook": "WEB_INT_FeatureBook",
+    "INT_Bass": "WEB_INT_Bass",
+    "INT_LightSwitch": "WEB_INT_LightSwitch",
+    "SIMRIG": "WEB_SIMRIG",
+    "INT_Monitor": "WEB_INT_Monitor"
+  },
+  "static_join_groups": [
+    {
+      "parent": "ROOM",
+      "parts": 18
+    },
+    {
+      "parent": "BOOKCASE",
+      "parts": 8
+    },
+    {
+      "parent": "INT_FeatureBook",
+      "parts": 4
+    },
+    {
+      "parent": "Pivot_BookFrontCover",
+      "parts": 10
+    },
+    {
+      "parent": "Pivot_BookLeftPages",
+      "parts": 43
+    },
+    {
+      "parent": "ArticlePage_Control",
+      "parts": 19
+    },
+    {
+      "parent": "Pivot_BookRightPages",
+      "parts": 23
+    },
+    {
+      "parent": "ShelfBook",
+      "parts": 6
+    },
+    {
+      "parent": "ShelfBook.001",
+      "parts": 6
+    },
+    {
+      "parent": "ShelfBook.002",
+      "parts": 6
+    },
+    {
+      "parent": "ShelfBook.003",
+      "parts": 6
+    },
+    {
+      "parent": "ShelfBook.004",
+      "parts": 6
+    },
+    {
+      "parent": "ShelfBook.005",
+      "parts": 6
+    },
+    {
+      "parent": "ShelfBook.006",
+      "parts": 6
+    },
+    {
+      "parent": "ShelfBook.007",
+      "parts": 6
+    },
+    {
+      "parent": "ShelfBook.008",
+      "parts": 6
+    },
+    {
+      "parent": "ShelfBook.009",
+      "parts": 6
+    },
+    {
+      "parent": "ShelfBook.010",
+      "parts": 6
+    },
+    {
+      "parent": "ShelfBook.011",
+      "parts": 6
+    },
+    {
+      "parent": "ShelfBook.012",
+      "parts": 6
+    },
+    {
+      "parent": "ShelfBook.013",
+      "parts": 6
+    },
+    {
+      "parent": "ShelfBook.014",
+      "parts": 6
+    },
+    {
+      "parent": "ShelfBook.015",
+      "parts": 6
+    },
+    {
+      "parent": "ShelfBook.016",
+      "parts": 6
+    },
+    {
+      "parent": "ShelfBook.017",
+      "parts": 6
+    },
+    {
+      "parent": "ShelfBook.018",
+      "parts": 6
+    },
+    {
+      "parent": "ShelfBook.019",
+      "parts": 6
+    },
+    {
+      "parent": "ShelfBook.020",
+      "parts": 6
+    },
+    {
+      "parent": "ShelfBook.021",
+      "parts": 6
+    },
+    {
+      "parent": "ShelfBook.022",
+      "parts": 6
+    },
+    {
+      "parent": "ShelfBook.023",
+      "parts": 6
+    },
+    {
+      "parent": "ShelfBook.024",
+      "parts": 6
+    },
+    {
+      "parent": "DeskChair",
+      "parts": 18
+    },
+    {
+      "parent": "FloorLamp",
+      "parts": 3
+    },
+    {
+      "parent": "Bass amplifier",
+      "parts": 42
+    },
+    {
+      "parent": "MUSIC_Amplifier power rocker pivot",
+      "parts": 3
+    },
+    {
+      "parent": "INT_Bass",
+      "parts": 34
+    },
+    {
+      "parent": "INT_LightSwitch",
+      "parts": 2
+    },
+    {
+      "parent": "Plant",
+      "parts": 16
+    },
+    {
+      "parent": "SHELL",
+      "parts": 94
+    },
+    {
+      "parent": "SIMRIG",
+      "parts": 92
+    },
+    {
+      "parent": "Pivot_Steering",
+      "parts": 11
+    },
+    {
+      "parent": "WORKSTATION",
+      "parts": 107
+    },
+    {
+      "parent": "Headphones",
+      "parts": 18
+    },
+    {
+      "parent": "INT_Monitor",
+      "parts": 3
+    },
+    {
+      "parent": "Opening_Monitor_BootOverlay",
+      "parts": 4
+    },
+    {
+      "parent": "Sim_Cues_StartHint",
+      "parts": 2
+    }
+  ],
+  "light_setup": [
+    {
+      "name": "Daylight",
+      "type": "AREA",
+      "color_linear": [
+        0.8199999928474426,
+        0.8999999761581421,
+        1.0
+      ],
+      "blender_energy_watts": 360.0,
+      "matrix_world_blender": [
+        [
+          -0.9012523889541626,
+          -0.2627464234828949,
+          0.34454092383384705,
+          1.5
+        ],
+        [
+          0.43329450488090515,
+          -0.5465123057365417,
+          0.7166450619697571,
+          4.699999809265137
+        ],
+        [
+          -6.601784008353206e-08,
+          0.7951657772064209,
+          0.6063921451568604,
+          5.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "size": 4.0,
+      "size_y": 0.25,
+      "shape": "DISK"
+    },
+    {
+      "name": "Softbox",
+      "type": "AREA",
+      "color_linear": [
+        1.0,
+        0.8600000143051147,
+        0.6700000166893005
+      ],
+      "blender_energy_watts": 850.0,
+      "matrix_world_blender": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.7481876611709595,
+          -0.6634871959686279,
+          -4.5
+        ],
+        [
+          0.0,
+          0.6634871959686279,
+          0.7481876611709595,
+          6.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "size": 5.0,
+      "size_y": 0.25,
+      "shape": "DISK"
+    },
+    {
+      "name": "Right fill",
+      "type": "AREA",
+      "color_linear": [
+        0.7200000286102295,
+        0.8199999928474426,
+        1.0
+      ],
+      "blender_energy_watts": 100.0,
+      "matrix_world_blender": [
+        [
+          -0.19611617922782898,
+          -0.5094001889228821,
+          0.8378841876983643,
+          5.0
+        ],
+        [
+          0.9805806875228882,
+          -0.1018800362944603,
+          0.1675768941640854,
+          1.0
+        ],
+        [
+          -2.3186503383954005e-08,
+          0.85447758436203,
+          0.5194882750511169,
+          4.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "size": 4.0,
+      "size_y": 0.25,
+      "shape": "DISK"
+    },
+    {
+      "name": "Warm corner",
+      "type": "AREA",
+      "color_linear": [
+        1.0,
+        0.6399999856948853,
+        0.2800000011920929
+      ],
+      "blender_energy_watts": 55.0,
+      "matrix_world_blender": [
+        [
+          -0.5449885129928589,
+          0.37679970264434814,
+          -0.7490056753158569,
+          -3.0
+        ],
+        [
+          -0.8384435176849365,
+          -0.2449198216199875,
+          0.4868539273738861,
+          1.649999976158142
+        ],
+        [
+          9.103135312216182e-08,
+          0.8933287262916565,
+          0.4494037628173828,
+          1.600000023841858
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "size": 0.5,
+      "size_y": 0.25,
+      "shape": "DISK"
+    },
+    {
+      "name": "Room_Warm_Bounce",
+      "type": "AREA",
+      "color_linear": [
+        1.0,
+        0.7599999904632568,
+        0.4699999988079071
+      ],
+      "blender_energy_watts": 450.0,
+      "matrix_world_blender": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -0.10000000149011612
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          3.119999885559082
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "size": 3.799999952316284,
+      "size_y": 0.25,
+      "shape": "DISK"
+    },
+    {
+      "name": "Cove_Left_Wash",
+      "type": "AREA",
+      "color_linear": [
+        1.0,
+        0.7099999785423279,
+        0.38999998569488525
+      ],
+      "blender_energy_watts": 100.0,
+      "matrix_world_blender": [
+        [
+          -4.371138828673793e-08,
+          -0.9871351718902588,
+          0.15988808870315552,
+          -3.1500000953674316
+        ],
+        [
+          1.0,
+          -7.001733592915116e-08,
+          -1.5889351345776959e-07,
+          0.05000000074505806
+        ],
+        [
+          1.680443091345296e-07,
+          0.15988808870315552,
+          0.9871351718902588,
+          2.9200000762939453
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "size": 2.5,
+      "size_y": 0.25,
+      "shape": "DISK"
+    },
+    {
+      "name": "Cove_Rear_Wash",
+      "type": "AREA",
+      "color_linear": [
+        1.0,
+        0.7099999785423279,
+        0.38999998569488525
+      ],
+      "blender_energy_watts": 120.0,
+      "matrix_world_blender": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.10000000149011612
+        ],
+        [
+          0.0,
+          0.9871351718902588,
+          -0.15988792479038239,
+          2.4600000381469727
+        ],
+        [
+          0.0,
+          0.15988792479038239,
+          0.9871351718902588,
+          2.9200000762939453
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "size": 2.5,
+      "size_y": 0.25,
+      "shape": "DISK"
+    }
+  ],
+  "limitations": [
+    "GLB stores surfaces, geometry, transforms, cameras and morph clips; Blender area lights and material intensity changes are in runtime-tracks.json and need a renderer integration.",
+    "Do not play all clips simultaneously. Stop an object idle when its hover/click begins; blend or restore its rest pose when done.",
+    "Blender color management, bloom, shadows and ambient illumination are renderer settings, not portable GLB render results.",
+    "Portal approach clips stop at the room monitor; destination worlds are separate assets.",
+    "room-export.blend is the compact static review assembly. Editable source animations remain in blog-room-v26.blend; animation clips are included in room.glb."
+  ],
+  "warnings": [
+    "Music_Idle is material/light-only; use runtime-tracks.json.",
+    "Music_Hover_Exit is material/light-only; use runtime-tracks.json."
+  ],
+  "stats": {
+    "bytes": 9344188,
+    "nodes": 167,
+    "meshes": 101,
+    "materials": 50,
+    "images": 4,
+    "animations": 22,
+    "triangles": 133425
+  },
+  "material_rest_state": {
+    "0": {
+      "name": "Web PBR | Opening | Lighting | Cove ROOM.005",
+      "baseColorFactor": [
+        0.949999988079071,
+        0.7900000214576721,
+        0.5099999904632568,
+        1
+      ],
+      "emissiveFactor": [
+        1,
+        0.6899999976158142,
+        0.3400000035762787
+      ],
+      "emissiveStrength": 5
+    },
+    "1": {
+      "name": "Web PBR | Studio | Fabric",
+      "baseColorFactor": [
+        0.4919050335884094,
+        0.4479884207248688,
+        0.3546920716762543,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "2": {
+      "name": "Web PBR | Studio | Walnut",
+      "baseColorFactor": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "3": {
+      "name": "Web PBR | Studio | Paper",
+      "baseColorFactor": [
+        0.6738595366477966,
+        0.6382831931114197,
+        0.5225215554237366,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "4": {
+      "name": "Web PBR | Studio | Charcoal",
+      "baseColorFactor": [
+        0.012510408647358418,
+        0.014349875040352345,
+        0.015325203537940979,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "5": {
+      "name": "Web PBR | Lighting | Ivory housing",
+      "baseColorFactor": [
+        0.7200000286102295,
+        0.6899999976158142,
+        0.6100000143051147,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "6": {
+      "name": "Web PBR | Lighting | Switch shadow",
+      "baseColorFactor": [
+        0.03500000014901161,
+        0.03700000047683716,
+        0.03400000184774399,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "7": {
+      "name": "Web PBR | Studio | Oak",
+      "baseColorFactor": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "8": {
+      "name": "Web PBR | Studio | Terracotta",
+      "baseColorFactor": [
+        0.27383843064308167,
+        0.08353512734174728,
+        0.043233636766672134,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "9": {
+      "name": "Web PBR | Studio | Brass",
+      "baseColorFactor": [
+        0.36724647879600525,
+        0.19599418342113495,
+        0.05087608844041824,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "10": {
+      "name": "Web PBR | MAT_PageEdgeFine",
+      "baseColorFactor": [
+        0.5600000023841858,
+        0.5199999809265137,
+        0.41999998688697815,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "11": {
+      "name": "Web PBR | Preview blog | teal",
+      "baseColorFactor": [
+        0.0134117491543293,
+        0.08353512734174728,
+        0.06372379511594772,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "12": {
+      "name": "Web PBR | Preview blog | muted ink",
+      "baseColorFactor": [
+        0.09462962299585342,
+        0.10653922706842422,
+        0.09462962299585342,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "13": {
+      "name": "Web PBR | Preview blog | ink",
+      "baseColorFactor": [
+        0.0134117491543293,
+        0.01960664801299572,
+        0.017389101907610893,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "14": {
+      "name": "Web PBR | Preview blog | terracotta",
+      "baseColorFactor": [
+        0.38005632162094116,
+        0.1259673833847046,
+        0.06372379511594772,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "15": {
+      "name": "Web PBR | Preview blog | hairline",
+      "baseColorFactor": [
+        0.4919050335884094,
+        0.5382355451583862,
+        0.4623613655567169,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "16": {
+      "name": "Web PBR | Preview blog | selected row",
+      "baseColorFactor": [
+        0.6920710802078247,
+        0.7874122858047485,
+        0.7105664610862732,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "17": {
+      "name": "Web PBR | Studio | Sage",
+      "baseColorFactor": [
+        0.13286831974983215,
+        0.1873166710138321,
+        0.13286831974983215,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "18": {
+      "name": "Web PBR | Studio | Teal",
+      "baseColorFactor": [
+        0.03968190774321556,
+        0.11928018927574158,
+        0.1259673833847046,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "19": {
+      "name": "Web PBR | Studio | Metal",
+      "baseColorFactor": [
+        0.021980946883559227,
+        0.02451501414179802,
+        0.025842878967523575,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "20": {
+      "name": "Web PBR | Studio | Rubber",
+      "baseColorFactor": [
+        0.005422868765890598,
+        0.005753953941166401,
+        0.005866865627467632,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "21": {
+      "name": "Web PBR | Opening | Lighting | Floor lamp ROOM.005",
+      "baseColorFactor": [
+        1,
+        0.6499999761581421,
+        0.30000001192092896,
+        1
+      ],
+      "emissiveFactor": [
+        1,
+        0.6499999761581421,
+        0.30000001192092896
+      ],
+      "emissiveStrength": 3
+    },
+    "22": {
+      "name": "Web PBR | Lighting | Switch markings",
+      "baseColorFactor": [
+        0.14000000059604645,
+        0.15000000596046448,
+        0.12999999523162842,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "23": {
+      "name": "Web PBR | Lighting | Warm white rocker",
+      "baseColorFactor": [
+        0.8700000047683716,
+        0.8500000238418579,
+        0.7900000214576721,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "24": {
+      "name": "Web PBR | Studio | Leather",
+      "baseColorFactor": [
+        0.0450764074921608,
+        0.03968190774321556,
+        0.03310476616024971,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "25": {
+      "name": "Web PBR | Studio | Silver",
+      "baseColorFactor": [
+        0.4064483046531677,
+        0.4338795244693756,
+        0.4479884207248688,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "26": {
+      "name": "Web PBR | MUSIC_Control bezel graphite",
+      "baseColorFactor": [
+        0.02199999988079071,
+        0.02500000037252903,
+        0.026000000536441803,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "27": {
+      "name": "Web PBR | MUSIC_Control fine index",
+      "baseColorFactor": [
+        0.6700000166893005,
+        0.6399999856948853,
+        0.5299999713897705,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "28": {
+      "name": "Web PBR | MUSIC_Switch molded black",
+      "baseColorFactor": [
+        0.012000000104308128,
+        0.014000000432133675,
+        0.014000000432133675,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "29": {
+      "name": "Web PBR | Opening | MUSIC_Amplifier amber power lens",
+      "baseColorFactor": [
+        0.41999998688697815,
+        0.15000000596046448,
+        0.02500000037252903,
+        1
+      ],
+      "emissiveFactor": [
+        1,
+        0.33000001311302185,
+        0.054999999701976776
+      ],
+      "emissiveStrength": 2.200000047683716
+    },
+    "30": {
+      "name": "Web PBR | Studio | Rug",
+      "baseColorFactor": [
+        0.23302200436592102,
+        0.21404114365577698,
+        0.17064493894577026,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "31": {
+      "name": "Web PBR | Studio | Plaster",
+      "baseColorFactor": [
+        0.6738595366477966,
+        0.6382831931114197,
+        0.5382355451583862,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "32": {
+      "name": "Web PBR | Studio | Glass",
+      "baseColorFactor": [
+        0.9331068396568298,
+        0.9662157297134399,
+        0.9774019122123718,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "33": {
+      "name": "Web PBR | Simulator Cues | Quiet teal bezel",
+      "baseColorFactor": [
+        0.12999999523162842,
+        0.4399999976158142,
+        0.36000001430511475,
+        1
+      ],
+      "emissiveFactor": [
+        0.17549999666213978,
+        0.5940000072717666,
+        0.4860000278949741
+      ],
+      "emissiveStrength": 1
+    },
+    "34": {
+      "name": "Web PBR | Simulator Cues | START dark plaque",
+      "baseColorFactor": [
+        0.006000000052154064,
+        0.014000000432133675,
+        0.014000000432133675,
+        1
+      ],
+      "emissiveFactor": [
+        0.0003000000070780516,
+        0.0007000000320374969,
+        0.0007000000320374969
+      ],
+      "emissiveStrength": 1
+    },
+    "35": {
+      "name": "Web PBR | Simulator Cues | START lettering",
+      "baseColorFactor": [
+        0.23999999463558197,
+        0.6499999761581421,
+        0.5099999904632568,
+        1
+      ],
+      "emissiveFactor": [
+        0.215999989449978,
+        0.5849999630451208,
+        0.45899997925758385
+      ],
+      "emissiveStrength": 1
+    },
+    "36": {
+      "name": "Web PBR | Opening_SimMonitor | MAT_SimScreen",
+      "baseColorFactor": [
+        0.0021671827416867018,
+        0.0033353136386722326,
+        0.003758403705433011,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "37": {
+      "name": "Web PBR | Opening_SimMonitor | Monitor muted sand",
+      "baseColorFactor": [
+        0.5,
+        0.33000001311302185,
+        0.14000000059604645,
+        1
+      ],
+      "emissiveFactor": [
+        0.17499999701976776,
+        0.11550000262260429,
+        0.048999999374151226
+      ],
+      "emissiveStrength": 1
+    },
+    "38": {
+      "name": "Web PBR | Opening_SimMonitor | Monitor muted teal",
+      "baseColorFactor": [
+        0.11999999731779099,
+        0.3499999940395355,
+        0.30000001192092896,
+        1
+      ],
+      "emissiveFactor": [
+        0.041999998345971123,
+        0.1224999958276749,
+        0.10500000238418572
+      ],
+      "emissiveStrength": 1
+    },
+    "39": {
+      "name": "Web PBR | Monitor muted teal",
+      "baseColorFactor": [
+        0.11999999731779099,
+        0.3499999940395355,
+        0.30000001192092896,
+        1
+      ],
+      "emissiveFactor": [
+        0.041999998345971123,
+        0.1224999958276749,
+        0.10500000238418572
+      ],
+      "emissiveStrength": 1
+    },
+    "40": {
+      "name": "Web PBR | Opening_Monitor | Studio | Charcoal",
+      "baseColorFactor": [
+        0.012510408647358418,
+        0.014349875040352345,
+        0.015325203537940979,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "41": {
+      "name": "Web PBR | Opening_Monitor | Studio | Metal",
+      "baseColorFactor": [
+        0.021980946883559227,
+        0.02451501414179802,
+        0.025842878967523575,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "42": {
+      "name": "Web PBR | Monitor Cues | Muted terminal caret",
+      "baseColorFactor": [
+        0.25999999046325684,
+        0.550000011920929,
+        0.4300000071525574,
+        1
+      ],
+      "emissiveFactor": [
+        0.18199999022483837,
+        0.3850000017881392,
+        0.3009999998807906
+      ],
+      "emissiveStrength": 1
+    },
+    "43": {
+      "name": "Web PBR | Monitor Cues | Soft teal hover trim",
+      "baseColorFactor": [
+        0.12999999523162842,
+        0.4399999976158142,
+        0.36000001430511475,
+        1
+      ],
+      "emissiveFactor": [
+        0.20799999547004688,
+        0.7040000066757202,
+        0.5760000314712528
+      ],
+      "emissiveStrength": 1
+    },
+    "44": {
+      "name": "Web PBR | Opening_Monitor | Monitor muted sand",
+      "baseColorFactor": [
+        0.5,
+        0.33000001311302185,
+        0.14000000059604645,
+        1
+      ],
+      "emissiveFactor": [
+        0.17499999701976776,
+        0.11550000262260429,
+        0.048999999374151226
+      ],
+      "emissiveStrength": 1
+    },
+    "45": {
+      "name": "Web PBR | Opening_Monitor | Monitor muted teal",
+      "baseColorFactor": [
+        0.11999999731779099,
+        0.3499999940395355,
+        0.30000001192092896,
+        1
+      ],
+      "emissiveFactor": [
+        0.041999998345971123,
+        0.1224999958276749,
+        0.10500000238418572
+      ],
+      "emissiveStrength": 1
+    },
+    "46": {
+      "name": "Web PBR | Opening_Monitor | MAT_MainScreen",
+      "baseColorFactor": [
+        0.0021671827416867018,
+        0.0033353136386722326,
+        0.003758403705433011,
+        1
+      ],
+      "emissiveFactor": [
+        0,
+        0,
+        0
+      ],
+      "emissiveStrength": 1
+    },
+    "47": {
+      "name": "Web PBR | Opening_Monitor | Warm lamp diffuser",
+      "baseColorFactor": [
+        1,
+        0.6499999761581421,
+        0.30000001192092896,
+        1
+      ],
+      "emissiveFactor": [
+        1,
+        0.6499999761581421,
+        0.30000001192092896
+      ],
+      "emissiveStrength": 2
+    },
+    "48": {
+      "name": "Web PBR | Opening_Monitor | Boot phosphor",
+      "baseColorFactor": [
+        0.18000000715255737,
+        0.6600000262260437,
+        0.47999998927116394,
+        1
+      ],
+      "emissiveFactor": [
+        0.22500000894069672,
+        0.8250000327825546,
+        0.5999999865889549
+      ],
+      "emissiveStrength": 1
+    },
+    "49": {
+      "name": "Web PBR | Opening_Monitor | Boot track",
+      "baseColorFactor": [
+        0.02500000037252903,
+        0.10999999940395355,
+        0.0820000022649765,
+        1
+      ],
+      "emissiveFactor": [
+        0.012500000186264515,
+        0.054999999701976776,
+        0.04100000113248825
+      ],
+      "emissiveStrength": 1
+    }
+  },
+  "environment": {
+    "world_strength": 0.2800000011920929,
+    "world_color_linear": [
+      0.6000000238418579,
+      0.6800000071525574,
+      0.7799999713897705
+    ],
+    "recommended_view_transform": "AgX",
+    "note": "Use room-export.blend for exact original World and area-light setup. Web exposure/tone mapping must be matched by eye."
+  }
+}

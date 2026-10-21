@@ -1,0 +1,456 @@
+{
+  "version": 27,
+  "purpose": "Blender assets for a future interactive personal blog; no web application code.",
+  "authoring_master": "../blog-room-v26/blog-room-v26.blend (separate, unchanged)",
+  "recommended_interactive_room": "interactive/room.glb",
+  "static_baked_comparison": "baked/room-baked-preview.glb",
+  "guide": "먼저 읽어주세요.txt",
+  "units": "meters",
+  "coordinate_system": "glTF +Y up",
+  "validation": "Independent structure, UV, image, animation checks and fresh Blender import; not Khronos certification.",
+  "assets": [
+    {
+      "file": "interactive/room.glb",
+      "bytes": 9344188,
+      "sha256": "7afdd8b0374ce219d38a7c6fbae7917bd5295e96afb181c8f27c05184d8c6969",
+      "triangles": 133425,
+      "animations": [
+        {
+          "name": "Room_Opening",
+          "channels": 34,
+          "samplers": 34,
+          "start_seconds": 0.0,
+          "end_seconds": 3.0,
+          "duration_seconds": 3.0,
+          "target_paths": {
+            "scale": 29,
+            "rotation": 4,
+            "translation": 1
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Room_Ambient_Idle",
+          "channels": 32,
+          "samplers": 32,
+          "start_seconds": 0.0,
+          "end_seconds": 20.0,
+          "duration_seconds": 20.0,
+          "target_paths": {
+            "translation": 16,
+            "scale": 15,
+            "rotation": 1
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Book_Click",
+          "channels": 13,
+          "samplers": 13,
+          "start_seconds": 0.0,
+          "end_seconds": 18.0,
+          "duration_seconds": 18.0,
+          "target_paths": {
+            "translation": 3,
+            "rotation": 8,
+            "scale": 2
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Music_Click",
+          "channels": 10,
+          "samplers": 10,
+          "start_seconds": 0.0,
+          "end_seconds": 15.0,
+          "duration_seconds": 15.0,
+          "target_paths": {
+            "rotation": 3,
+            "scale": 2,
+            "weights": 4,
+            "translation": 1
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Monitor_Portal_Approach",
+          "channels": 3,
+          "samplers": 3,
+          "start_seconds": 0.0,
+          "end_seconds": 4.958333492279053,
+          "duration_seconds": 4.958333492279053,
+          "target_paths": {
+            "translation": 1,
+            "rotation": 1,
+            "scale": 1
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Simulator_Portal_Approach",
+          "channels": 3,
+          "samplers": 3,
+          "start_seconds": 0.0,
+          "end_seconds": 4.958333492279053,
+          "duration_seconds": 4.958333492279053,
+          "target_paths": {
+            "translation": 1,
+            "rotation": 1,
+            "scale": 1
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Book_Idle",
+          "channels": 2,
+          "samplers": 2,
+          "start_seconds": 0.0,
+          "end_seconds": 5.0,
+          "duration_seconds": 5.0,
+          "target_paths": {
+            "translation": 1,
+            "rotation": 1
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Book_Hover_Enter",
+          "channels": 2,
+          "samplers": 2,
+          "start_seconds": 0.0,
+          "end_seconds": 0.5,
+          "duration_seconds": 0.5,
+          "target_paths": {
+            "translation": 1,
+            "rotation": 1
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Book_Hover_Hold",
+          "channels": 3,
+          "samplers": 3,
+          "start_seconds": 0.0,
+          "end_seconds": 2.0,
+          "duration_seconds": 2.0,
+          "target_paths": {
+            "scale": 1,
+            "translation": 1,
+            "rotation": 1
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Book_Hover_Exit",
+          "channels": 2,
+          "samplers": 2,
+          "start_seconds": 0.0,
+          "end_seconds": 0.5,
+          "duration_seconds": 0.5,
+          "target_paths": {
+            "translation": 1,
+            "rotation": 1
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Monitor_Idle",
+          "channels": 4,
+          "samplers": 4,
+          "start_seconds": 0.0,
+          "end_seconds": 5.0,
+          "duration_seconds": 5.0,
+          "target_paths": {
+            "translation": 2,
+            "scale": 2
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Monitor_Hover_Enter",
+          "channels": 4,
+          "samplers": 4,
+          "start_seconds": 0.0,
+          "end_seconds": 0.5,
+          "duration_seconds": 0.5,
+          "target_paths": {
+            "scale": 4
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Monitor_Hover_Hold",
+          "channels": 5,
+          "samplers": 5,
+          "start_seconds": 0.0,
+          "end_seconds": 2.0,
+          "duration_seconds": 2.0,
+          "target_paths": {
+            "scale": 5
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Monitor_Hover_Exit",
+          "channels": 4,
+          "samplers": 4,
+          "start_seconds": 0.0,
+          "end_seconds": 0.5,
+          "duration_seconds": 0.5,
+          "target_paths": {
+            "scale": 4
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Simulator_Idle",
+          "channels": 26,
+          "samplers": 26,
+          "start_seconds": 0.0,
+          "end_seconds": 5.0,
+          "duration_seconds": 5.0,
+          "target_paths": {
+            "translation": 13,
+            "scale": 13
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Simulator_Hover_Enter",
+          "channels": 5,
+          "samplers": 5,
+          "start_seconds": 0.0,
+          "end_seconds": 0.5,
+          "duration_seconds": 0.5,
+          "target_paths": {
+            "scale": 5
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Simulator_Hover_Hold",
+          "channels": 5,
+          "samplers": 5,
+          "start_seconds": 0.0,
+          "end_seconds": 2.0,
+          "duration_seconds": 2.0,
+          "target_paths": {
+            "scale": 5
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Simulator_Hover_Exit",
+          "channels": 5,
+          "samplers": 5,
+          "start_seconds": 0.0,
+          "end_seconds": 0.5,
+          "duration_seconds": 0.5,
+          "target_paths": {
+            "scale": 5
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Music_Hover_Enter",
+          "channels": 4,
+          "samplers": 4,
+          "start_seconds": 0.0,
+          "end_seconds": 0.5,
+          "duration_seconds": 0.5,
+          "target_paths": {
+            "weights": 4
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Music_Hover_Hold",
+          "channels": 5,
+          "samplers": 5,
+          "start_seconds": 0.0,
+          "end_seconds": 2.0,
+          "duration_seconds": 2.0,
+          "target_paths": {
+            "weights": 4,
+            "scale": 1
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Lights_Off",
+          "channels": 1,
+          "samplers": 1,
+          "start_seconds": 0.0,
+          "end_seconds": 0.0416666679084301,
+          "duration_seconds": 0.0416666679084301,
+          "target_paths": {
+            "rotation": 1
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Lights_On",
+          "channels": 1,
+          "samplers": 1,
+          "start_seconds": 0.0,
+          "end_seconds": 0.0416666679084301,
+          "duration_seconds": 0.0416666679084301,
+          "target_paths": {
+            "rotation": 1
+          },
+          "pointer_targets": []
+        }
+      ],
+      "checked": true
+    },
+    {
+      "file": "worlds/apex-circuit.glb",
+      "bytes": 12676712,
+      "sha256": "1cca4144cbf2b6f556e7ce347c6d1cb20fa153dd66aa3ab2d492ae7cb4591b53",
+      "triangles": 451244,
+      "animations": [],
+      "checked": true
+    },
+    {
+      "file": "worlds/computer-desktop.glb",
+      "bytes": 11318936,
+      "sha256": "7ee555a100c9815d66b0c18201e5f60e8b51297318ae187825f3dd8b300b6d62",
+      "triangles": 212180,
+      "animations": [
+        {
+          "name": "DesktopAmbient",
+          "channels": 78,
+          "samplers": 78,
+          "start_seconds": 0.0,
+          "end_seconds": 9.958333015441895,
+          "duration_seconds": 9.958333015441895,
+          "target_paths": {
+            "translation": 26,
+            "rotation": 26,
+            "scale": 26
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "DesktopFolderOpen",
+          "channels": 6,
+          "samplers": 6,
+          "start_seconds": 0.0,
+          "end_seconds": 2.5,
+          "duration_seconds": 2.5,
+          "target_paths": {
+            "translation": 2,
+            "rotation": 2,
+            "scale": 2
+          },
+          "pointer_targets": []
+        }
+      ],
+      "checked": true
+    },
+    {
+      "file": "worlds/development-atelier-optional.glb",
+      "bytes": 5100660,
+      "sha256": "f4f4e004d3f397ae25b80ed1537519df09f8098390c8b819b3998d760e63a346",
+      "triangles": 57183,
+      "animations": [
+        {
+          "name": "AtelierLab",
+          "channels": 96,
+          "samplers": 96,
+          "start_seconds": 0.0,
+          "end_seconds": 8.958333015441895,
+          "duration_seconds": 8.958333015441895,
+          "target_paths": {
+            "translation": 32,
+            "rotation": 32,
+            "scale": 32
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "AtelierNotes",
+          "channels": 9,
+          "samplers": 9,
+          "start_seconds": 0.0,
+          "end_seconds": 8.958333015441895,
+          "duration_seconds": 8.958333015441895,
+          "target_paths": {
+            "translation": 3,
+            "rotation": 3,
+            "scale": 3
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "AtelierProjects",
+          "channels": 9,
+          "samplers": 9,
+          "start_seconds": 0.0,
+          "end_seconds": 8.958333015441895,
+          "duration_seconds": 8.958333015441895,
+          "target_paths": {
+            "translation": 3,
+            "rotation": 3,
+            "scale": 3
+          },
+          "pointer_targets": []
+        }
+      ],
+      "checked": true
+    },
+    {
+      "file": "worlds/formula-car-animated.glb",
+      "bytes": 5422204,
+      "sha256": "f9e4810cacdef7b5a8bf4682dcbc3bbf7b5b9df3c0b08da5983ffe241d72391a",
+      "triangles": 188548,
+      "animations": [
+        {
+          "name": "SteeringWheel",
+          "channels": 1,
+          "samplers": 1,
+          "start_seconds": 0.0,
+          "end_seconds": 3.0,
+          "duration_seconds": 3.0,
+          "target_paths": {
+            "rotation": 1
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "FrontSteer",
+          "channels": 2,
+          "samplers": 2,
+          "start_seconds": 0.0,
+          "end_seconds": 3.0,
+          "duration_seconds": 3.0,
+          "target_paths": {
+            "rotation": 2
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "WheelSpin",
+          "channels": 4,
+          "samplers": 4,
+          "start_seconds": 0.0,
+          "end_seconds": 1.0,
+          "duration_seconds": 1.0,
+          "target_paths": {
+            "rotation": 4
+          },
+          "pointer_targets": []
+        }
+      ],
+      "checked": true
+    },
+    {
+      "file": "baked/room-baked-preview.glb",
+      "bytes": 10639392,
+      "sha256": "717f9fe750002762652e1438154f9188f097b60a72aed2ab6d42eb5ef1c4ae78",
+      "triangles": 132097,
+      "animations": [],
+      "checked": true
+    }
+  ]
+}

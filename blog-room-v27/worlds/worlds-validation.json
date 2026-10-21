@@ -1,0 +1,33 @@
+{
+  "assets": [
+    {
+      "file": "computer-desktop.glb",
+      "imported_nodes": 83,
+      "imported_tracks": [
+        "DesktopAmbient",
+        "DesktopFolderOpen"
+      ],
+      "compared_poses": 112,
+      "maximum_pose_matrix_error": 5.4836273193359375e-06
+    },
+    {
+      "file": "development-atelier-optional.glb",
+      "imported_nodes": 47,
+      "imported_tracks": [
+        "AtelierLab",
+        "AtelierNotes",
+        "AtelierProjects"
+      ],
+      "compared_poses": 110,
+      "maximum_pose_matrix_error": 7.152557373046875e-06
+    },
+    {
+      "file": "apex-circuit.glb",
+      "imported_nodes": 22,
+      "imported_tracks": [],
+      "compared_poses": 0,
+      "maximum_pose_matrix_error": 0
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,299 @@
+{
+  "method": "Blender 5.2 glTF importer in fresh unsaved scenes",
+  "status": "PASS",
+  "files": [
+    {
+      "file": "C:\\Users\\rueha\\Documents\\Codex\\2026-10-19\\new-chat\\outputs\\blog-room-v27\\interactive\\room.glb",
+      "errors": [],
+      "objects": 167,
+      "mesh_objects": 101,
+      "materials": 50,
+      "images": [
+        {
+          "name": "oak_basecolor_v1",
+          "size": [
+            1024,
+            1024
+          ],
+          "has_data": true,
+          "users": 1
+        },
+        {
+          "name": "oak_normal_v1",
+          "size": [
+            512,
+            512
+          ],
+          "has_data": true,
+          "users": 1
+        },
+        {
+          "name": "walnut_basecolor_v1",
+          "size": [
+            1024,
+            1024
+          ],
+          "has_data": true,
+          "users": 1
+        },
+        {
+          "name": "walnut_normal_v1",
+          "size": [
+            512,
+            512
+          ],
+          "has_data": true,
+          "users": 1
+        }
+      ],
+      "cameras": 1,
+      "lights": 0,
+      "shape_key_objects": 4,
+      "actions": [
+        "Book_Click",
+        "Book_Hover_Enter",
+        "Book_Hover_Exit",
+        "Book_Hover_Hold",
+        "Book_Idle",
+        "Lights_Off",
+        "Lights_On",
+        "Monitor_Hover_Enter",
+        "Monitor_Hover_Exit",
+        "Monitor_Hover_Hold",
+        "Monitor_Idle",
+        "Monitor_Portal_Approach",
+        "Music_Click",
+        "Music_Hover_Enter",
+        "Music_Hover_Hold",
+        "Room_Ambient_Idle",
+        "Room_Opening",
+        "Simulator_Hover_Enter",
+        "Simulator_Hover_Exit",
+        "Simulator_Hover_Hold",
+        "Simulator_Idle",
+        "Simulator_Portal_Approach"
+      ],
+      "bounds_blender_xyz": [
+        [
+          -3.5299999713897705,
+          -2.700000047683716,
+          -0.25
+        ],
+        [
+          3.4000000953674316,
+          2.8399999141693115,
+          3.200000047683716
+        ]
+      ],
+      "status": "PASS",
+      "sha256": "7afdd8b0374ce219d38a7c6fbae7917bd5295e96afb181c8f27c05184d8c6969"
+    },
+    {
+      "file": "C:\\Users\\rueha\\Documents\\Codex\\2026-10-19\\new-chat\\outputs\\blog-room-v27\\worlds\\apex-circuit.glb",
+      "errors": [],
+      "objects": 22,
+      "mesh_objects": 16,
+      "materials": 57,
+      "images": [],
+      "cameras": 0,
+      "lights": 0,
+      "shape_key_objects": 0,
+      "actions": [],
+      "bounds_blender_xyz": [
+        [
+          -245.0,
+          -110.0,
+          -0.14237956702709198
+        ],
+        [
+          65.0,
+          300.0,
+          22.17790985107422
+        ]
+      ],
+      "status": "PASS",
+      "sha256": "1cca4144cbf2b6f556e7ce347c6d1cb20fa153dd66aa3ab2d492ae7cb4591b53"
+    },
+    {
+      "file": "C:\\Users\\rueha\\Documents\\Codex\\2026-10-19\\new-chat\\outputs\\blog-room-v27\\worlds\\computer-desktop.glb",
+      "errors": [],
+      "objects": 83,
+      "mesh_objects": 51,
+      "materials": 32,
+      "images": [
+        {
+          "name": "pixel_room",
+          "size": [
+            1440,
+            1280
+          ],
+          "has_data": true,
+          "users": 1
+        },
+        {
+          "name": "realistic_room",
+          "size": [
+            1200,
+            1000
+          ],
+          "has_data": true,
+          "users": 1
+        }
+      ],
+      "cameras": 0,
+      "lights": 0,
+      "shape_key_objects": 0,
+      "actions": [
+        "DesktopAmbient",
+        "DesktopFolderOpen"
+      ],
+      "bounds_blender_xyz": [
+        [
+          -8.800000190734863,
+          -6.0,
+          -0.5199999809265137
+        ],
+        [
+          8.800000190734863,
+          18.399999618530273,
+          6.335000038146973
+        ]
+      ],
+      "status": "PASS",
+      "sha256": "7ee555a100c9815d66b0c18201e5f60e8b51297318ae187825f3dd8b300b6d62"
+    },
+    {
+      "file": "C:\\Users\\rueha\\Documents\\Codex\\2026-10-19\\new-chat\\outputs\\blog-room-v27\\worlds\\development-atelier-optional.glb",
+      "errors": [],
+      "objects": 47,
+      "mesh_objects": 31,
+      "materials": 28,
+      "images": [
+        {
+          "name": "oak_basecolor_v1",
+          "size": [
+            1024,
+            1024
+          ],
+          "has_data": true,
+          "users": 2
+        },
+        {
+          "name": "oak_normal_v1",
+          "size": [
+            512,
+            512
+          ],
+          "has_data": true,
+          "users": 2
+        },
+        {
+          "name": "walnut_basecolor_v1",
+          "size": [
+            1024,
+            1024
+          ],
+          "has_data": true,
+          "users": 1
+        },
+        {
+          "name": "walnut_normal_v1",
+          "size": [
+            512,
+            512
+          ],
+          "has_data": true,
+          "users": 1
+        }
+      ],
+      "cameras": 0,
+      "lights": 0,
+      "shape_key_objects": 0,
+      "actions": [
+        "AtelierLab",
+        "AtelierNotes",
+        "AtelierProjects"
+      ],
+      "bounds_blender_xyz": [
+        [
+          -6.099999904632568,
+          -0.050328124314546585,
+          -0.800000011920929
+        ],
+        [
+          6.099999904632568,
+          13.59999942779541,
+          5.680000305175781
+        ]
+      ],
+      "status": "PASS",
+      "sha256": "f4f4e004d3f397ae25b80ed1537519df09f8098390c8b819b3998d760e63a346"
+    },
+    {
+      "file": "C:\\Users\\rueha\\Documents\\Codex\\2026-10-19\\new-chat\\outputs\\blog-room-v27\\worlds\\formula-car-animated.glb",
+      "errors": [],
+      "objects": 16,
+      "mesh_objects": 8,
+      "materials": 35,
+      "images": [],
+      "cameras": 0,
+      "lights": 0,
+      "shape_key_objects": 0,
+      "actions": [
+        "FrontSteer",
+        "SteeringWheel",
+        "WheelSpin"
+      ],
+      "bounds_blender_xyz": [
+        [
+          -1.01997709274292,
+          -2.494999885559082,
+          0.0
+        ],
+        [
+          1.01997709274292,
+          2.565000057220459,
+          1.2799999713897705
+        ]
+      ],
+      "status": "PASS",
+      "sha256": "f9e4810cacdef7b5a8bf4682dcbc3bbf7b5b9df3c0b08da5983ffe241d72391a"
+    },
+    {
+      "file": "C:\\Users\\rueha\\Documents\\Codex\\2026-10-19\\new-chat\\outputs\\blog-room-v27\\baked\\room-baked-preview.glb",
+      "errors": [],
+      "objects": 2,
+      "mesh_objects": 1,
+      "materials": 1,
+      "images": [
+        {
+          "name": "room-baked-lighting-4k",
+          "size": [
+            4096,
+            4096
+          ],
+          "has_data": true,
+          "users": 1
+        }
+      ],
+      "cameras": 1,
+      "lights": 0,
+      "shape_key_objects": 0,
+      "actions": [],
+      "bounds_blender_xyz": [
+        [
+          -3.5299999713897705,
+          -2.700000047683716,
+          -0.25
+        ],
+        [
+          3.4000000953674316,
+          2.8399999141693115,
+          3.200000047683716
+        ]
+      ],
+      "status": "PASS",
+      "sha256": "717f9fe750002762652e1438154f9188f097b60a72aed2ab6d42eb5ef1c4ae78"
+    }
+  ]
+}

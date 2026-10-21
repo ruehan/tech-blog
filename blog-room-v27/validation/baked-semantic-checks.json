@@ -1,0 +1,48 @@
+{
+  "method": "Independent GLB binary, references, decoded accessors, images and animation integrity checks",
+  "khronos_certified_validation": false,
+  "files": [
+    {
+      "file": "C:\\Users\\rueha\\Documents\\Codex\\2026-10-19\\new-chat\\outputs\\blog-room-v27\\baked\\room-baked-preview.glb",
+      "errors": [],
+      "warnings": [],
+      "bytes": 10639392,
+      "mib": 10.147,
+      "scenes": 1,
+      "nodes": 2,
+      "mesh_resources": 1,
+      "mesh_nodes": 1,
+      "primitives": 1,
+      "vertices_across_primitives": 218866,
+      "triangles_unique_resources": 132097,
+      "triangles_instantiated": 132097,
+      "materials": 1,
+      "images": [
+        {
+          "name": "room-baked-lighting-4k",
+          "mimeType": "image/jpeg",
+          "bytes": 2048518,
+          "embedded": true,
+          "size": [
+            4096,
+            4096
+          ],
+          "format": "JPEG"
+        }
+      ],
+      "morph_primitives": 0,
+      "animations": [],
+      "cameras": 1,
+      "punctual_lights": 0,
+      "extensions_used": [
+        "KHR_materials_unlit"
+      ],
+      "extensions_required": [],
+      "unlit_materials": 1,
+      "interaction_nodes": [],
+      "status": "PASS",
+      "sha256": "717f9fe750002762652e1438154f9188f097b60a72aed2ab6d42eb5ef1c4ae78"
+    }
+  ],
+  "status": "PASS"
+}

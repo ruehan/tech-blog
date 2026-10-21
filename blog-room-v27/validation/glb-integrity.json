@@ -1,0 +1,987 @@
+{
+  "method": "Independent GLB binary, references, decoded accessors, images and animation integrity checks",
+  "khronos_certified_validation": false,
+  "files": [
+    {
+      "file": "C:\\Users\\rueha\\Documents\\Codex\\2026-10-19\\new-chat\\outputs\\blog-room-v27\\interactive\\room.glb",
+      "errors": [],
+      "warnings": [],
+      "bytes": 9344188,
+      "mib": 8.911,
+      "scenes": 1,
+      "nodes": 167,
+      "mesh_resources": 101,
+      "mesh_nodes": 101,
+      "primitives": 216,
+      "vertices_across_primitives": 182397,
+      "triangles_unique_resources": 133425,
+      "triangles_instantiated": 133425,
+      "materials": 50,
+      "images": [
+        {
+          "name": "walnut_normal_v1",
+          "mimeType": "image/png",
+          "bytes": 191359,
+          "embedded": true,
+          "size": [
+            512,
+            512
+          ],
+          "format": "PNG"
+        },
+        {
+          "name": "walnut_basecolor_v1",
+          "mimeType": "image/png",
+          "bytes": 782288,
+          "embedded": true,
+          "size": [
+            1024,
+            1024
+          ],
+          "format": "PNG"
+        },
+        {
+          "name": "oak_normal_v1",
+          "mimeType": "image/png",
+          "bytes": 192035,
+          "embedded": true,
+          "size": [
+            512,
+            512
+          ],
+          "format": "PNG"
+        },
+        {
+          "name": "oak_basecolor_v1",
+          "mimeType": "image/png",
+          "bytes": 780417,
+          "embedded": true,
+          "size": [
+            1024,
+            1024
+          ],
+          "format": "PNG"
+        }
+      ],
+      "morph_primitives": 4,
+      "animations": [
+        {
+          "name": "Room_Opening",
+          "channels": 34,
+          "samplers": 34,
+          "start_seconds": 0.0,
+          "end_seconds": 3.0,
+          "duration_seconds": 3.0,
+          "target_paths": {
+            "scale": 29,
+            "rotation": 4,
+            "translation": 1
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Room_Ambient_Idle",
+          "channels": 32,
+          "samplers": 32,
+          "start_seconds": 0.0,
+          "end_seconds": 20.0,
+          "duration_seconds": 20.0,
+          "target_paths": {
+            "translation": 16,
+            "scale": 15,
+            "rotation": 1
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Book_Click",
+          "channels": 13,
+          "samplers": 13,
+          "start_seconds": 0.0,
+          "end_seconds": 18.0,
+          "duration_seconds": 18.0,
+          "target_paths": {
+            "translation": 3,
+            "rotation": 8,
+            "scale": 2
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Music_Click",
+          "channels": 10,
+          "samplers": 10,
+          "start_seconds": 0.0,
+          "end_seconds": 15.0,
+          "duration_seconds": 15.0,
+          "target_paths": {
+            "rotation": 3,
+            "scale": 2,
+            "weights": 4,
+            "translation": 1
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Monitor_Portal_Approach",
+          "channels": 3,
+          "samplers": 3,
+          "start_seconds": 0.0,
+          "end_seconds": 4.958333492279053,
+          "duration_seconds": 4.958333492279053,
+          "target_paths": {
+            "translation": 1,
+            "rotation": 1,
+            "scale": 1
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Simulator_Portal_Approach",
+          "channels": 3,
+          "samplers": 3,
+          "start_seconds": 0.0,
+          "end_seconds": 4.958333492279053,
+          "duration_seconds": 4.958333492279053,
+          "target_paths": {
+            "translation": 1,
+            "rotation": 1,
+            "scale": 1
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Book_Idle",
+          "channels": 2,
+          "samplers": 2,
+          "start_seconds": 0.0,
+          "end_seconds": 5.0,
+          "duration_seconds": 5.0,
+          "target_paths": {
+            "translation": 1,
+            "rotation": 1
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Book_Hover_Enter",
+          "channels": 2,
+          "samplers": 2,
+          "start_seconds": 0.0,
+          "end_seconds": 0.5,
+          "duration_seconds": 0.5,
+          "target_paths": {
+            "translation": 1,
+            "rotation": 1
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Book_Hover_Hold",
+          "channels": 3,
+          "samplers": 3,
+          "start_seconds": 0.0,
+          "end_seconds": 2.0,
+          "duration_seconds": 2.0,
+          "target_paths": {
+            "scale": 1,
+            "translation": 1,
+            "rotation": 1
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Book_Hover_Exit",
+          "channels": 2,
+          "samplers": 2,
+          "start_seconds": 0.0,
+          "end_seconds": 0.5,
+          "duration_seconds": 0.5,
+          "target_paths": {
+            "translation": 1,
+            "rotation": 1
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Monitor_Idle",
+          "channels": 4,
+          "samplers": 4,
+          "start_seconds": 0.0,
+          "end_seconds": 5.0,
+          "duration_seconds": 5.0,
+          "target_paths": {
+            "translation": 2,
+            "scale": 2
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Monitor_Hover_Enter",
+          "channels": 4,
+          "samplers": 4,
+          "start_seconds": 0.0,
+          "end_seconds": 0.5,
+          "duration_seconds": 0.5,
+          "target_paths": {
+            "scale": 4
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Monitor_Hover_Hold",
+          "channels": 5,
+          "samplers": 5,
+          "start_seconds": 0.0,
+          "end_seconds": 2.0,
+          "duration_seconds": 2.0,
+          "target_paths": {
+            "scale": 5
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Monitor_Hover_Exit",
+          "channels": 4,
+          "samplers": 4,
+          "start_seconds": 0.0,
+          "end_seconds": 0.5,
+          "duration_seconds": 0.5,
+          "target_paths": {
+            "scale": 4
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Simulator_Idle",
+          "channels": 26,
+          "samplers": 26,
+          "start_seconds": 0.0,
+          "end_seconds": 5.0,
+          "duration_seconds": 5.0,
+          "target_paths": {
+            "translation": 13,
+            "scale": 13
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Simulator_Hover_Enter",
+          "channels": 5,
+          "samplers": 5,
+          "start_seconds": 0.0,
+          "end_seconds": 0.5,
+          "duration_seconds": 0.5,
+          "target_paths": {
+            "scale": 5
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Simulator_Hover_Hold",
+          "channels": 5,
+          "samplers": 5,
+          "start_seconds": 0.0,
+          "end_seconds": 2.0,
+          "duration_seconds": 2.0,
+          "target_paths": {
+            "scale": 5
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Simulator_Hover_Exit",
+          "channels": 5,
+          "samplers": 5,
+          "start_seconds": 0.0,
+          "end_seconds": 0.5,
+          "duration_seconds": 0.5,
+          "target_paths": {
+            "scale": 5
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Music_Hover_Enter",
+          "channels": 4,
+          "samplers": 4,
+          "start_seconds": 0.0,
+          "end_seconds": 0.5,
+          "duration_seconds": 0.5,
+          "target_paths": {
+            "weights": 4
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Music_Hover_Hold",
+          "channels": 5,
+          "samplers": 5,
+          "start_seconds": 0.0,
+          "end_seconds": 2.0,
+          "duration_seconds": 2.0,
+          "target_paths": {
+            "weights": 4,
+            "scale": 1
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Lights_Off",
+          "channels": 1,
+          "samplers": 1,
+          "start_seconds": 0.0,
+          "end_seconds": 0.0416666679084301,
+          "duration_seconds": 0.0416666679084301,
+          "target_paths": {
+            "rotation": 1
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "Lights_On",
+          "channels": 1,
+          "samplers": 1,
+          "start_seconds": 0.0,
+          "end_seconds": 0.0416666679084301,
+          "duration_seconds": 0.0416666679084301,
+          "target_paths": {
+            "rotation": 1
+          },
+          "pointer_targets": []
+        }
+      ],
+      "cameras": 1,
+      "punctual_lights": 0,
+      "extensions_used": [
+        "KHR_materials_clearcoat",
+        "KHR_materials_transmission",
+        "KHR_materials_emissive_strength",
+        "KHR_materials_ior",
+        "KHR_materials_sheen"
+      ],
+      "extensions_required": [],
+      "unlit_materials": 0,
+      "interaction_nodes": [
+        {
+          "name": "WEB_INT_FeatureBook",
+          "interaction_id": "featured_book"
+        },
+        {
+          "name": "WEB_BOOKCASE",
+          "interaction_id": "books"
+        },
+        {
+          "name": "WEB_INT_LightSwitch",
+          "interaction_id": "room_lighting"
+        },
+        {
+          "name": "WEB_INT_Bass",
+          "interaction_id": "bass"
+        },
+        {
+          "name": "WEB_SIMRIG",
+          "interaction_id": "racing"
+        },
+        {
+          "name": "WEB_INT_Monitor",
+          "interaction_id": "monitor"
+        }
+      ],
+      "status": "PASS",
+      "sha256": "7afdd8b0374ce219d38a7c6fbae7917bd5295e96afb181c8f27c05184d8c6969"
+    },
+    {
+      "file": "C:\\Users\\rueha\\Documents\\Codex\\2026-10-19\\new-chat\\outputs\\blog-room-v27\\worlds\\apex-circuit.glb",
+      "errors": [],
+      "warnings": [],
+      "bytes": 12676712,
+      "mib": 12.089,
+      "scenes": 1,
+      "nodes": 22,
+      "mesh_resources": 16,
+      "mesh_nodes": 16,
+      "primitives": 62,
+      "vertices_across_primitives": 357767,
+      "triangles_unique_resources": 451244,
+      "triangles_instantiated": 451244,
+      "materials": 57,
+      "images": [],
+      "morph_primitives": 0,
+      "animations": [],
+      "cameras": 0,
+      "punctual_lights": 0,
+      "extensions_used": [
+        "KHR_materials_clearcoat"
+      ],
+      "extensions_required": [],
+      "unlit_materials": 0,
+      "interaction_nodes": [],
+      "status": "PASS",
+      "sha256": "1cca4144cbf2b6f556e7ce347c6d1cb20fa153dd66aa3ab2d492ae7cb4591b53"
+    },
+    {
+      "file": "C:\\Users\\rueha\\Documents\\Codex\\2026-10-19\\new-chat\\outputs\\blog-room-v27\\worlds\\computer-desktop.glb",
+      "errors": [],
+      "warnings": [],
+      "bytes": 11318936,
+      "mib": 10.795,
+      "scenes": 1,
+      "nodes": 83,
+      "mesh_resources": 51,
+      "mesh_nodes": 51,
+      "primitives": 111,
+      "vertices_across_primitives": 252772,
+      "triangles_unique_resources": 212180,
+      "triangles_instantiated": 212180,
+      "materials": 32,
+      "images": [
+        {
+          "name": "realistic_room",
+          "mimeType": "image/png",
+          "bytes": 1601912,
+          "embedded": true,
+          "size": [
+            1200,
+            1000
+          ],
+          "format": "PNG"
+        },
+        {
+          "name": "pixel_room",
+          "mimeType": "image/png",
+          "bytes": 67672,
+          "embedded": true,
+          "size": [
+            1440,
+            1280
+          ],
+          "format": "PNG"
+        }
+      ],
+      "morph_primitives": 0,
+      "animations": [
+        {
+          "name": "DesktopAmbient",
+          "channels": 78,
+          "samplers": 78,
+          "start_seconds": 0.0,
+          "end_seconds": 9.958333015441895,
+          "duration_seconds": 9.958333015441895,
+          "target_paths": {
+            "translation": 26,
+            "rotation": 26,
+            "scale": 26
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "DesktopFolderOpen",
+          "channels": 6,
+          "samplers": 6,
+          "start_seconds": 0.0,
+          "end_seconds": 2.5,
+          "duration_seconds": 2.5,
+          "target_paths": {
+            "translation": 2,
+            "rotation": 2,
+            "scale": 2
+          },
+          "pointer_targets": []
+        }
+      ],
+      "cameras": 0,
+      "punctual_lights": 0,
+      "extensions_used": [
+        "KHR_materials_clearcoat"
+      ],
+      "extensions_required": [],
+      "unlit_materials": 0,
+      "interaction_nodes": [
+        {
+          "name": "Desktop | Code editor window",
+          "interaction_id": "desktop.editor"
+        },
+        {
+          "name": "Desktop | Music waveform 1",
+          "interaction_id": "desktop.music"
+        },
+        {
+          "name": "Desktop | Music waveform 2",
+          "interaction_id": "desktop.music"
+        },
+        {
+          "name": "Desktop | Music waveform 3",
+          "interaction_id": "desktop.music"
+        },
+        {
+          "name": "Desktop | Music waveform 4",
+          "interaction_id": "desktop.music"
+        },
+        {
+          "name": "Desktop | Music waveform 5",
+          "interaction_id": "desktop.music"
+        },
+        {
+          "name": "Desktop | Music waveform 6",
+          "interaction_id": "desktop.music"
+        },
+        {
+          "name": "Desktop | Music waveform 7",
+          "interaction_id": "desktop.music"
+        },
+        {
+          "name": "Desktop | Music waveform 8",
+          "interaction_id": "desktop.music"
+        },
+        {
+          "name": "Desktop | Music waveform 9",
+          "interaction_id": "desktop.music"
+        },
+        {
+          "name": "Desktop | Music waveform 10",
+          "interaction_id": "desktop.music"
+        },
+        {
+          "name": "Desktop | Music waveform 11",
+          "interaction_id": "desktop.music"
+        },
+        {
+          "name": "Desktop | Music waveform 12",
+          "interaction_id": "desktop.music"
+        },
+        {
+          "name": "Desktop | Music waveform 13",
+          "interaction_id": "desktop.music"
+        },
+        {
+          "name": "Desktop | Music waveform 14",
+          "interaction_id": "desktop.music"
+        },
+        {
+          "name": "Desktop | Music waveform 15",
+          "interaction_id": "desktop.music"
+        },
+        {
+          "name": "Desktop | Music waveform 16",
+          "interaction_id": "desktop.music"
+        },
+        {
+          "name": "Desktop | Music waveform 17",
+          "interaction_id": "desktop.music"
+        },
+        {
+          "name": "Desktop | Music waveform 18",
+          "interaction_id": "desktop.music"
+        },
+        {
+          "name": "Desktop | Music waveform 19",
+          "interaction_id": "desktop.music"
+        },
+        {
+          "name": "Desktop | Music waveform 20",
+          "interaction_id": "desktop.music"
+        },
+        {
+          "name": "Desktop | Music waveform 21",
+          "interaction_id": "desktop.music"
+        },
+        {
+          "name": "Desktop | Music waveform 22",
+          "interaction_id": "desktop.music"
+        },
+        {
+          "name": "Desktop | Music mini player",
+          "interaction_id": "desktop.music"
+        },
+        {
+          "name": "Desktop | Photos window",
+          "interaction_id": "desktop.photos"
+        },
+        {
+          "name": "Desktop | Pixel photo window",
+          "interaction_id": "desktop.pixel-photo"
+        }
+      ],
+      "status": "PASS",
+      "sha256": "7ee555a100c9815d66b0c18201e5f60e8b51297318ae187825f3dd8b300b6d62"
+    },
+    {
+      "file": "C:\\Users\\rueha\\Documents\\Codex\\2026-10-19\\new-chat\\outputs\\blog-room-v27\\worlds\\development-atelier-optional.glb",
+      "errors": [],
+      "warnings": [],
+      "bytes": 5100660,
+      "mib": 4.864,
+      "scenes": 1,
+      "nodes": 47,
+      "mesh_resources": 31,
+      "mesh_nodes": 31,
+      "primitives": 65,
+      "vertices_across_primitives": 81516,
+      "triangles_unique_resources": 57183,
+      "triangles_instantiated": 57183,
+      "materials": 28,
+      "images": [
+        {
+          "name": "oak_normal_v1",
+          "mimeType": "image/png",
+          "bytes": 192035,
+          "embedded": true,
+          "size": [
+            512,
+            512
+          ],
+          "format": "PNG"
+        },
+        {
+          "name": "oak_basecolor_v1",
+          "mimeType": "image/png",
+          "bytes": 780417,
+          "embedded": true,
+          "size": [
+            1024,
+            1024
+          ],
+          "format": "PNG"
+        },
+        {
+          "name": "walnut_normal_v1",
+          "mimeType": "image/png",
+          "bytes": 191359,
+          "embedded": true,
+          "size": [
+            512,
+            512
+          ],
+          "format": "PNG"
+        },
+        {
+          "name": "walnut_basecolor_v1",
+          "mimeType": "image/png",
+          "bytes": 782288,
+          "embedded": true,
+          "size": [
+            1024,
+            1024
+          ],
+          "format": "PNG"
+        }
+      ],
+      "morph_primitives": 0,
+      "animations": [
+        {
+          "name": "AtelierLab",
+          "channels": 96,
+          "samplers": 96,
+          "start_seconds": 0.0,
+          "end_seconds": 8.958333015441895,
+          "duration_seconds": 8.958333015441895,
+          "target_paths": {
+            "translation": 32,
+            "rotation": 32,
+            "scale": 32
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "AtelierNotes",
+          "channels": 9,
+          "samplers": 9,
+          "start_seconds": 0.0,
+          "end_seconds": 8.958333015441895,
+          "duration_seconds": 8.958333015441895,
+          "target_paths": {
+            "translation": 3,
+            "rotation": 3,
+            "scale": 3
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "AtelierProjects",
+          "channels": 9,
+          "samplers": 9,
+          "start_seconds": 0.0,
+          "end_seconds": 8.958333015441895,
+          "duration_seconds": 8.958333015441895,
+          "target_paths": {
+            "translation": 3,
+            "rotation": 3,
+            "scale": 3
+          },
+          "pointer_targets": []
+        }
+      ],
+      "cameras": 0,
+      "punctual_lights": 0,
+      "extensions_used": [],
+      "extensions_required": [],
+      "unlit_materials": 0,
+      "interaction_nodes": [
+        {
+          "name": "Atelier | Data packet main branch.001",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | Experiment Branch Control",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | BUILD caption",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | BUILD empty track",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | BUILD label",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | BUILD number",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | BUILD progress light",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | BUILD Progress Control",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | BUILD Step",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | MERGE caption",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | MERGE empty track",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | MERGE label",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | MERGE number",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | MERGE progress light",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | MERGE Progress Control",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | MERGE Step",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | Pipeline brass side 1",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | Pipeline brass side -1",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | Pipeline heading",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | Pipeline machined housing",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | Pipeline recessed face",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | Pipeline subtitle",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | TEST caption",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | TEST empty track",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | TEST label",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | TEST number",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | TEST progress light",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | TEST Progress Control",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | TEST Step",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | Pipeline Status Control",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "Atelier | Data packet study branch.001",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "LAB | Study Branch Control",
+          "interaction_id": "lab"
+        },
+        {
+          "name": "World_DevelopmentAtelier.001 | Interaction | NOTES companion slip",
+          "interaction_id": "notes"
+        },
+        {
+          "name": "World_DevelopmentAtelier.001 | Interaction | NOTES companion reveal",
+          "interaction_id": "notes"
+        },
+        {
+          "name": "World_DevelopmentAtelier.001 | Interaction | NOTES reading sheet",
+          "interaction_id": "notes"
+        },
+        {
+          "name": "World_DevelopmentAtelier.001 | Interaction | PROJECTS secondary leaf hinge",
+          "interaction_id": "projects"
+        },
+        {
+          "name": "World_DevelopmentAtelier.001 | Interaction | PROJECTS physical frame reveal",
+          "interaction_id": "projects"
+        },
+        {
+          "name": "World_DevelopmentAtelier.001 | Interaction | PROJECTS pullout",
+          "interaction_id": "projects"
+        }
+      ],
+      "status": "PASS",
+      "sha256": "f4f4e004d3f397ae25b80ed1537519df09f8098390c8b819b3998d760e63a346"
+    },
+    {
+      "file": "C:\\Users\\rueha\\Documents\\Codex\\2026-10-19\\new-chat\\outputs\\blog-room-v27\\worlds\\formula-car-animated.glb",
+      "errors": [],
+      "warnings": [],
+      "bytes": 5422204,
+      "mib": 5.171,
+      "scenes": 1,
+      "nodes": 16,
+      "mesh_resources": 8,
+      "mesh_nodes": 8,
+      "primitives": 55,
+      "vertices_across_primitives": 186621,
+      "triangles_unique_resources": 188548,
+      "triangles_instantiated": 188548,
+      "materials": 35,
+      "images": [],
+      "morph_primitives": 0,
+      "animations": [
+        {
+          "name": "SteeringWheel",
+          "channels": 1,
+          "samplers": 1,
+          "start_seconds": 0.0,
+          "end_seconds": 3.0,
+          "duration_seconds": 3.0,
+          "target_paths": {
+            "rotation": 1
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "FrontSteer",
+          "channels": 2,
+          "samplers": 2,
+          "start_seconds": 0.0,
+          "end_seconds": 3.0,
+          "duration_seconds": 3.0,
+          "target_paths": {
+            "rotation": 2
+          },
+          "pointer_targets": []
+        },
+        {
+          "name": "WheelSpin",
+          "channels": 4,
+          "samplers": 4,
+          "start_seconds": 0.0,
+          "end_seconds": 1.0,
+          "duration_seconds": 1.0,
+          "target_paths": {
+            "rotation": 4
+          },
+          "pointer_targets": []
+        }
+      ],
+      "cameras": 0,
+      "punctual_lights": 0,
+      "extensions_used": [
+        "KHR_materials_clearcoat",
+        "KHR_materials_emissive_strength"
+      ],
+      "extensions_required": [],
+      "unlit_materials": 0,
+      "interaction_nodes": [],
+      "status": "PASS",
+      "sha256": "f9e4810cacdef7b5a8bf4682dcbc3bbf7b5b9df3c0b08da5983ffe241d72391a"
+    },
+    {
+      "file": "C:\\Users\\rueha\\Documents\\Codex\\2026-10-19\\new-chat\\outputs\\blog-room-v27\\baked\\room-baked-preview.glb",
+      "errors": [],
+      "warnings": [],
+      "bytes": 10639392,
+      "mib": 10.147,
+      "scenes": 1,
+      "nodes": 2,
+      "mesh_resources": 1,
+      "mesh_nodes": 1,
+      "primitives": 1,
+      "vertices_across_primitives": 218866,
+      "triangles_unique_resources": 132097,
+      "triangles_instantiated": 132097,
+      "materials": 1,
+      "images": [
+        {
+          "name": "room-baked-lighting-4k",
+          "mimeType": "image/jpeg",
+          "bytes": 2048518,
+          "embedded": true,
+          "size": [
+            4096,
+            4096
+          ],
+          "format": "JPEG"
+        }
+      ],
+      "morph_primitives": 0,
+      "animations": [],
+      "cameras": 1,
+      "punctual_lights": 0,
+      "extensions_used": [
+        "KHR_materials_unlit"
+      ],
+      "extensions_required": [],
+      "unlit_materials": 1,
+      "interaction_nodes": [],
+      "status": "PASS",
+      "sha256": "717f9fe750002762652e1438154f9188f097b60a72aed2ab6d42eb5ef1c4ae78"
+    }
+  ],
+  "status": "PASS"
+}
