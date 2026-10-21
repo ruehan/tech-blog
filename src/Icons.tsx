@@ -1,5 +1,7 @@
 export function Icon({ name, size = 20 }: { name: string; size?: number }) {
   const paths: Record<string, React.ReactNode> = {
+    search: <><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></>,
+    notes: <><rect x="5" y="3" width="15" height="18" rx="2"/><path d="M9 3v18M3 7h4m-4 5h4m-4 5h4m6-10h4m-4 5h4"/></>,
     room: <><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Z"/><path d="M9 21v-8h6v8"/></>,
     desktop: <><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4M7 8h5"/></>,
     circuit: <><path d="M7 3v18M7 4c5-4 7 4 14 0v9c-7 4-9-4-14 0"/><path d="M12 4v8m5-6v8M7 8c5-4 7 4 14 0"/></>,

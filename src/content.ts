@@ -88,3 +88,16 @@ export const project = {
 };
 export const allTags = [...new Set(posts.flatMap(post => post.tags))];
 export const formatDate = (date: string) => date.replaceAll('-', '.');
+
+const normalizeSearch = (text: string) => text.normalize('NFKC').toLocaleLowerCase().replace(/\s+/g, ' ').trim();
+export function filterPosts(tag: string, query: string) {
+  const terms = normalizeSearch(query).split(' ').filter(Boolean);
+  return posts.filter(post => {
+    if (tag && !post.tags.includes(tag)) return false;
+    const text = normalizeSearch([
+      post.title, post.description, ...post.tags,
+      ...post.sections.flatMap(section => [section.title, ...section.blocks.flatMap(block => block.type === 'list' ? block.items : [block.text])]),
+    ].join(' '));
+    return terms.every(term => text.includes(term));
+  });
+}

@@ -3,6 +3,7 @@ import type { RoomHandle } from './Room';
 import { Icon } from './Icons';
 import { defaultView, worlds, type ViewId, type WorldId } from './worlds';
 import { Book, ContentMetadata, Library, ReadingPage } from './Blog';
+import { Journal } from './Journal';
 import { useRoute } from './navigation';
 
 const WorldScene = lazy(() => import('./WorldScene'));
@@ -19,12 +20,12 @@ function RailButton({ icon, label, ...props }: ButtonHTMLAttributes<HTMLButtonEl
 
 export default function App() {
   const { route, go } = useRoute();
+  const journalOpen = route.path === '/journal' || route.path.startsWith('/journal/');
   const inSpace = route.path === '/';
   const bookOpen = route.path === '/posts' || route.path.startsWith('/posts/');
   const libraryOpen = bookOpen || route.path === '/projects';
   const [spaceMounted, setSpaceMounted] = useState(inSpace);
   const folderPending = useRef(false);
-  useEffect(() => { if (inSpace) setSpaceMounted(true); }, [inSpace]);
   const openPosts = useCallback(() => go('/posts'), [go]);
   const openProjects = useCallback(() => {
     if (!folderPending.current) return;
@@ -42,6 +43,13 @@ export default function App() {
   const [reset, setReset] = useState(0);
   const [folderOpen, setFolderOpen] = useState(false);
   const roomRef = useRef<RoomHandle>(null);
+  useEffect(() => {
+    if (inSpace) setSpaceMounted(true);
+    if (journalOpen) {
+      setSpaceMounted(false); setReady(false); setBusy(false); setFailed(false);
+      setFolderOpen(false); folderPending.current = false; document.body.style.cursor = '';
+    }
+  }, [inSpace, journalOpen]);
   const config = worlds[world];
   const navigate = useCallback((next: WorldId) => {
     if (next === world) return;
@@ -86,6 +94,8 @@ export default function App() {
     go(href);
   };
 
+  if (journalOpen) return <><ContentMetadata route={route}/><Journal route={route} go={contentNavigate}/></>;
+
   return <><ContentMetadata route={route}/>{spaceMounted && <main inert={!inSpace} aria-hidden={!inSpace || undefined} className={`app ${!inSpace ? 'space-inactive' : ''} ${!inSpace && !libraryOpen ? 'space-covered' : ''} ${world} ${view}-view ${world === 'room' && !lightsOn ? 'night' : ''}`} data-world={world} data-view={view} data-ready={ready}>
     <header className="header">
       <a className="brand" href="#room" onClick={event => { event.preventDefault(); jumpToWorld('room'); }} aria-label="Hangyu's room, 메인 방으로"><span>hangyu<span className="brand-light"> / room</span></span></a>
@@ -99,6 +109,7 @@ export default function App() {
     {!ready && !failed && <div className="loading" role="status" aria-label={`${config.label}에 들어가는 중`}><span className="loading-orbit"/></div>}
 
     <aside className="room-rail" aria-label="공간 메뉴">
+      <div className="rail-group"><button className="rail-button rail-mode" aria-label="일반 블로그로 보기" title="일반 블로그로 보기" onClick={() => openContent('/journal')}>2D</button></div>
       <nav className="rail-group" aria-label="빠른 이동">
         <RailButton icon="room" label="나의 방 01" aria-current={world === 'room' ? 'page' : undefined} onClick={() => jumpToWorld('room')}/>
         <RailButton icon="book" label="글 목록 열기" onClick={() => openContent('/posts')}/>

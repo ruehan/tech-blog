@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState, type RefObject } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type RefObject, type ReactNode } from 'react';
 import { allTags, formatDate, posts, project, type ContentBlock, type Post } from './content';
 import { Icon } from './Icons';
 import { RouteLink, type Navigate, type Route } from './navigation';
@@ -6,7 +6,7 @@ import { asset } from './worlds';
 import './blog.css';
 
 const scrollPositions = new Map<string, number>();
-function useReadingPosition(ref: RefObject<HTMLElement | null>, key: string) {
+export function useReadingPosition(ref: RefObject<HTMLElement | null>, key: string) {
   useLayoutEffect(() => {
     const element = ref.current;
     if (!element) return;
@@ -120,23 +120,36 @@ export function Book({ route, go, onClose }: { route: Route; go: Navigate; onClo
   </dialog>;
 }
 
-function PostArticle({ post, go }: { post: Post; go: Navigate }) {
+export function PostArticle({ post, go, listPath = '/posts', articleBase = '/posts', footer }: { post: Post; go: Navigate; listPath?: string; articleBase?: string; footer?: ReactNode }) {
   const [share, setShare] = useState('');
   const [copyFallback, setCopyFallback] = useState('');
   async function copyLink() {
-    const url = new URL(`/posts/${post.slug}`, window.location.origin).href;
+    const url = new URL(`${articleBase}/${post.slug}`, window.location.origin).href;
     try { await navigator.clipboard.writeText(url); setShare('링크를 복사했어요.'); }
     catch { setCopyFallback(url); setShare('아래 주소를 복사해주세요.'); }
   }
   return <article className="article" >
-        <header className="article-heading"><div className="article-tags">{post.tags.map(tag => <RouteLink key={tag} to={`/posts?tag=${encodeURIComponent(tag)}`} go={go}>{tag}</RouteLink>)}</div>
+        <header className="article-heading"><div className="article-tags">{post.tags.map(tag => <RouteLink key={tag} to={`${listPath}?tag=${encodeURIComponent(tag)}`} go={go}>{tag}</RouteLink>)}</div>
           <h1 tabIndex={-1}>{post.title}</h1><p className="article-deck">{post.description}</p>
-          <div className="article-byline"><span className="author-mark">h.</span><span>hangyu <span className="byline-separator">/</span> <time dateTime={post.date}>{formatDate(post.date)}</time></span><span>{post.minutes}분 읽기</span><span className="draft-label">초안</span></div>
+          <div className="article-byline"><span>hangyu <span className="byline-separator">/</span> <time dateTime={post.date}>{formatDate(post.date)}</time></span><span>{post.minutes}분 읽기</span><span className="draft-label">초안</span></div>
         </header>
         <nav className="book-toc" aria-label="목차"><span className="content-kicker">이 글의 순서</span>{post.sections.map(section => <a href={`#${section.id}`} key={section.id}>{section.title}</a>)}</nav>
         <div className="article-body">{post.sections.map(section => <section key={section.id} id={section.id}><h2>{section.title}</h2>{section.blocks.map((block, index) => <Block key={index} block={block}/>)}</section>)}</div>
-        <div className="article-end"><span>읽어주셔서 감사합니다.</span><button className="share-button" onClick={copyLink}><Icon name="link" size={17}/> 링크 복사</button><span role="status">{share}</span>{copyFallback && <input className="copy-fallback" aria-label="글 주소" readOnly value={copyFallback} onFocus={event => event.target.select()}/>}</div>
-        <section className="related-posts"><span className="content-kicker">함께 읽기</span>{posts.filter(item => item.slug !== post.slug).map(item => <RouteLink key={item.slug} to={`/posts/${item.slug}`} go={go}>{item.title}<Icon name="arrow" size={18}/></RouteLink>)}</section>
+        <div className="article-end"><button className="share-button" onClick={copyLink}><Icon name="link" size={17}/> 링크 복사</button><span role="status">{share}</span>{copyFallback && <input className="copy-fallback" aria-label="글 주소" readOnly value={copyFallback} onFocus={event => event.target.select()}/>}</div>
+        {footer ?? <section className="related-posts"><span className="content-kicker">함께 읽기</span>{posts.filter(item => item.slug !== post.slug).map(item => <RouteLink key={item.slug} to={`${articleBase}/${item.slug}`} go={go}>{item.title}<Icon name="arrow" size={18}/></RouteLink>)}</section>}
+      </article>;
+}
+
+export function ProjectArticle({ go, listPath = '/projects', articleBase = '/posts' }: { go: Navigate; listPath?: string; articleBase?: string }) {
+  return <article className="project-detail">
+        <RouteLink className="article-back" to={listPath} go={go}><Icon name="back" size={16}/> 프로젝트 목록</RouteLink>
+        <header className="article-heading"><span className="status-badge">진행 중 · 개인 프로젝트</span><h1 tabIndex={-1}>{project.title}</h1><p className="article-deck">{project.subtitle}</p><div className="article-tags">{project.tags.map(tag => <span key={tag}>{tag}</span>)}</div></header>
+        <div className="project-cover"><img src={asset('interactive/room-glb-verified.png')} alt="웹으로 옮긴 개인 작업실의 3D 모델"/></div>
+        <div className="article-body"><section><h2>어떤 공간인가요?</h2><p>{project.description} 책에서 글을 읽고, 컴퓨터에서 만든 것을 살펴볼 수 있습니다.</p></section>
+          <section><h2>지금까지 만든 경험</h2><ul><li>책·베이스의 호버 반응과 방의 조명 전환</li><li>모니터를 거쳐 들어가는 컴퓨터 월드</li><li>심레이싱 장비에서 출발선의 운전석으로 이동</li><li>책처럼 펼치는 글 목록과 본문, 페이지 전환</li></ul></section>
+          <section><h2>다음 작업</h2><p>실제 글과 프로젝트 콘텐츠를 늘리고, 모바일에서의 탐색 경험을 다듬습니다. 현재 차량 주행과 물리 시뮬레이션은 포함하지 않습니다.</p></section></div>
+        <RouteLink className="content-primary" to="/" go={go}>방 둘러보기 <Icon name="arrow" size={18}/></RouteLink>
+        <section className="related-posts"><span className="content-kicker">이 프로젝트의 작업 기록</span>{posts.map(post => <RouteLink key={post.slug} to={`${articleBase}/${post.slug}`} go={go}>{post.title}<Icon name="arrow" size={18}/></RouteLink>)}</section>
       </article>;
 }
 
@@ -148,24 +161,16 @@ export function ReadingPage({ route, go, onReturn }: { route: Route; go: Navigat
     <header className="reading-header"><RouteLink className="brand" to="/" go={go} aria-label="Hangyu's room, 메인 방으로">hangyu<span className="brand-light"> / room</span></RouteLink>
       <button className="reading-return" onClick={onReturn}><Icon name="back" size={17}/> 공간으로 돌아가기</button></header>
     <main className="reading-layout reading-wide">
-      {isProject ? <article className="project-detail">
-        <RouteLink className="article-back" to="/projects" go={go}><Icon name="back" size={16}/> 프로젝트 목록</RouteLink>
-        <header className="article-heading"><span className="status-badge">진행 중 · 개인 프로젝트</span><h1 tabIndex={-1}>{project.title}</h1><p className="article-deck">{project.subtitle}</p><div className="article-tags">{project.tags.map(tag => <span key={tag}>{tag}</span>)}</div></header>
-        <div className="project-cover"><img src={asset('interactive/room-glb-verified.png')} alt="웹으로 옮긴 개인 작업실의 3D 모델"/></div>
-        <div className="article-body"><section><h2>어떤 공간인가요?</h2><p>{project.description} 책에서 글을 읽고, 컴퓨터에서 만든 것을 살펴볼 수 있습니다.</p></section>
-          <section><h2>지금까지 만든 경험</h2><ul><li>책·베이스의 호버 반응과 방의 조명 전환</li><li>모니터를 거쳐 들어가는 컴퓨터 월드</li><li>심레이싱 장비에서 출발선의 운전석으로 이동</li><li>책처럼 펼치는 글 목록과 본문, 페이지 전환</li></ul></section>
-          <section><h2>다음 작업</h2><p>실제 글과 프로젝트 콘텐츠를 늘리고, 모바일에서의 탐색 경험을 다듬습니다. 현재 차량 주행과 물리 시뮬레이션은 포함하지 않습니다.</p></section></div>
-        <RouteLink className="content-primary" to="/" go={go}>방 둘러보기 <Icon name="arrow" size={18}/></RouteLink>
-        <section className="related-posts"><span className="content-kicker">이 프로젝트의 작업 기록</span>{posts.map(post => <RouteLink key={post.slug} to={`/posts/${post.slug}`} go={go}>{post.title}<Icon name="arrow" size={18}/></RouteLink>)}</section>
-      </article> : <section className="content-empty not-found"><span className="content-kicker">404 / NOT FOUND</span><h1 tabIndex={-1}>이 페이지는 아직 없어요.</h1><p>주소를 확인하거나 책장에서 다른 글을 찾아보세요.</p><RouteLink className="content-primary" to="/posts" go={go}>글 목록으로 <Icon name="arrow" size={18}/></RouteLink></section>}
+      {isProject ? <ProjectArticle go={go}/> : <section className="content-empty not-found"><span className="content-kicker">404 / NOT FOUND</span><h1 tabIndex={-1}>이 페이지는 아직 없어요.</h1><p>주소를 확인하거나 책장에서 다른 글을 찾아보세요.</p><RouteLink className="content-primary" to="/posts" go={go}>글 목록으로 <Icon name="arrow" size={18}/></RouteLink></section>}
     </main><footer className="reading-footer">hangyu / room <span>만들고 배우는 과정을 기록합니다.</span></footer>
   </div>;
 }
 
 export function ContentMetadata({ route }: { route: Route }) {
   useEffect(() => {
-    const post = posts.find(post => route.path === `/posts/${post.slug}`);
-    const title = post?.title ?? (route.path === '/posts' ? '글 기록' : route.path.startsWith('/projects') ? '프로젝트' : route.path === '/' ? '작은 취향의 공간' : '페이지를 찾을 수 없습니다');
+    const path = route.path === '/journal' ? '/posts' : route.path.replace(/^\/journal\//, '/');
+    const post = posts.find(post => path === `/posts/${post.slug}`);
+    const title = post?.title ?? (path === '/posts' ? '글 기록' : path.startsWith('/projects') ? '프로젝트' : path === '/' ? '작은 취향의 공간' : '페이지를 찾을 수 없습니다');
     const description = post?.description ?? '개발하고, 만들고, 배우는 과정을 기록하는 hangyu의 개인 공간.';
     document.title = `${title} — hangyu / room`;
     document.querySelector('meta[name="description"]')?.setAttribute('content', description);
