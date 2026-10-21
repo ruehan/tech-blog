@@ -1,10 +1,65 @@
 // Loaded by the browser test through Vite, with no diagnostics in the app bundle.
 import { _roots, addAfterEffect } from '@react-three/fiber';
-import { Box3, Object3D, PerspectiveCamera, Raycaster, Vector2, Vector3 } from 'three';
+import { Box3, DirectionalLight, Object3D, PerspectiveCamera, Raycaster, Vector2, Vector3 } from 'three';
 
 type RoomFrame = { zoom: number; fov: number; quaternion: number[]; position: number[]; controlsEnabled: boolean; editorScale: number; time: number; hover: { book: number; monitor: number; simulator: number; music: number[] } };
 let frames: RoomFrame[] = [];
 let unsubscribe: (() => void) | undefined;
+
+export function readRenderStats() {
+  const canvas = document.querySelector('canvas')!;
+  const state = _roots.get(canvas)!.store.getState();
+  return {
+    ...state.gl.info.render, ...state.gl.info.memory, dpr: state.viewport.dpr, frameloop: state.frameloop,
+    transmissionScale: state.gl.transmissionResolutionScale,
+    shadowSizes: state.scene.children.filter((object): object is DirectionalLight => object instanceof DirectionalLight).map(light => light.shadow.mapSize.x),
+  };
+}
+
+let removeRenderDelay: (() => void) | undefined;
+export function setRenderDelay(milliseconds: number) {
+  removeRenderDelay?.();
+  removeRenderDelay = undefined;
+  if (!milliseconds) return;
+  const canvas = document.querySelector('canvas')!;
+  const gl = _roots.get(canvas)!.store.getState().gl;
+  const original = gl.render;
+  gl.render = function (...args) {
+    const end = performance.now() + milliseconds;
+    while (performance.now() < end) { /* Controlled load, only in browser tests. */ }
+    return original.apply(this, args);
+  };
+  removeRenderDelay = () => { gl.render = original; };
+}
+
+export async function measureRenderedFrames(milliseconds = 1000) {
+  const canvas = document.querySelector('canvas')!;
+  const state = _roots.get(canvas)!.store.getState();
+  const original = state.gl.render;
+  let frames = 0;
+  state.gl.render = function (...args) { frames++; return original.apply(this, args); };
+  try { await new Promise(resolve => setTimeout(resolve, milliseconds)); }
+  finally { state.gl.render = original; }
+  return frames;
+}
+
+export async function measureFramePacing(milliseconds = 3000) {
+  const canvas = document.querySelector('canvas')!;
+  const state = _roots.get(canvas)!.store.getState();
+  const original = state.gl.render;
+  const times: number[] = [];
+  state.gl.render = function (...args) { times.push(performance.now()); return original.apply(this, args); };
+  try { await new Promise(resolve => setTimeout(resolve, milliseconds)); }
+  finally { state.gl.render = original; }
+  const intervals = times.slice(1).map((time, index) => time - times[index]).sort((a, b) => a - b);
+  return {
+    frames: times.length,
+    fps: times.length > 1 ? (times.length - 1) * 1000 / (times.at(-1)! - times[0]) : 0,
+    p95Ms: intervals[Math.floor(intervals.length * 0.95)] ?? 0,
+    over25Ms: intervals.filter(value => value > 25).length,
+    dpr: state.gl.getPixelRatio(),
+  };
+}
 
 export function startRoomCapture() {
   unsubscribe?.();

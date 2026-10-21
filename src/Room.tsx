@@ -5,7 +5,8 @@ import { AnimationAction, FileLoader, Group, LoopOnce, LoopRepeat, Matrix4, Obje
 import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
 import { useModel } from './models';
 import { asset, type WorldId } from './worlds';
-import { sample, type RoomManifest, type RuntimeClip } from './animation';
+import { sampleInto, type RoomManifest, type RuntimeClip } from './animation';
+import { compileRuntimeClips } from './runtime-tracks';
 import { applyRoomCamera, applyRoomRestZoom } from './room-camera';
 import { blendRoomPose, captureRoomPose, ROOM_ALIGNMENT_SECONDS, type RoomPose } from './room-transition';
 import { Icon } from './Icons';
@@ -53,7 +54,11 @@ export function Room(props: Props) {
   const fading = useRef(new Map<AnimationAction, number>());
   const [busy, setBusy] = useState(!props.paused);
   const latest = useRef(props); latest.current = props;
-  const rest = useMemo(() => new Map(model.ownedMaterials.map(m => [m, { color: m.color.clone(), emissive: m.emissive.clone(), strength: m.emissiveIntensity }])), [model]);
+  const rest = useMemo(() => {
+    const indices = new Set(Object.values(runtime).flatMap(clip => clip.materials.flatMap(track => track.bindings.flatMap(binding => binding.gltf_material_indices))));
+    const targets = new Set([...indices].flatMap(index => model.materials.get(index) ?? []));
+    return new Map([...targets].map(m => [m, { color: m.color.clone(), emissive: m.emissive.clone(), strength: m.emissiveIntensity }]));
+  }, [model, runtime]);
   const materialBlends = useRef(new Map<string, { elapsed: number; from: typeof rest }>());
   const hoverMaterials = useMemo(() => new Map(Object.values(prefixes).map(prefix => {
     const indices = new Set(Object.entries(runtime)
@@ -74,6 +79,9 @@ export function Room(props: Props) {
     }
     return { group, byName };
   }, [manifest]);
+  const runtimeClips = useMemo(() => compileRuntimeClips(runtime, model.materials, lights.byName), [runtime, model, lights]);
+  const sourceCamera = useMemo(() => model.root.getObjectByName('WEB_Camera_Main'), [model]);
+  const lensSample = useRef<number[]>([]);
   const hotspots = useMemo(() => {
     model.root.updateMatrixWorld(true);
     return labelInfo.map(label => {
@@ -221,23 +229,6 @@ export function Room(props: Props) {
     return () => { clear(); latest.current.onBusy(false); };
   }, [model, manifest]);
 
-  function applyRuntime(clip: RuntimeClip | undefined, time: number) {
-    if (!clip) return;
-    const value = (values: number[][]) => sample(values, time, clip.fps, clip.interpolation === 'STEP');
-    for (const track of clip.materials) {
-      const channels = Object.fromEntries(Object.entries(track.channels).map(([key, values]) => [key, value(values)]));
-      const indices = new Set(track.bindings.flatMap(b => b.gltf_material_indices));
-      for (const index of indices) for (const material of model.materials.get(index) ?? []) {
-        if (channels.baseColor) material.color.fromArray(channels.baseColor);
-        if (channels.emissiveColor) material.emissive.fromArray(channels.emissiveColor);
-        if (channels.emissiveStrength) material.emissiveIntensity = channels.emissiveStrength[0];
-      }
-    }
-    for (const track of clip.lights) {
-      const light = lights.byName.get(track.node);
-      if (light) light.intensity = value(track.source_blender_watts)[0] / 100;
-    }
-  }
   function updateAnimation(dt: number) {
     if (alignment.current) {
       const transition = alignment.current;
@@ -265,7 +256,7 @@ export function Room(props: Props) {
     const completed: (() => void)[] = [];
     for (const item of playing.current.values()) {
       item.time = item.loop && item.duration > 0 ? (item.time + dt) % item.duration : Math.min(item.time + dt, item.duration);
-      applyRuntime(runtime[item.name], item.time);
+      runtimeClips.get(item.name)?.(item.time);
       if (!item.loop && !item.finished && item.time >= item.duration) {
         item.finished = true; if (item.done) completed.push(item.done);
       }
@@ -282,13 +273,12 @@ export function Room(props: Props) {
       if (weight === 1) materialBlends.current.delete(group);
     }
     // Lighting is an independent persistent layer, applied after object effects.
-    if (!playing.current.has('opening')) applyRuntime(runtime[props.lightsOn ? 'Lights_On' : 'Lights_Off'], 1);
+    if (!playing.current.has('opening')) runtimeClips.get(props.lightsOn ? 'Lights_On' : 'Lights_Off')?.(1);
     const active = playing.current.get('cinematic') ?? playing.current.get('opening');
-    const sourceCamera = model.root.getObjectByName('WEB_Camera_Main');
     if (active && sourceCamera instanceof PerspectiveCamera && camera instanceof PerspectiveCamera) {
-      model.root.updateMatrixWorld(true);
       const lensTrack = runtime[active.name]?.camera_lens_mm_and_sensor_width_mm;
-      applyRoomCamera(camera, sourceCamera, lensTrack ? sample(lensTrack, active.time) : undefined);
+      // applyRoomCamera updates only the camera's ancestor chain, not the whole model.
+      applyRoomCamera(camera, sourceCamera, lensTrack ? sampleInto(lensTrack, active.time, lensSample.current) : undefined);
     }
     if (bookPhase.current === 'entering' && active && active.time >= BOOK_READ_TIME) completed.push(holdBook);
     completed.forEach(done => done());

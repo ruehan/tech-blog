@@ -37,6 +37,14 @@ export default function App() {
   const [paused, setPaused] = useState(() => matchMedia('(prefers-reduced-motion: reduce)').matches);
   const [lightsOn, setLightsOn] = useState(true);
   const [labels, setLabels] = useState(true);
+  const [optimized, setOptimized] = useState(() => {
+    try { return localStorage.getItem('room-render-mode') !== 'normal'; }
+    catch { return true; }
+  });
+  useEffect(() => {
+    try { localStorage.setItem('room-render-mode', optimized ? 'optimized' : 'normal'); }
+    catch { /* Rendering controls also work when storage is unavailable. */ }
+  }, [optimized]);
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -103,7 +111,7 @@ export default function App() {
 
     <div className="viewport" aria-label={`${config.label} 3D 뷰어. 드래그로 회전하고 스크롤로 확대합니다.`}>
       <SceneBoundary key={world} onRetry={() => window.location.reload()} onError={() => { setFailed(true); setReady(false); }}>
-        <Suspense fallback={null}><WorldScene world={world} view={view} paused={paused || !inSpace} active={inSpace} onRead={openPosts} lightsOn={lightsOn} labels={labels} reset={reset} busy={busy} roomRef={roomRef} onNavigate={navigate} onReady={onReady} onBusy={setBusy} onLights={toggleLights} onResetCamera={resetCamera} folderOpen={folderOpen} onFolderToggle={toggleFolder} onFolderOpened={openProjects}/></Suspense>
+        <Suspense fallback={null}><WorldScene world={world} view={view} optimized={optimized} paused={paused || !inSpace} active={inSpace} onRead={openPosts} lightsOn={lightsOn} labels={labels} reset={reset} busy={busy} roomRef={roomRef} onNavigate={navigate} onReady={onReady} onBusy={setBusy} onLights={toggleLights} onResetCamera={resetCamera} folderOpen={folderOpen} onFolderToggle={toggleFolder} onFolderOpened={openProjects}/></Suspense>
       </SceneBoundary>
     </div>
     {!ready && !failed && <div className="loading" role="status" aria-label={`${config.label}에 들어가는 중`}><span className="loading-orbit"/></div>}
@@ -124,6 +132,9 @@ export default function App() {
         : <><RailButton icon="steering" label="운전석 시점" aria-pressed={view === 'cockpit'} onClick={() => setView('cockpit')}/><RailButton icon="circuit" label="서킷 전체" aria-pressed={view === 'overview'} onClick={() => setView('overview')}/><RailButton icon="focus" label="차량 가까이" aria-pressed={view === 'car'} onClick={() => setView('car')}/></>}
       </div>}
       <div className="rail-group rail-settings" role="group" aria-label="화면 설정">
+        <button className="rail-button rail-quality" role="switch" aria-label="60fps 최적화" aria-checked={optimized} title={optimized ? '최적화 모드 · 클릭하면 일반 화질' : '일반 모드 · 클릭하면 60fps 최적화'} onClick={() => setOptimized(value => !value)}>
+          <span>{optimized ? '최적화' : '일반'}</span><span className="rail-switch-track" aria-hidden="true"/>
+        </button>
         {world === 'room' && <RailButton icon={lightsOn ? 'sun' : 'moon'} label={lightsOn ? '조명 끄기' : '조명 켜기'} disabled={!ready || busy} onClick={toggleLights}/>}
         <RailButton icon={paused ? 'play' : 'pause'} label={paused ? '애니메이션 재생' : '애니메이션 일시정지'} aria-pressed={paused} onClick={() => setPaused(value => !value)}/>
         <RailButton icon="reset" label="시점 초기화" disabled={!ready} onClick={() => { if (busy) roomRef.current?.cancel(); setView(defaultView(world)); resetCamera(); }}/>

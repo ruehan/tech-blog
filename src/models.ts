@@ -1,15 +1,21 @@
 import { useMemo, useEffect } from 'react';
 import { useGLTF } from '@react-three/drei';
-import { AnimationMixer, Mesh, MeshStandardMaterial } from 'three';
+import { AnimationMixer, Mesh, MeshStandardMaterial, PropertyBinding } from 'three';
 import { asset } from './worlds';
 
 export function useModel(file: string) {
   const gltf = useGLTF(asset(file));
   const model = useMemo(() => {
     const root = gltf.scene.clone(true);
+    const animatedNodes = new Set(gltf.animations.flatMap(clip => clip.tracks.map(track =>
+      PropertyBinding.findNode(root, PropertyBinding.parseTrackName(track.name).nodeName))));
     const materials = new Map<number, MeshStandardMaterial[]>();
     const clones = new Map<MeshStandardMaterial, MeshStandardMaterial>();
     root.traverse(object => {
+      // Static local transforms need no matrix recomposition on every rendered frame.
+      // World matrices still follow animated ancestors normally.
+      object.updateMatrix();
+      object.matrixAutoUpdate = animatedNodes.has(object);
       if (!(object instanceof Mesh)) return;
       object.castShadow = true;
       object.receiveShadow = true;

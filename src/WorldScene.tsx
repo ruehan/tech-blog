@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useLayoutEffect, useRef } from 'react';
+import { Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Canvas, useFrame, useThree, type ThreeEvent } from '@react-three/fiber';
 import { OrbitControls, useGLTF } from '@react-three/drei';
 import { AgXToneMapping, LoopOnce, PCFShadowMap, PerspectiveCamera, Vector3 } from 'three';
@@ -7,8 +7,10 @@ import { Room, type RoomHandle } from './Room';
 import { useModel } from './models';
 import { asset, cockpitCamera, worlds, type ViewId, type WorldId } from './worlds';
 import { applyRoomCamera, applyRoomRestZoom } from './room-camera';
+import { AdaptiveResolution } from './AdaptiveResolution';
 
 interface Props {
+  optimized: boolean;
   world: WorldId; view: ViewId; paused: boolean; active: boolean; onRead: () => void; lightsOn: boolean; labels: boolean;
   reset: number; busy: boolean; roomRef: React.RefObject<RoomHandle | null>;
   onNavigate: (world: WorldId) => void; onReady: () => void; onBusy: (busy: boolean) => void;
@@ -114,11 +116,21 @@ function Circuit({ onReady }: { onReady: () => void }) {
 
 export default function WorldScene(props: Props) {
   const room = props.world === 'room';
-  return <Canvas frameloop={props.active ? 'always' : 'never'} shadows={{ type: PCFShadowMap }} dpr={[1, 1.5]} gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }} onCreated={({ gl }) => { gl.toneMapping = AgXToneMapping; gl.toneMappingExposure = 1.15; }} fallback={<span className="sr-only">3D 공간. 하단 메뉴로 월드를 선택할 수 있습니다.</span>}>
+  const [resolution, setResolution] = useState(() => Math.min(window.devicePixelRatio || 1, 1.5));
+  const shadowSize = props.optimized && resolution < 1 ? 1024 : 2048;
+  const [visible, setVisible] = useState(() => !document.hidden);
+  useEffect(() => {
+    const update = () => setVisible(!document.hidden);
+    document.addEventListener('visibilitychange', update);
+    return () => document.removeEventListener('visibilitychange', update);
+  }, []);
+  const frameloop = !props.active || !visible ? 'never' : props.paused || props.world === 'circuit' ? 'demand' : 'always';
+  return <Canvas frameloop={frameloop} shadows={{ type: PCFShadowMap }} dpr={props.optimized ? resolution : [1, 1.5]} gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }} onCreated={({ gl }) => { gl.toneMapping = AgXToneMapping; gl.toneMappingExposure = 1.15; }} fallback={<span className="sr-only">3D 공간. 왼쪽 메뉴로 월드를 선택할 수 있습니다.</span>}>
     <hemisphereLight args={['#e9f2ff', '#b7a48a', room && !props.lightsOn ? 0.65 : 1.7]} />
-    <directionalLight position={room ? [3, 8, 5] : [30, 80, 30]} intensity={room ? (props.lightsOn ? 1.6 : 0.35) : 3} color="#fff2dc" castShadow={props.world !== 'circuit'} shadow-mapSize={[2048, 2048]} shadow-camera-left={-14} shadow-camera-right={14} shadow-camera-top={14} shadow-camera-bottom={-14} shadow-camera-far={160} shadow-bias={-0.0003} shadow-normalBias={0.035} />
+    <directionalLight key={shadowSize} position={room ? [3, 8, 5] : [30, 80, 30]} intensity={room ? (props.lightsOn ? 1.6 : 0.35) : 3} color="#fff2dc" castShadow={props.world !== 'circuit'} shadow-mapSize={[shadowSize, shadowSize]} shadow-camera-left={-14} shadow-camera-right={14} shadow-camera-top={14} shadow-camera-bottom={-14} shadow-camera-far={160} shadow-bias={-0.0003} shadow-normalBias={0.035} />
     {props.world !== 'room' && <CameraRig world={props.world} view={props.view} reset={props.reset} busy={props.busy}/>}
     <Suspense fallback={null}>
+      <AdaptiveResolution enabled={props.optimized} onChange={setResolution} resolution={resolution}/>
       {room && <RoomCameraRig reset={props.reset} busy={props.busy}/>}
       <group key={props.world}>
         {room && <Room ref={props.roomRef} active={props.active} paused={props.paused} lightsOn={props.lightsOn} labels={props.labels} onNavigate={props.onNavigate} onReady={props.onReady} onBusy={props.onBusy} onLights={props.onLights} onRead={props.onRead} onResetCamera={props.onResetCamera}/>}

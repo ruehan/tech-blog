@@ -2,12 +2,19 @@ export type Samples = number[][];
 
 /** Exported sidecar tracks are sampled at 24fps, including both end frames. */
 export function sample(values: Samples, seconds: number, fps = 24, step = false): number[] {
-  if (!values.length) return [];
+  return sampleInto(values, seconds, [], fps, step);
+}
+
+/** Reuse a channel's output buffer in the render loop instead of allocating each frame. */
+export function sampleInto(values: Samples, seconds: number, output: number[], fps = 24, step = false): number[] {
+  if (!values.length) { output.length = 0; return output; }
   const frame = Math.max(0, Math.min(seconds * fps, values.length - 1));
   const index = Math.floor(frame);
   const a = values[index];
   const b = values[Math.min(index + 1, values.length - 1)];
-  return step ? [...a] : a.map((value, i) => value + (b[i] - value) * (frame - index));
+  output.length = a.length;
+  for (let i = 0; i < a.length; i++) output[i] = step ? a[i] : a[i] + (b[i] - a[i]) * (frame - index);
+  return output;
 }
 
 export function blenderPosition(matrix: number[][]): [number, number, number] {
