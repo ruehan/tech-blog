@@ -19,6 +19,8 @@
 .desk-objects[data-arrangement="2"]{padding-top:54px;gap:60px}
 .desk-objects[data-arrangement="2"] .desk-clock{transform:translateX(10px) rotate(3deg)}
 .desk-objects[data-arrangement="2"] .desk-calendar{transform:translateX(-7px) rotate(-3deg)}
+.desk-objects{row-gap:46px}
 @media(max-width:1099px){.journal-index-layout{grid-template-columns:1fr;gap:55px}.desk-objects,.desk-objects[data-arrangement="2"]{flex-direction:row;justify-content:center;align-items:center;gap:64px;padding:20px 0 25px}.desk-clock,.desk-calendar,.desk-objects[data-arrangement] .desk-clock,.desk-objects[data-arrangement] .desk-calendar{transform:rotate(-3deg)}.desk-calendar,.desk-objects[data-arrangement] .desk-calendar{transform:rotate(3deg)}}
 @media(max-width:700px){.desk-objects,.desk-objects[data-arrangement="2"]{gap:24px}.desk-clock{width:128px;flex-shrink:0}.desk-clock-face{border-width:7px}.desk-clock::before{top:109px;left:24px;right:24px;height:20px}.desk-clock-time{margin-top:18px;font-size:11px}.desk-calendar{width:168px;flex-shrink:0;padding:17px 10px 12px}.desk-calendar caption strong{font-size:26px}.desk-calendar td{height:23px;font-size:9px}.desk-calendar td time{width:20px;height:20px}.desk-calendar th{font-size:8px}.desk-calendar caption{padding-bottom:10px}}
 @media(max-width:374px){.desk-objects,.desk-objects[data-arrangement="2"]{gap:14px}.desk-clock{width:104px}.desk-clock::before{top:88px;left:19px;right:19px;height:18px}.desk-calendar{width:146px;padding-left:7px;padding-right:7px}.desk-calendar td time{width:18px;height:18px}.desk-calendar-rings{left:26px;right:26px}}
+@media(max-width:1099px){.desk-objects,.desk-objects[data-arrangement="2"]{flex-wrap:wrap;row-gap:36px}}

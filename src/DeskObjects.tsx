@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import './desk.css';
+import { StartLights } from './StartLights';
 
 const pad = (value: number) => String(value).padStart(2, '0');
 const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
@@ -29,7 +30,8 @@ export function DeskObjects({ arrangement }: { arrangement: number }) {
   const minuteAngle = now.getMinutes() * 6 + now.getSeconds() / 10;
   const secondAngle = now.getSeconds() * 6;
 
-  return <aside className="desk-objects" data-arrangement={arrangement} aria-label="시계와 달력">
+  return <aside className="desk-objects" data-arrangement={arrangement} aria-label="책상 위 소품">
+    <StartLights/>
     <div className="desk-clock" role="group" aria-label="현재 시간">
       <div className="desk-clock-face">
         <svg viewBox="0 0 160 160" aria-hidden="true">
