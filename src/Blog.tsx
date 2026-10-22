@@ -4,6 +4,7 @@ import { Icon } from './Icons';
 import { RouteLink, type Navigate, type Route } from './navigation';
 import { asset } from './worlds';
 import { MarkdownBody } from './MarkdownBody';
+import { ZoomableImage } from './ImageViewer';
 import './blog.css';
 
 const scrollPositions = new Map<string, number>();
@@ -139,7 +140,7 @@ export function ProjectArticle({ go, listPath = '/projects', articleBase = '/pos
   return <article className="project-detail">
         <RouteLink className="article-back" to={listPath} go={go}><Icon name="back" size={16}/> 프로젝트 목록</RouteLink>
         <header className="article-heading"><span className="status-badge">진행 중 · 개인 프로젝트</span><h1 tabIndex={-1}>{project.title}</h1><p className="article-deck">{project.subtitle}</p><div className="article-tags">{project.tags.map(tag => <span key={tag}>{tag}</span>)}</div></header>
-        <div className="project-cover"><img src={asset('interactive/room-glb-verified.png')} alt="웹으로 옮긴 개인 작업실의 3D 모델"/></div>
+        <div className="project-cover"><ZoomableImage src={asset('interactive/room-glb-verified.png')} alt="웹으로 옮긴 개인 작업실의 3D 모델"/></div>
         <div className="article-body"><section><h2>어떤 공간인가요?</h2><p>{project.description} 책에서 글을 읽고, 컴퓨터에서 만든 것을 살펴볼 수 있습니다.</p></section>
           <section><h2>지금까지 만든 경험</h2><ul><li>책·베이스의 호버 반응과 방의 조명 전환</li><li>모니터를 거쳐 들어가는 컴퓨터 월드</li><li>심레이싱 장비에서 출발선의 운전석으로 이동</li><li>책처럼 펼치는 글 목록과 본문, 페이지 전환</li></ul></section>
           <section><h2>다음 작업</h2><p>실제 글과 프로젝트 콘텐츠를 늘리고, 모바일에서의 탐색 경험을 다듬습니다. 현재 차량 주행과 물리 시뮬레이션은 포함하지 않습니다.</p></section></div>

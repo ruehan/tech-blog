@@ -1,5 +1,6 @@
 import { createElement, useState } from 'react';
 import type { MarkdownNode } from './content-types';
+import { ZoomableImage } from './ImageViewer';
 
 function CodeBlock({ block }: { block: Extract<MarkdownNode, { type: 'code' }> }) {
   const [copied, setCopied] = useState(false);
@@ -15,14 +16,15 @@ function CodeBlock({ block }: { block: Extract<MarkdownNode, { type: 'code' }> }
   </figure>;
 }
 
-function renderNodes(nodes: MarkdownNode[]): React.ReactNode[] {
+function renderNodes(nodes: MarkdownNode[], linked = false): React.ReactNode[] {
   return nodes.map((node, index) => {
     if (node.type === 'text') return node.value;
     if (node.type === 'code') return <CodeBlock key={index} block={node}/>;
     const attributes = { ...node.attributes, key: index };
+    if (node.tag === 'img' && !linked) return <ZoomableImage key={index} {...node.attributes}/>;
     // React void elements must not receive an empty children array.
     if (['img', 'br', 'hr', 'input', 'wbr'].includes(node.tag)) return createElement(node.tag, attributes);
-    const element = createElement(node.tag, attributes, renderNodes(node.children));
+    const element = createElement(node.tag, attributes, renderNodes(node.children, linked || node.tag === 'a'));
     return node.tag === 'table' ? <div className="article-table" key={index} tabIndex={0} role="region" aria-label="표">{element}</div> : element;
   });
 }

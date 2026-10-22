@@ -1,0 +1,131 @@
+import { test, expect } from '@playwright/test';
+
+const articlePath = '/journal/posts/building-a-room-on-the-web';
+
+test('reading preferences resize prose and code, preserve the outline and persist across routes and reloads', async ({ page }) => {
+  await page.goto(articlePath);
+  const body = page.locator('.article-body');
+  const toggle = page.getByRole('button', { name: '읽기 설정', exact: true });
+  const panel = page.getByRole('region', { name: '읽기 설정', exact: true });
+  await expect(body).toHaveCSS('font-size', '16px');
+  const initial = (await body.boundingBox())!;
+  await toggle.focus();
+  await page.keyboard.press('Enter');
+  await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+  await panel.getByRole('radio', { name: '크게', exact: true }).check();
+  await panel.getByRole('radio', { name: '넓게', exact: true }).check();
+  await expect(body).toHaveCSS('font-size', '19px');
+  await expect(body.locator('.code-block pre')).toHaveCSS('font-size', '15.2px');
+  const expanded = (await body.boundingBox())!;
+  expect(expanded.width).toBeGreaterThan(initial.width);
+  const toc = (await page.getByRole('navigation', { name: '목차' }).boundingBox())!;
+  expect(toc.x).toBeGreaterThan(expanded.x + expanded.width);
+  await page.screenshot({ path: '.local/journal-reading-settings.png' });
+  await page.keyboard.press('Escape');
+  await expect(panel).toBeHidden();
+  await expect(toggle).toBeFocused();
+  await page.reload();
+  await expect(body).toHaveCSS('font-size', '19px');
+  await page.getByRole('navigation', { name: '블로그 메뉴' }).getByRole('link', { name: '프로젝트' }).click();
+  await page.locator('.journal-project-card').click();
+  await expect(body).toHaveCSS('font-size', '19px');
+  await toggle.click();
+  await panel.getByRole('button', { name: '기본값으로' }).click();
+  await expect(body).toHaveCSS('font-size', '16px');
+  await panel.getByRole('button', { name: '읽기 설정 닫기' }).click();
+  await page.reload();
+  await expect(body).toHaveCSS('font-size', '16px');
+  await expect(page.locator('canvas')).toHaveCount(0);
+});
+
+test('image viewer supports keyboard, original size, background dismissal and restores reading position', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto(articlePath);
+  const trigger = page.getByRole('button', { name: /^이미지 확대:/ }).first();
+  await trigger.scrollIntoViewIfNeeded();
+  await trigger.focus();
+  const before = await page.locator('.journal').evaluate(element => element.scrollTop);
+  await page.keyboard.press('Enter');
+  const viewer = page.getByRole('dialog', { name: '이미지 크게 보기' });
+  await expect(viewer).toBeVisible();
+  await expect(viewer.getByRole('button', { name: '이미지 닫기' })).toBeFocused();
+  await expect(viewer.locator('img')).toHaveAttribute('src', /room-blog/);
+  await expect(viewer.locator('.image-viewer-caption')).toContainText('실제 웹 화면');
+  await expect(page.locator('.journal')).toHaveCSS('overflow', 'hidden');
+  await viewer.getByRole('button', { name: '원본 크기로 보기' }).click();
+  await expect.poll(() => viewer.locator('img').evaluate(image => image.getBoundingClientRect().width)).toBe(1440);
+  await viewer.getByRole('button', { name: '화면에 맞추기' }).click();
+  await page.screenshot({ path: '.local/journal-image-viewer.png' });
+  await page.keyboard.press('Escape');
+  await expect(viewer).toHaveCount(0);
+  await expect(trigger).toBeFocused();
+  expect(await page.locator('.journal').evaluate(element => element.scrollTop)).toBe(before);
+  await trigger.click();
+  await viewer.click({ position: { x: 4, y: 4 } });
+  await expect(viewer).toHaveCount(0);
+  await trigger.click();
+  await viewer.getByRole('button', { name: '이미지 닫기' }).click();
+  await expect(page.locator('.journal')).not.toHaveCSS('overflow', 'hidden');
+  expect(errors).toEqual([]);
+});
+
+test('mobile reading controls and enlarged images fit a narrow night-themed screen', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 740 });
+  await page.goto(articlePath);
+  await page.getByRole('button', { name: '밤에 읽기', exact: true }).click();
+  await page.getByRole('button', { name: '읽기 설정', exact: true }).click();
+  const panel = page.getByRole('region', { name: '읽기 설정', exact: true });
+  await panel.getByRole('radio', { name: '크게', exact: true }).check();
+  await panel.getByRole('radio', { name: '넓게', exact: true }).check();
+  await expect(page.locator('.article-body')).toHaveCSS('font-size', '18px');
+  await expect(panel).toHaveCSS('background-color', 'rgb(28, 43, 37)');
+  const bounds = (await panel.boundingBox())!;
+  expect(bounds.x).toBeGreaterThanOrEqual(0);
+  expect(bounds.x + bounds.width).toBeLessThanOrEqual(320);
+  await page.screenshot({ path: '.local/journal-settings-mobile.png' });
+  await panel.getByRole('button', { name: '읽기 설정 닫기' }).click();
+  expect(await page.locator('.journal').evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true);
+  await page.getByRole('button', { name: /^이미지 확대:/ }).first().click();
+  const viewer = page.getByRole('dialog', { name: '이미지 크게 보기' });
+  await viewer.getByRole('button', { name: '원본 크기로 보기' }).click();
+  const stage = viewer.getByRole('region', { name: '확대 이미지' });
+  expect(await stage.evaluate(element => element.scrollWidth > element.clientWidth)).toBe(true);
+  await stage.focus();
+  await page.keyboard.press('ArrowRight');
+  await expect.poll(() => stage.evaluate(element => element.scrollLeft)).toBeGreaterThan(0);
+  await viewer.getByRole('button', { name: '화면에 맞추기' }).click();
+  await expect.poll(() => stage.evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true);
+  await page.screenshot({ path: '.local/journal-image-mobile.png' });
+  await page.keyboard.press('Escape');
+  await expect(viewer).toHaveCount(0);
+});
+
+test('reading settings tolerate corrupt or blocked storage, and stay scoped to the journal', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('journal-reading', '{bad json'));
+  await page.goto(articlePath);
+  await expect(page.locator('.article-body')).toHaveCSS('font-size', '16px');
+  await page.evaluate(() => {
+    Object.defineProperty(window, 'localStorage', { get() { throw new DOMException('Blocked', 'SecurityError'); } });
+  });
+  await page.getByRole('button', { name: '읽기 설정', exact: true }).click();
+  const panel = page.getByRole('region', { name: '읽기 설정', exact: true });
+  await panel.getByRole('radio', { name: '작게', exact: true }).check();
+  await expect(page.locator('.article-body')).toHaveCSS('font-size', '14px');
+  await page.goto('/posts/building-a-room-on-the-web');
+  await expect(page.getByRole('button', { name: /^이미지 확대:/ })).toHaveCount(0);
+  await expect(page.locator('.book .article-body')).toHaveCSS('font-size', '15px');
+});
+
+test('back navigation closes the image without overwriting the destination scroll position', async ({ page }) => {
+  await page.goto('/journal');
+  await page.locator('.journal-entry').first().click();
+  await page.getByRole('button', { name: /^이미지 확대:/ }).first().click();
+  await expect(page.getByRole('dialog', { name: '이미지 크게 보기' })).toBeVisible();
+  await page.goBack();
+  await expect(page).toHaveURL(/\/journal$/);
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await expect.poll(() => page.locator('.journal').evaluate(element => element.scrollTop)).toBe(0);
+  await expect(page.locator('.journal')).not.toHaveCSS('overflow', 'hidden');
+  await expect(page.getByRole('heading', { level: 1 })).toBeFocused();
+});

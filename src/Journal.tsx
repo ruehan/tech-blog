@@ -6,12 +6,16 @@ import { RouteLink, type Navigate, type Route } from './navigation';
 import { asset } from './worlds';
 import { DeskObjects } from './DeskObjects';
 import { JournalToc } from './JournalToc';
+import { JournalReadingSettings, useReadingPreferences } from './JournalReadingSettings';
+import { ImageViewer } from './ImageViewer';
 import './journal.css';
 import './journal-theme.css';
+import './journal-reading.css';
 
 const number = (value: number) => String(value).padStart(2, '0');
 
 export function Journal({ route, go }: { route: Route; go: Navigate }) {
+  const reading = useReadingPreferences();
   const scroll = useRef<HTMLDivElement>(null);
   const isIndex = route.path === '/journal';
   const isProjects = route.path === '/journal/projects';
@@ -62,7 +66,8 @@ export function Journal({ route, go }: { route: Route; go: Navigate }) {
     searchInput.current?.focus({ preventScroll: true });
   }
 
-  return <div className="journal" data-theme={night ? 'night' : 'day'} ref={scroll}>
+  return <div className="journal" data-theme={night ? 'night' : 'day'} ref={scroll} style={reading.style}>
+    <ImageViewer routeKey={route.path + route.search}>
     <a className="journal-skip" href="#journal-main">본문으로 건너뛰기</a>
     <header className="journal-header">
       <RouteLink className="brand" to="/journal" go={go}>hangyu<span className="brand-light"> / room</span></RouteLink>
@@ -71,11 +76,12 @@ export function Journal({ route, go }: { route: Route; go: Navigate }) {
       <RouteLink className="rail-button" to="/journal" go={go} aria-label="글 기록" aria-current={isIndex || post ? 'page' : undefined} title="글 기록"><Icon name="notes"/><span className="journal-tooltip">글 기록</span></RouteLink>
       <RouteLink className="rail-button" to="/journal/projects" go={go} aria-label="프로젝트" aria-current={isProjects || isProject ? 'page' : undefined} title="프로젝트"><Icon name="folder"/><span className="journal-tooltip">프로젝트</span></RouteLink>
       <span className="journal-rail-divider"/>
+      <JournalReadingSettings preferences={reading.preferences} onChange={reading.setPreferences}/>
       <button className="rail-button" type="button" onClick={toggleTheme} aria-label="밤에 읽기" aria-pressed={night} title={night ? '밝게 읽기' : '밤에 읽기'}><Icon name={night ? 'sun' : 'moon'}/><span className="journal-tooltip">{night ? '밝게 읽기' : '밤에 읽기'}</span></button>
       <RouteLink className="rail-button" to="/" go={go} aria-label="3D 방으로" title="3D 방으로"><Icon name="room"/><span className="journal-tooltip">3D 방으로</span></RouteLink>
     </nav>
 
-    <main className={`journal-main${isIndex ? ' journal-with-desk' : ''}${post?.sections.length ? ' journal-with-toc' : ''}`} id="journal-main" tabIndex={-1}>
+    <main className={`journal-main${isIndex ? ' journal-with-desk' : ''}${post || isProject ? ' journal-with-reading' : ''}${post?.sections.length ? ' journal-with-toc' : ''}`} id="journal-main" tabIndex={-1}>
       {isIndex ? <div className="journal-index-layout">
           <section className="journal-entries" aria-labelledby="entries-heading">
             <div className="journal-section-heading"><h1 id="entries-heading" tabIndex={-1}>글 <span>{posts.length}</span></h1></div>
@@ -105,5 +111,6 @@ export function Journal({ route, go }: { route: Route; go: Navigate }) {
         }/>
       </div> : isProject ? <div className="journal-project-reading"><ProjectArticle go={go} listPath="/journal/projects" articleBase="/journal/posts"/></div> : <section className="journal-empty journal-missing"><h1 tabIndex={-1}>페이지를 찾을 수 없습니다.</h1><RouteLink to="/journal" go={go}>기록 목록으로 <Icon name="arrow" size={18}/></RouteLink></section>}
     </main>
+    </ImageViewer>
   </div>;
 }
