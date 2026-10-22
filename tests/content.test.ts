@@ -72,6 +72,14 @@ test('isolated fixtures validate published image dimensions and draft filtering'
 });
 
 
-test('deployment content starts empty, including drafts', async () => {
-  assert.deepEqual(await loadPosts('content/posts', { includeDrafts: true, publicDirectory: 'public' }), []);
+test('published content excludes drafts and local post images have dimensions', async () => {
+  const published = await loadPosts('content/posts', { publicDirectory: 'public' });
+  const all = await loadPosts('content/posts', { includeDrafts: true, publicDirectory: 'public' });
+  assert.deepEqual(published.map(post => post.slug), all.filter(post => !post.draft).map(post => post.slug));
+  for (const post of all) {
+    for (const image of allNodes(post.body).filter(node => node.tag === 'img')) {
+      assert.ok(image.attributes.width > 0);
+      assert.ok(image.attributes.height > 0);
+    }
+  }
 });
