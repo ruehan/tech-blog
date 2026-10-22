@@ -1,0 +1,13 @@
+.now-note{order:-3;width:100%;min-width:0;padding:18px 16px 14px;border:1px solid var(--journal-border);border-radius:5px;background:#faf9f2;color:inherit}
+.now-note h2{margin:0;font-size:13px;font-weight:500;line-height:1.6;letter-spacing:-.3px}
+.now-note ul{list-style:none;padding:0;margin:12px 0 0}
+.now-note li+li{border-top:1px solid var(--journal-border)}
+.now-note a{display:block;padding:13px 0;border-radius:2px;overflow-wrap:anywhere}
+.now-note-label{display:block;color:var(--journal-muted);font-size:10px;line-height:1.5;margin-bottom:6px}
+.now-note-title{display:flex;align-items:baseline;justify-content:space-between;gap:8px;font-size:13px;font-weight:500;line-height:1.6;word-break:keep-all}
+.now-note-title svg{flex-shrink:0;align-self:center;color:var(--journal-muted)}
+.now-note a:hover .now-note-title,.now-note a:focus-visible .now-note-title{text-decoration:underline;text-underline-offset:4px}
+.now-note-description{display:block;font-size:11px;line-height:1.8;color:var(--journal-muted);margin-top:6px;word-break:keep-all}
+.now-note-updated{margin:7px 0 0;padding-top:12px;border-top:1px solid var(--journal-border);font-size:10px;line-height:1.5;color:var(--journal-muted);font-variant-numeric:tabular-nums}
+.journal[data-theme=night] .now-note{background:#26392e}
+@media(max-width:1099px){.now-note{flex:0 0 100%;max-width:420px}}

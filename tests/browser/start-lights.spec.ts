@@ -128,7 +128,7 @@ test('the desk device stays beside or below the posts and within narrow screens'
     const entries = (await page.locator('.journal-entries').boundingBox())!;
     expect(bounds.x).toBeGreaterThanOrEqual(0);
     expect(bounds.x + bounds.width).toBeLessThanOrEqual(width);
-    expect(bounds.x >= entries.x + entries.width || bounds.y >= entries.y + entries.height).toBe(true);
+    expect(bounds.x + bounds.width <= entries.x || bounds.x >= entries.x + entries.width || bounds.y >= entries.y + entries.height).toBe(true);
     expect(await page.locator('.journal').evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true);
     if (width === 1440 || width === 390) await page.screenshot({ path: `.local/start-lights-${width}.png` });
     if (width === 320) {

@@ -27,7 +27,7 @@ test('reading preferences resize prose and code, preserve the outline and persis
   await page.reload();
   await expect(body).toHaveCSS('font-size', '19px');
   await page.getByRole('navigation', { name: '블로그 메뉴' }).getByRole('link', { name: '프로젝트' }).click();
-  await page.locator('.journal-project-card').click();
+  await page.getByRole('link', { name: '프로젝트 자세히 보기' }).click();
   await expect(body).toHaveCSS('font-size', '19px');
   await toggle.click();
   await panel.getByRole('button', { name: '기본값으로' }).click();

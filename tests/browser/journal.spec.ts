@@ -58,22 +58,27 @@ test.describe('desk clock and calendar', () => {
     await expect(page.locator('.desk-objects')).toHaveAttribute('data-arrangement', arrangement!);
   });
 
-  test('every arrangement stays clear of articles and fits narrow screens', async ({ page }) => {
+  test('random desk coordinates stay clear of articles, each other and narrow screens', async ({ page }) => {
     for (const arrangement of [0, 1, 2]) {
       await page.addInitScript(value => { Math.random = () => (value + 0.1) / 3; }, arrangement);
-      for (const width of [1440, 1100, 390, 320]) {
+      for (const width of [2560, 1440, 1280, 1100, 390, 320]) {
         await page.setViewportSize({ width, height: 900 });
         await page.goto('/journal');
         const desk = page.locator('.desk-objects');
-        await expect(desk).toHaveAttribute('data-arrangement', String(arrangement));
+        await expect(desk).toHaveAttribute('data-arrangement', String(Math.floor((arrangement + 0.1) / 3 * 0x100000000)));
+        await expect(desk).toHaveAttribute('data-layout', width >= 1280 ? 'free' : 'stack');
         await desk.scrollIntoViewIfNeeded();
         const articles = (await page.locator('.journal-entries').boundingBox())!;
-        for (const object of [page.locator('.desk-clock'), page.locator('.desk-calendar')]) {
+        const objects = [page.locator('.desk-clock'), page.locator('.desk-calendar'), page.locator('.now-note'), page.locator('.start-lights')];
+        const rectangles = [];
+        for (const object of objects) {
           const bounds = (await object.boundingBox())!;
           expect(bounds.x).toBeGreaterThanOrEqual(0);
           expect(bounds.x + bounds.width).toBeLessThanOrEqual(width);
-          expect(bounds.x >= articles.x + articles.width || bounds.y >= articles.y + articles.height).toBe(true);
+          expect(bounds.x + bounds.width <= articles.x || bounds.x >= articles.x + articles.width || bounds.y >= articles.y + articles.height).toBe(true);
+          rectangles.push(bounds);
         }
+        for (const [index, a] of rectangles.entries()) for (const b of rectangles.slice(index + 1)) expect(a.x + a.width <= b.x || b.x + b.width <= a.x || a.y + a.height <= b.y || b.y + b.height <= a.y).toBe(true);
         expect(await page.locator('.journal').evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true);
         if (width === 1440 || width === 390) await page.screenshot({ path: `.local/desk-${arrangement}-${width}.png` });
       }
@@ -159,7 +164,7 @@ test('journal search and tags combine, survive back navigation, and handle empty
 test('journal project and missing routes stay in the ordinary blog', async ({ page }) => {
   await page.goto('/journal/projects');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('프로젝트');
-  await page.locator('.journal-project-card').click();
+  await page.getByRole('link', { name: '프로젝트 자세히 보기' }).click();
   await expect(page).toHaveURL(/\/journal\/projects\/hangyu-room$/);
   await expect(page.getByRole('heading', { name: '지금까지 만든 경험' })).toBeVisible();
   await page.getByRole('link', { name: '내 방을 웹으로 옮기는 일' }).click();

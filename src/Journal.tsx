@@ -3,7 +3,7 @@ import { PostArticle, ProjectArticle, useReadingPosition } from './Blog';
 import { allTags, filterPosts, formatDate, posts, project } from './content';
 import { Icon } from './Icons';
 import { RouteLink, type Navigate, type Route } from './navigation';
-import { asset } from './worlds';
+import { ProjectShowcase } from './ProjectShowcase';
 import { DeskObjects } from './DeskObjects';
 import { JournalToc } from './JournalToc';
 import { JournalReadingSettings, useReadingPreferences } from './JournalReadingSettings';
@@ -27,7 +27,7 @@ export function Journal({ route, go }: { route: Route; go: Navigate }) {
   const tag = query.get('tag') ?? '';
   const search = query.get('q') ?? '';
   const [draftSearch, setDraftSearch] = useState(search);
-  const [deskArrangement] = useState(() => Math.floor(Math.random() * 3));
+  const [deskArrangement] = useState(() => Math.floor(Math.random() * 0x100000000));
   const [night, setNight] = useState(() => {
     try { return localStorage.getItem('journal-theme') === 'night'; }
     catch { return false; }
@@ -98,10 +98,10 @@ export function Journal({ route, go }: { route: Route; go: Navigate }) {
             </RouteLink>; })}</div>
             {!visiblePosts.length && <div className="journal-empty"><Icon name="search" size={28}/><h3>아직 찾는 기록이 없어요.</h3><p>다른 단어나 태그로 찾아보세요.</p><RouteLink to="/journal" go={go}>전체 기록 보기 <Icon name="arrow" size={16}/></RouteLink></div>}
           </section>
-          <DeskObjects arrangement={deskArrangement}/>
+          <DeskObjects arrangement={deskArrangement} go={go}/>
       </div> : isProjects ? <>
         <div className="journal-section-heading journal-project-heading"><h1 tabIndex={-1}>프로젝트</h1></div>
-        <RouteLink className="journal-project-card" to={`/journal/projects/${project.slug}`} go={go}><div className="journal-project-image"><img src={asset('interactive/room-glb-verified.png')} alt="책장과 컴퓨터, 심레이싱 장비가 놓인 hangyu의 방"/></div><div className="journal-project-info"><span className="status-badge">진행 중 · 개인 프로젝트</span><h2>{project.title}</h2><p>{project.description}</p><div className="article-tags">{project.tags.map(value => <span key={value}>{value}</span>)}</div><span className="journal-note-link">만드는 과정 보기 <Icon name="arrow" size={18}/></span></div></RouteLink>
+        <ProjectShowcase go={go}/>
       </> : post ? <div className="journal-reading">
         <div className="journal-reading-margin"><RouteLink to={`/journal${route.search}`} go={go}><Icon name="back" size={16}/> 기록 목록</RouteLink></div>
         <PostArticle key={post.slug} post={post} go={go} listPath="/journal" articleBase="/journal/posts" searchQuery={search} toc={<JournalToc key={post.slug} post={post} scrollRef={scroll}/>} footer={

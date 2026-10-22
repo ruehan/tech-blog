@@ -20,7 +20,7 @@ test('night reading persists across journal routes and reloads without loading 3
   await expect(page.locator('.article-body')).toHaveCSS('color', 'rgb(204, 211, 192)');
   await page.getByRole('navigation', { name: '블로그 메뉴' }).getByRole('link', { name: '프로젝트' }).click();
   await expect(journal).toHaveAttribute('data-theme', 'night');
-  await page.locator('.journal-project-card').click();
+  await page.getByRole('link', { name: '프로젝트 자세히 보기' }).click();
   await expect(page.locator('.article-body h2').first()).toHaveCSS('color', 'rgb(230, 229, 213)');
   await toggle.click();
   await page.reload();

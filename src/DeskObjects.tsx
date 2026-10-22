@@ -1,11 +1,16 @@
 import { useEffect, useState } from 'react';
 import './desk.css';
 import { StartLights } from './StartLights';
+import { NowNote } from './NowNote';
+import type { Navigate } from './navigation';
+import { useDeskLayout } from './useDeskLayout';
 
 const pad = (value: number) => String(value).padStart(2, '0');
 const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
 
-export function DeskObjects({ arrangement }: { arrangement: number }) {
+export function DeskObjects({ arrangement, go }: { arrangement: number; go: Navigate }) {
+  const { ref, layout } = useDeskLayout(arrangement);
+  const position = (index: number) => layout ? { left: layout.items[index].x, top: layout.items[index].y } : undefined;
   const [now, setNow] = useState(() => new Date());
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
@@ -30,8 +35,10 @@ export function DeskObjects({ arrangement }: { arrangement: number }) {
   const minuteAngle = now.getMinutes() * 6 + now.getSeconds() / 10;
   const secondAngle = now.getSeconds() * 6;
 
-  return <aside className="desk-objects" data-arrangement={arrangement} aria-label="책상 위 소품">
-    <StartLights/>
+  return <aside ref={ref} className="desk-objects" data-arrangement={arrangement} data-layout={layout ? 'free' : 'stack'} aria-label="책상 위 소품">
+    <div className="desk-item desk-item-note" style={position(0)}><NowNote go={go}/></div>
+    <div className="desk-item desk-item-game" style={position(1)}><StartLights/></div>
+    <div className="desk-item desk-item-clock" style={position(2)}>
     <div className="desk-clock" role="group" aria-label="현재 시간">
       <div className="desk-clock-face">
         <svg viewBox="0 0 160 160" aria-hidden="true">
@@ -44,7 +51,8 @@ export function DeskObjects({ arrangement }: { arrangement: number }) {
       </div>
       <time className="desk-clock-time" dateTime={now.toISOString()} aria-label={`${now.getHours()}시 ${now.getMinutes()}분`}>{pad(now.getHours())}:{pad(now.getMinutes())}</time>
     </div>
-
+    </div>
+    <div className="desk-item desk-item-calendar" style={position(3)}>
     <div className="desk-calendar">
       <div className="desk-calendar-rings" aria-hidden="true"><i/><i/></div>
       <table aria-label={`${year}년 ${month + 1}월 달력`}>
@@ -55,6 +63,7 @@ export function DeskObjects({ arrangement }: { arrangement: number }) {
           return <td key={day}>{date > 0 && date <= days && <time dateTime={`${datePrefix}-${pad(date)}`} aria-current={date === now.getDate() ? 'date' : undefined}>{date}</time>}</td>;
         })}</tr>)}</tbody>
       </table>
+    </div>
     </div>
   </aside>;
 }
