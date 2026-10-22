@@ -8,6 +8,7 @@ export interface Post {
   title: string;
   description: string;
   date: string;
+  publishedAt?: string;
   tags: string[];
   draft: boolean;
   minutes: number;

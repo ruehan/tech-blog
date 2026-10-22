@@ -3,8 +3,9 @@ title: "바탕화면에 고양이 한 마리 올려두기"
 slug: bytepet-desktop-companion
 description: "Electron과 Canvas로 시작한 BytePet 제작기. 픽셀 고양이의 대기 모션, 드래그와 위치 저장, 투명한 여백의 클릭 통과를 구현한 과정을 기록한다."
 date: 2026-10-22
+publishedAt: 2026-10-22T08:07:44Z
 tags: [BytePet, Electron, 데스크톱 앱, 개발 기록]
-draft: true
+draft: false
 series: { slug: building-bytepet, title: "바탕화면에 작은 친구를 놓기 — BytePet 제작기", order: 1 }
 image: /images/posts/bytepet-desktop-companion/bytepet-yard.png
 ---

@@ -28,11 +28,11 @@ export function pageMetadata(path: string, posts: Post[]) {
   const noindex = !known || !!post?.draft;
   const structuredData = post && !noindex ? {
     '@context': 'https://schema.org', '@type': 'BlogPosting', headline: post.title,
-    description, image: [image], datePublished: `${post.date}T00:00:00+09:00`, inLanguage: 'ko-KR',
+    description, image: [image], datePublished: post.publishedAt ?? `${post.date}T00:00:00+09:00`, inLanguage: 'ko-KR',
     author: { '@type': 'Person', name: 'hangyu' }, mainEntityOfPage: canonical, url: canonical,
     ...(post.series ? { isPartOf: { '@type': 'CreativeWorkSeries', name: post.series.title }, position: post.series.order } : {}),
   } : null;
-  return { title: `${title} — ${siteName}`, description, canonical, image, imageAlt: post?.title ?? 'hangyu의 작업실', type: post ? 'article' : 'website', date: post?.date, noindex, structuredData };
+  return { title: `${title} — ${siteName}`, description, canonical, image, imageAlt: post?.title ?? 'hangyu의 작업실', type: post ? 'article' : 'website', date: post ? post.publishedAt ?? `${post.date}T00:00:00+09:00` : undefined, noindex, structuredData };
 }
 
 export function metadataTags(metadata: ReturnType<typeof pageMetadata>) {
@@ -45,6 +45,6 @@ export function metadataTags(metadata: ReturnType<typeof pageMetadata>) {
     ['name', 'twitter:card', 'summary_large_image'], ['name', 'twitter:title', metadata.title],
     ['name', 'twitter:description', metadata.description], ['name', 'twitter:image', metadata.image],
     ['name', 'twitter:image:alt', metadata.imageAlt],
-    ...(metadata.date ? [['property', 'article:published_time', `${metadata.date}T00:00:00+09:00`]] : []),
+    ...(metadata.date ? [['property', 'article:published_time', metadata.date]] : []),
   ];
 }

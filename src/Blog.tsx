@@ -7,6 +7,8 @@ import { ZoomableImage } from './ImageViewer';
 import { SeriesContents } from './SeriesContents';
 import { searchPreview } from './search';
 import { metadataTags, pageMetadata } from './seo';
+import { PostSort } from './PostSort';
+import { parsePostSort, postSortSearch, sortPosts } from './post-sort';
 import './blog.css';
 
 const scrollPositions = new Map<string, number>();
@@ -68,15 +70,23 @@ export function Book({ route, go, onClose }: { route: Route; go: Navigate; onClo
   const dialog = useRef<HTMLDialogElement>(null);
   const listScroll = useRef<HTMLDivElement>(null);
   const pageScroll = useRef<HTMLDivElement>(null);
-  const tag = new URLSearchParams(route.search).get('tag');
-  const visiblePosts = tag ? posts.filter(post => post.tags.includes(tag)) : posts;
+  const query = new URLSearchParams(route.search);
+  const tag = query.get('tag');
+  const sort = parsePostSort(query.get('sort'));
+  const orderedPosts = sortPosts(posts, sort);
+  const visiblePosts = tag ? orderedPosts.filter(post => post.tags.includes(tag)) : orderedPosts;
+  function tagHref(value: string) {
+    const params = new URLSearchParams(postSortSearch('', sort));
+    if (value) params.set('tag', value);
+    return `/posts${params.size ? `?${params}` : ''}`;
+  }
   const isList = route.path === '/posts';
   const post = isList ? visiblePosts[0] : posts.find(item => route.path === `/posts/${item.slug}`);
   const pageKey = post?.slug ?? route.path + route.search;
   const previousPage = useRef(pageKey);
-  const previousIndex = posts.findIndex(item => item.slug === previousPage.current);
-  const index = posts.findIndex(item => item.slug === post?.slug);
-  const neighbours = post && visiblePosts.includes(post) ? visiblePosts : posts;
+  const previousIndex = orderedPosts.findIndex(item => item.slug === previousPage.current);
+  const index = orderedPosts.findIndex(item => item.slug === post?.slug);
+  const neighbours = post && visiblePosts.includes(post) ? visiblePosts : orderedPosts;
   const neighbourIndex = neighbours.findIndex(item => item.slug === post?.slug);
   const turn = previousPage.current !== pageKey;
   const direction = index < previousIndex ? 'backward' : 'forward';
@@ -90,7 +100,7 @@ export function Book({ route, go, onClose }: { route: Route; go: Navigate; onClo
     focusTarget?.focus({ preventScroll: true });
     return () => { element.close(); if (previous?.isConnected) previous.focus({ preventScroll: true }); };
   }, []);
-  useReadingPosition(listScroll, `book-list:${tag ?? ''}`);
+  useReadingPosition(listScroll, `book-list:${route.search}`);
   useReadingPosition(pageScroll, `book-page:${pageKey}`);
   useLayoutEffect(() => {
     if (!isList) pageScroll.current?.querySelector<HTMLElement>('h1')?.focus({ preventScroll: true });
@@ -104,12 +114,12 @@ export function Book({ route, go, onClose }: { route: Route; go: Navigate; onClo
     <div className="book-spread">
       <aside className="book-index" aria-label="글 목록">
         <div className="book-index-scroll" ref={listScroll}>
-          <div className="tag-filters" aria-label="태그 필터"><RouteLink to="/posts" go={go} aria-current={!tag ? 'true' : undefined}>전체 <span>{posts.length}</span></RouteLink>{allTags.map(value => <RouteLink key={value} to={`/posts?tag=${encodeURIComponent(value)}`} go={go} aria-current={tag === value ? 'true' : undefined}>{value}</RouteLink>)}</div>
-          <div className="library-count">{visiblePosts.length}개의 글 </div>
+          <div className="tag-filters" aria-label="태그 필터"><RouteLink to={tagHref('')} go={go} aria-current={!tag ? 'true' : undefined}>전체 <span>{posts.length}</span></RouteLink>{allTags.map(value => <RouteLink key={value} to={tagHref(value)} go={go} aria-current={tag === value ? 'true' : undefined}>{value}</RouteLink>)}</div>
+          <div className="library-count">{visiblePosts.length}개의 글 <PostSort value={sort} onChange={value => go(`${route.path}${postSortSearch(route.search, value)}`)}/></div>
           <nav className="book-posts" aria-label="글 선택">{visiblePosts.map(item => <RouteLink key={item.slug} className="post-card" to={`/posts/${item.slug}${route.search}`} go={go} aria-current={item.slug === post?.slug ? 'page' : undefined}>
-            <span className="post-number">{String(posts.indexOf(item) + 1).padStart(2, '0')}</span><div><div className="post-meta"><span>{item.tags.join(' / ')}</span></div><h3>{item.title}</h3><time dateTime={item.date}>{formatDate(item.date)} · {item.minutes}분 읽기</time></div><Icon name="arrow" size={16}/>
+            <span className="post-number">{String(orderedPosts.indexOf(item) + 1).padStart(2, '0')}</span><div><div className="post-meta"><span>{item.tags.join(' / ')}</span></div><h3>{item.title}</h3><time dateTime={item.date}>{formatDate(item.date)} · {item.minutes}분 읽기</time></div><Icon name="arrow" size={16}/>
           </RouteLink>)}</nav>
-          {!visiblePosts.length && <div className="content-empty"><h2>{posts.length ? '아직 이 태그의 글이 없어요.' : '아직 등록된 글이 없어요.'}</h2>{!!posts.length && <RouteLink to="/posts" go={go}>전체 글 보기 <Icon name="arrow" size={16}/></RouteLink>}</div>}
+          {!visiblePosts.length && <div className="content-empty"><h2>{posts.length ? '아직 이 태그의 글이 없어요.' : '아직 등록된 글이 없어요.'}</h2>{!!posts.length && <RouteLink to={tagHref('')} go={go}>전체 글 보기 <Icon name="arrow" size={16}/></RouteLink>}</div>}
         </div>
         <footer className="book-index-footer"><span>조금씩 쌓아가는 개인 기록</span><Icon name="book" size={18}/></footer>
       </aside>
@@ -117,7 +127,7 @@ export function Book({ route, go, onClose }: { route: Route; go: Navigate; onClo
         <div className="book-page-bar"><RouteLink className="article-back" to={`/posts${route.search}`} go={go}><Icon name="back" size={15}/> 글 목록</RouteLink><span>{post ? `${String(index + 1).padStart(2, '0')} / ${String(posts.length).padStart(2, '0')}` : '기록'}</span></div>
         <div className="book-page-scroll" ref={pageScroll}>
           <div key={pageKey} className={`book-leaf ${turn ? 'is-turning' : ''}`} data-direction={direction}>
-            {post ? <PostArticle post={post} go={go}/> : isList ? <div className="book-blank"><Icon name="book" size={40}/><h1 tabIndex={-1}>{posts.length ? '다음 이야기를 기다리며.' : '아직 등록된 글이 없어요.'}</h1>{!!posts.length && <p>왼쪽 목록에서 다른 태그를 골라보세요.</p>}</div> : <section className="content-empty not-found"><span className="content-kicker">404 / NOT FOUND</span><h1 tabIndex={-1}>이 페이지는 아직 없어요.</h1><p>책장에서 다른 글을 찾아보세요.</p><RouteLink className="content-primary" to="/posts" go={go}>글 목록으로 <Icon name="arrow" size={18}/></RouteLink></section>}
+            {post ? <PostArticle post={post} go={go} listSearch={route.search}/> : isList ? <div className="book-blank"><Icon name="book" size={40}/><h1 tabIndex={-1}>{posts.length ? '다음 이야기를 기다리며.' : '아직 등록된 글이 없어요.'}</h1>{!!posts.length && <p>왼쪽 목록에서 다른 태그를 골라보세요.</p>}</div> : <section className="content-empty not-found"><span className="content-kicker">404 / NOT FOUND</span><h1 tabIndex={-1}>이 페이지는 아직 없어요.</h1><p>책장에서 다른 글을 찾아보세요.</p><RouteLink className="content-primary" to="/posts" go={go}>글 목록으로 <Icon name="arrow" size={18}/></RouteLink></section>}
           </div>
         </div>
         {post && <footer className="book-pagination"><span>{String(index + 1).padStart(2, '0')}</span><nav aria-label="글 넘기기">{neighbourIndex > 0 && <RouteLink to={`/posts/${neighbours[neighbourIndex - 1].slug}${route.search}`} go={go}><Icon name="back" size={15}/> 이전 글</RouteLink>}{neighbourIndex < neighbours.length - 1 && <RouteLink to={`/posts/${neighbours[neighbourIndex + 1].slug}${route.search}`} go={go}>다음 글 <Icon name="arrow" size={15}/></RouteLink>}</nav></footer>}
@@ -126,7 +136,7 @@ export function Book({ route, go, onClose }: { route: Route; go: Navigate; onClo
   </dialog>;
 }
 
-export function PostArticle({ post, go, listPath = '/posts', articleBase = '/posts', footer, toc, searchQuery = '' }: { post: Post; go: Navigate; listPath?: string; articleBase?: string; footer?: ReactNode; toc?: ReactNode; searchQuery?: string }) {
+export function PostArticle({ post, go, listPath = '/posts', articleBase = '/posts', footer, toc, searchQuery = '', listSearch = '' }: { post: Post; go: Navigate; listPath?: string; articleBase?: string; footer?: ReactNode; toc?: ReactNode; searchQuery?: string; listSearch?: string }) {
   const [share, setShare] = useState('');
   const [copyFallback, setCopyFallback] = useState('');
   async function copyLink() {
@@ -135,7 +145,7 @@ export function PostArticle({ post, go, listPath = '/posts', articleBase = '/pos
     catch { setCopyFallback(url); setShare('아래 주소를 복사해주세요.'); }
   }
   return <article className="article" >
-        <header className="article-heading"><div className="article-tags">{post.tags.map(tag => <RouteLink key={tag} to={`${listPath}?tag=${encodeURIComponent(tag)}`} go={go}>{tag}</RouteLink>)}</div>
+        <header className="article-heading"><div className="article-tags">{post.tags.map(tag => <RouteLink key={tag} to={`${listPath}?${new URLSearchParams({ ...Object.fromEntries(new URLSearchParams(listSearch)), tag })}`} go={go}>{tag}</RouteLink>)}</div>
           <h1 tabIndex={-1}>{post.title}</h1><p className="article-deck">{post.description}</p>
           <div className="article-byline"><span>hangyu <span className="byline-separator">/</span> <time dateTime={post.date}>{formatDate(post.date)}</time></span><span>{post.minutes}분 읽기</span>{post.draft && <span className="draft-label">초안</span>}</div>
         </header>

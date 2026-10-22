@@ -20,7 +20,7 @@ export function parsePost(source, file = 'post.md') {
   catch (error) { fail(`메타데이터 오류: ${error.message}`); }
   if (!metadata || typeof metadata !== 'object' || Array.isArray(metadata)) fail('메타데이터는 필드와 값으로 작성해주세요.');
   for (const field of Object.keys(metadata)) {
-    if (!['slug', 'title', 'description', 'date', 'tags', 'draft', 'minutes', 'series', 'image'].includes(field)) fail(`알 수 없는 필드: ${field}`);
+    if (!['slug', 'title', 'description', 'date', 'publishedAt', 'tags', 'draft', 'minutes', 'series', 'image'].includes(field)) fail(`알 수 없는 필드: ${field}`);
   }
   for (const field of ['title', 'description', 'date']) {
     if (typeof metadata[field] !== 'string' || !metadata[field].trim()) fail(`${field} 필드에 문자열이 필요합니다.`);
@@ -30,6 +30,8 @@ export function parsePost(source, file = 'post.md') {
   const date = metadata.date;
   const parsedDate = new Date(`${date}T00:00:00Z`);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !Number.isFinite(parsedDate.getTime()) || parsedDate.toISOString().slice(0, 10) !== date) fail('date는 실제 날짜인 YYYY-MM-DD 형식이어야 합니다.');
+  const publishedAt = metadata.publishedAt;
+  if (publishedAt !== undefined && (typeof publishedAt !== 'string' || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(publishedAt) || !Number.isFinite(Date.parse(publishedAt)) || new Date(publishedAt).toISOString() !== publishedAt.replace('Z', '.000Z'))) fail('publishedAt은 실제 UTC 발행 시각(예: 2026-10-22T08:00:00Z)이어야 합니다.');
   const tags = metadata.tags ?? [];
   if (!Array.isArray(tags) || tags.some(tag => typeof tag !== 'string' || !tag.trim())) fail('tags에는 문자열 목록이 필요합니다.');
   if (metadata.draft !== undefined && typeof metadata.draft !== 'boolean') fail('draft는 true 또는 false여야 합니다.');
@@ -41,7 +43,7 @@ export function parsePost(source, file = 'post.md') {
   }
   if (metadata.image !== undefined && (typeof metadata.image !== 'string' || !/^(?:\/(?!\/)|https:\/\/)/i.test(metadata.image))) fail('image는 /images/... 또는 https://... 주소여야 합니다.');
   if (!match[2].trim()) fail('본문이 비어 있습니다.');
-  return { metadata: { slug, title: metadata.title.trim(), description: metadata.description.trim(), date, tags: [...new Set(tags.map(tag => tag.trim()))], draft: metadata.draft ?? true, minutes: metadata.minutes, series: metadata.series, image: metadata.image }, markdown: match[2] };
+  return { metadata: { slug, title: metadata.title.trim(), description: metadata.description.trim(), date, publishedAt, tags: [...new Set(tags.map(tag => tag.trim()))], draft: metadata.draft ?? true, minutes: metadata.minutes, series: metadata.series, image: metadata.image }, markdown: match[2] };
 }
 
 export function compilePost(source, file = 'post.md') {
@@ -177,5 +179,5 @@ export async function loadPosts(directory, { includeDrafts = false, publicDirect
     }
     posts.push(post);
   }
-  return posts.sort((a, b) => b.date.localeCompare(a.date));
+  return posts.sort((a, b) => b.date.localeCompare(a.date) || Date.parse(b.publishedAt ?? `${b.date}T00:00:00Z`) - Date.parse(a.publishedAt ?? `${a.date}T00:00:00Z`));
 }

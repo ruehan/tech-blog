@@ -3,6 +3,7 @@ title: "Blender로 만든 방을 React Three Fiber 블로그로 옮기기"
 slug: building-a-3d-blog-with-blender
 description: "Blender에서 직접 만든 방과 애니메이션을 React Three Fiber로 연결했다. 책을 펼쳐 글을 읽는 화면부터 전환이 끊기는 문제, 일반 블로그 화면을 함께 만든 과정까지 기록한다."
 date: 2026-10-22
+publishedAt: 2026-10-22T07:36:46Z
 tags: [Blender, React, 3D]
 draft: false
 image: /images/posts/building-3d-blog/room.jpg

@@ -2,6 +2,8 @@
 title: "글 제목"
 description: "목록에 표시할 짧은 설명"
 date: 2026-10-21
+# 같은 날짜의 글은 아래 UTC 발행 시각으로 정렬합니다. 공개할 때 지정해주세요.
+# publishedAt: 2026-10-21T09:00:00Z
 tags: [React]
 draft: true
 # series: { slug: my-series, title: "시리즈 제목", order: 1 }

@@ -8,6 +8,7 @@ import { chromium } from '@playwright/test';
 import { loadPosts } from '../../scripts/content.mjs';
 
 const posts = await loadPosts('content/posts', { publicDirectory: 'public' });
+const imageCount = nodes => nodes.reduce((count, node) => count + (node.tag === 'img' ? 1 : 0) + imageCount(node.children ?? []), 0);
 
 const output = resolve('dist');
 const removedSlugs = ['building-a-room-on-the-web', 'making-hover-transitions-smooth', 'from-the-room-to-the-cockpit'];
@@ -42,6 +43,7 @@ test('deployment publishes articles and metadata without removed sample content'
       const data = JSON.parse(DomUtils.textContent(find(document, 'script', 'type', 'application/ld+json')[0]));
       assert.equal(data['@type'], 'BlogPosting');
       assert.equal(data.headline, post.title);
+      assert.equal(data.datePublished, post.publishedAt ?? `${post.date}T00:00:00+09:00`);
     }
   }
   const javascript = (await Promise.all((await readdir(join(output, 'assets'))).filter(name => name.endsWith('.js')).map(name => readFile(join(output, 'assets', name), 'utf8')))).join('\n');
@@ -71,9 +73,10 @@ test('published articles work with and without JavaScript, including book mode a
     const plain = await browser.newPage({ javaScriptEnabled: false });
     await plain.goto(base + '/journal');
     assert.equal(await plain.locator('.journal-entry').count(), posts.length);
+    assert.deepEqual(await plain.locator('.journal-entry h2').allTextContents(), posts.map(post => post.title));
     await plain.locator('.journal-entry').first().click();
     assert.equal(await plain.getByRole('heading', { level: 1 }).innerText(), posts[0].title);
-    assert.equal(await plain.locator('article img').count(), 6);
+    assert.equal(await plain.locator('article img').count(), imageCount(posts[0].body));
     await plain.getByRole('link', { name: '프로젝트', exact: true }).click();
     assert.match(await plain.locator('main').innerText(), /아직 등록된 프로젝트가 없어요/);
     const page = await browser.newPage();
@@ -108,7 +111,7 @@ test('published articles work with and without JavaScript, including book mode a
     assert.equal(await page.locator('.post-card').count(), posts.length);
     await page.locator('.post-card').first().click();
     await page.getByRole('heading', { level: 1, name: posts[0].title }).waitFor();
-    assert.equal(await page.locator('article img').count(), 6);
+    assert.equal(await page.locator('article img').count(), imageCount(posts[0].body));
     await page.goto(base + '/projects');
     await page.getByRole('dialog').waitFor();
     await page.getByRole('heading', { name: '아직 등록된 프로젝트가 없어요.' }).waitFor();

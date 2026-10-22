@@ -1,0 +1,6 @@
+.post-sort{display:inline-flex;flex-shrink:0}
+.post-sort select{min-height:36px;max-width:140px;padding:7px 10px;border:1px solid var(--journal-border,#dce1d6);border-radius:10px;background:var(--journal-paper,#f8f7ef);color:var(--journal-ink,#415a47);font:inherit;font-size:12px;cursor:pointer}
+.post-sort select:hover{border-color:#93a186}
+.post-sort select:focus-visible{outline:2px solid #849970;outline-offset:3px}
+.journal[data-theme=night] .post-sort select:focus-visible{outline-color:#b6ca9e}
+@media(max-width:700px){.post-sort select{min-height:44px}}
