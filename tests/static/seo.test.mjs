@@ -1,43 +1,39 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile, stat } from 'node:fs/promises';
+import { readFile, readdir, stat } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import { resolve, join, extname, relative } from 'node:path';
 import { parseDocument, DomUtils } from 'htmlparser2';
 import { chromium } from '@playwright/test';
 
 const output = resolve('dist');
-const articlePath = '/journal/posts/building-a-room-on-the-web';
+const removedSlugs = ['building-a-room-on-the-web', 'making-hover-transitions-smooth', 'from-the-room-to-the-cockpit'];
 const htmlFor = path => readFile(join(output, `${path.slice(1)}/index.html`), 'utf8');
 const find = (document, tag, attribute, value) => DomUtils.findAll(node => node.name === tag && node.attribs?.[attribute] === value, document.children);
 
-test('built public HTML contains the article, canonical metadata and schema before JavaScript runs', async () => {
-  const html = await htmlFor(articlePath);
-  const document = parseDocument(html);
-  assert.match(DomUtils.textContent(document), /이 블로그는 작은 방에서 시작했다/);
-  assert.equal(find(document, 'meta', 'property', 'og:title')[0].attribs.content, '내 방을 웹으로 옮기는 일 — hangyu / room');
-  assert.equal(find(document, 'meta', 'property', 'og:image')[0].attribs.content, 'https://hangyu.blog/images/posts/room-blog/room.png');
-  assert.equal(find(document, 'link', 'rel', 'canonical')[0].attribs.href, `https://hangyu.blog${articlePath}`);
-  assert.equal(find(document, 'meta', 'name', 'description').length, 1);
-  const schema = JSON.parse(DomUtils.textContent(find(document, 'script', 'type', 'application/ld+json')[0]));
-  assert.equal(schema['@type'], 'BlogPosting');
-  assert.equal(schema.mainEntityOfPage, `https://hangyu.blog${articlePath}`);
-  assert.equal(schema.isPartOf.name, '이 블로그를 만드는 과정');
-  const alternate = parseDocument(await htmlFor('/posts/building-a-room-on-the-web'));
-  assert.equal(find(alternate, 'link', 'rel', 'canonical')[0].attribs.href, `https://hangyu.blog${articlePath}`);
-  assert.ok(!html.includes('making-hover-transitions-smooth'));
-  assert.ok(!html.includes('from-the-room-to-the-cockpit'));
-  await assert.rejects(stat(join(output, 'journal/posts/making-hover-transitions-smooth/index.html')), { code: 'ENOENT' });
+test('deployment contains empty lists and no removed content, assets, routes or sitemap entries', async () => {
+  for (const [path, text] of [['/journal', '아직 등록된 글이 없어요.'], ['/journal/projects', '아직 등록된 프로젝트가 없어요.']]) {
+    const document = parseDocument(await htmlFor(path));
+    assert.ok(DomUtils.textContent(document).includes(text));
+    assert.equal(find(document, 'link', 'rel', 'canonical')[0].attribs.href, `https://hangyu.blog${path}`);
+    assert.equal(find(document, 'meta', 'property', 'og:image')[0].attribs.content, 'https://hangyu.blog/images/site/room.png');
+    assert.equal(find(document, 'script', 'type', 'application/ld+json').length, 0);
+  }
+  for (const slug of removedSlugs) for (const base of ['journal/posts', 'posts']) {
+    await assert.rejects(stat(join(output, base, slug, 'index.html')), { code: 'ENOENT' });
+  }
+  for (const base of ['journal/projects', 'projects']) await assert.rejects(stat(join(output, base, 'hangyu-room/index.html')), { code: 'ENOENT' });
+  await assert.rejects(stat(join(output, 'images/posts/room-blog/journal.png')), { code: 'ENOENT' });
   const sitemap = await readFile(join(output, 'sitemap.xml'), 'utf8');
-  assert.ok(sitemap.includes(`https://hangyu.blog${articlePath}`));
-  assert.ok(!sitemap.includes('https://hangyu.blog/posts/'));
-  assert.ok(!sitemap.includes('making-hover'));
-  assert.match(await readFile(join(output, 'robots.txt'), 'utf8'), /Sitemap: https:\/\/hangyu.blog\/sitemap.xml/);
+  assert.equal((sitemap.match(/<loc>/g) ?? []).length, 3);
+  assert.ok(!sitemap.includes('/posts/') && !sitemap.includes('/projects/hangyu-room'));
+  const javascript = (await Promise.all((await readdir(join(output, 'assets'))).filter(name => name.endsWith('.js')).map(name => readFile(join(output, 'assets', name), 'utf8')))).join('\n');
+  for (const content of [...removedSlugs, '호버가 자꾸 다시 시작되던 이유', '관심사가 놓인 방, 글이 쌓이는 블로그.', '요즘 하는 일을 담은 메모와 여백에 놓이는 책상 소품.']) assert.ok(!javascript.includes(content), `Removed content leaked: ${content}`);
   const missing = parseDocument(await readFile(join(output, '404.html'), 'utf8'));
   assert.equal(find(missing, 'meta', 'name', 'robots')[0].attribs.content, 'noindex, follow');
 });
 
-test('static deep links remain readable without JavaScript, then enhance into the working journal', async () => {
+test('empty deployment works with and without JavaScript, including book mode and removed addresses', async () => {
   const server = createServer(async (request, response) => {
     try {
       const path = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
@@ -56,35 +52,48 @@ test('static deep links remain readable without JavaScript, then enhance into th
   try {
     browser = await chromium.launch({ channel: process.env.PLAYWRIGHT_CHANNEL || 'chrome' });
     const plain = await browser.newPage({ javaScriptEnabled: false });
-    await plain.goto(base + articlePath);
-    assert.match(await plain.locator('.markdown-body').innerText(), /이 블로그는 작은 방에서 시작했다/);
-    await plain.locator('.article-series summary').click();
-    assert.equal(await plain.locator('.article-series ol a').count(), 1);
-    await plain.screenshot({ path: '.local/static-article.png' });
-    await plain.getByRole('link', { name: '기록 목록', exact: true }).click();
-    assert.equal(await plain.locator('.journal-entry').count(), 1);
+    await plain.goto(base + '/journal');
+    assert.equal(await plain.locator('.journal-entry').count(), 0);
+    assert.match(await plain.locator('main').innerText(), /아직 등록된 글이 없어요/);
+    await plain.getByRole('link', { name: '프로젝트', exact: true }).click();
+    assert.match(await plain.locator('main').innerText(), /아직 등록된 프로젝트가 없어요/);
     const page = await browser.newPage();
     const errors = [], scenes = [];
     page.on('pageerror', error => errors.push(error.message));
     page.on('request', request => { if (/\.glb|WorldScene/.test(request.url())) scenes.push(request.url()); });
-    await page.goto(`${base}${articlePath}#scene-and-content`);
-    await page.locator('.journal-static').waitFor({ state: 'detached' });
-    await page.getByRole('button', { name: '읽기 설정', exact: true }).click();
-    await page.getByRole('radio', { name: '크게', exact: true }).check();
-    await page.keyboard.press('Escape');
-    assert.equal(await page.locator('.article-body').evaluate(node => getComputedStyle(node).fontSize), '19px');
-    await page.getByRole('link', { name: '기록 목록', exact: true }).click();
-    await page.getByRole('searchbox').fill('lerpVectors');
-    await page.getByRole('searchbox').press('Enter');
-    await page.locator('.journal-entry').click();
-    await page.locator('[data-search-match=true]').waitFor();
-    assert.match(await page.locator('[data-search-match=true]').innerText(), /lerpVectors/);
-    assert.equal(await page.locator('meta[name=description]').count(), 1);
+    for (const width of [1440, 390, 320]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(base + '/journal');
+      await page.locator('.journal-static').waitFor({ state: 'detached' });
+      assert.equal(await page.locator('.journal-entry, .now-note').count(), 0);
+      await page.getByRole('heading', { name: '아직 등록된 글이 없어요.' }).waitFor();
+      assert.equal(await page.locator('.desk-item').count(), 3);
+      assert.ok(await page.locator('.journal').evaluate(element => element.scrollWidth <= element.clientWidth));
+      await page.screenshot({ path: `.local/empty-journal-${width}.png` });
+      await page.getByRole('searchbox').fill('React');
+      await page.getByRole('searchbox').press('Enter');
+      await page.getByRole('heading', { name: '아직 등록된 글이 없어요.' }).waitFor();
+      await page.getByRole('link', { name: '프로젝트', exact: true }).click();
+      await page.getByRole('heading', { name: '아직 등록된 프로젝트가 없어요.' }).waitFor();
+    }
+    for (const path of ['/journal/posts/building-a-room-on-the-web', '/journal/projects/hangyu-room']) {
+      const missing = await plain.goto(base + path);
+      assert.equal(missing.status(), 404);
+      await page.goto(base + path);
+      await page.locator('.journal-static').waitFor({ state: 'detached' });
+      await page.getByRole('heading', { name: '페이지를 찾을 수 없습니다.' }).waitFor();
+      assert.equal(await page.locator('meta[name=robots]').getAttribute('content'), 'noindex, follow');
+    }
+    await page.goto(base + '/posts');
+    await page.getByRole('dialog').waitFor();
+    await page.locator('.book-index').getByRole('heading', { name: '아직 등록된 글이 없어요.' }).waitFor();
+    assert.equal(await page.locator('.book-posts a').count(), 0);
+    await page.goto(base + '/projects');
+    await page.getByRole('dialog').waitFor();
+    await page.getByRole('heading', { name: '아직 등록된 프로젝트가 없어요.' }).waitFor();
+    assert.equal(await page.locator('.project-card').count(), 0);
     assert.deepEqual(errors, []);
     assert.deepEqual(scenes, []);
-    const missing = await plain.goto(base + '/journal/posts/making-hover-transitions-smooth');
-    assert.equal(missing.status(), 404);
-    assert.match(await plain.getByRole('heading', { level: 1 }).innerText(), /찾을 수 없습니다/);
   } finally {
     await browser?.close();
     await new Promise(resolve => server.close(resolve));

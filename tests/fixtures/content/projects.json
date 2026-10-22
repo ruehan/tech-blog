@@ -1,0 +1,26 @@
+[
+  {
+    "slug": "hangyu-room",
+    "title": "hangyu / room",
+    "subtitle": "관심사가 놓인 방, 글이 쌓이는 블로그.",
+    "description": "방의 오브젝트를 통해 개발 기록과 프로젝트, 음악과 심레이싱을 탐색하는 개인 공간.",
+    "status": "진행 중 · 개인 프로젝트",
+    "tags": ["React", "TypeScript", "React Three Fiber"],
+    "cover": { "src": "/images/posts/room-blog/room.png", "alt": "웹으로 옮긴 개인 작업실의 3D 모델" },
+    "previews": [
+      { "label": "3D 방", "image": "/images/posts/room-blog/room.png", "alt": "책장, 책상과 심레이싱 장비가 놓인 3D 방", "description": "방 안의 물건을 따라 글과 프로젝트를 찾아가는 공간.", "href": "/", "action": "방 둘러보기" },
+      { "label": "2D 블로그", "image": "/images/posts/room-blog/journal.png", "alt": "글 목록과 책상 소품이 놓인 일반 블로그 화면", "description": "검색하고, 읽고, 기록을 따라가는 가벼운 블로그.", "href": "/journal", "action": "글 읽으러 가기" }
+    ],
+    "updates": [
+      { "date": "2026-10-22", "text": "요즘 하는 일을 담은 메모와 여백에 놓이는 책상 소품." },
+      { "date": "2026-10-22", "text": "본문 검색, 시리즈 탐색, 글씨 크기와 읽기 폭 설정." },
+      { "date": "2026-10-21", "text": "3D 방의 화면 전환과 렌더링 최적화, 화질 선택." }
+    ],
+    "sections": [
+      { "title": "어떤 공간인가요?", "text": "책에서 글을 읽고, 컴퓨터에서 만든 것을 살펴볼 수 있습니다." },
+      { "title": "지금까지 만든 경험", "items": ["책·베이스의 호버 반응과 방의 조명 전환", "모니터를 거쳐 들어가는 컴퓨터 월드", "심레이싱 장비에서 출발선의 운전석으로 이동", "책처럼 펼치는 글 목록과 본문, 페이지 전환"] }
+    ],
+    "series": "building-hangyu-room",
+    "action": { "href": "/", "label": "방 둘러보기" }
+  }
+]

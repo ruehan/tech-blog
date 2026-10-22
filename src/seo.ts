@@ -1,9 +1,10 @@
 import type { MarkdownNode, Post } from './content-types';
+import { projects } from './project-data';
 
 export const siteUrl: string = import.meta.env.SITE_URL;
 export const siteName = 'hangyu / room';
 export const siteDescription = '개발하고, 만들고, 배우는 과정을 기록하는 hangyu의 개인 공간.';
-const defaultImage = '/images/posts/room-blog/room.png';
+const defaultImage = '/images/site/room.png';
 
 function firstImage(nodes: MarkdownNode[]): string | undefined {
   for (const node of nodes) {
@@ -18,7 +19,8 @@ export function pageMetadata(path: string, posts: Post[]) {
   const clean = path.replace(/\/$/, '') || '/';
   const canonicalPath = clean === '/posts' ? '/journal' : clean.startsWith('/posts/') || clean === '/projects' || clean.startsWith('/projects/') ? `/journal${clean}` : clean;
   const post = posts.find(item => canonicalPath === `/journal/posts/${item.slug}`);
-  const known = post || ['/', '/journal', '/journal/projects', '/journal/projects/hangyu-room'].includes(canonicalPath);
+  const project = projects.find(item => canonicalPath === `/journal/projects/${item.slug}`);
+  const known = post || project || ['/', '/journal', '/journal/projects'].includes(canonicalPath);
   const title = post?.title ?? (canonicalPath === '/journal' ? '글 기록' : canonicalPath.startsWith('/journal/projects') && known ? '프로젝트' : canonicalPath === '/' ? '작은 취향의 공간' : '페이지를 찾을 수 없습니다');
   const description = post?.description ?? siteDescription;
   const image = new URL(post?.image ?? (post && firstImage(post.body)) ?? defaultImage, siteUrl).href;

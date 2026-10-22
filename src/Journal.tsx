@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { PostArticle, ProjectArticle, useReadingPosition } from './Blog';
-import { allTags, filterPosts, formatDate, posts, project } from './content';
+import { allTags, filterPosts, formatDate, posts, projects } from './content';
 import { Icon } from './Icons';
 import { RouteLink, type Navigate, type Route } from './navigation';
 import { ProjectShowcase } from './ProjectShowcase';
@@ -21,7 +21,8 @@ export function Journal({ route, go }: { route: Route; go: Navigate }) {
   const scroll = useRef<HTMLDivElement>(null);
   const isIndex = route.path === '/journal';
   const isProjects = route.path === '/journal/projects';
-  const isProject = route.path === `/journal/projects/${project.slug}`;
+  const project = projects.find(item => route.path === `/journal/projects/${item.slug}`);
+  const isProject = !!project;
   const post = posts.find(item => route.path === `/journal/posts/${item.slug}`);
   const query = new URLSearchParams(route.search);
   const tag = query.get('tag') ?? '';
@@ -96,12 +97,13 @@ export function Journal({ route, go }: { route: Route; go: Navigate }) {
               <div className={`journal-spine journal-spine-${posts.indexOf(item) % 3}`} aria-hidden="true"><Icon name={['book', 'focus', 'steering'][posts.indexOf(item) % 3]} size={22}/><span>{number(posts.indexOf(item) + 1)}</span></div>
               <div className="journal-entry-body"><div className="journal-entry-meta"><span><SearchHighlight text={item.tags.join(' / ')} query={search}/></span>{item.draft && <span className="draft-label">초안</span>}</div><h2><SearchHighlight text={item.title} query={search}/></h2><p className={search ? 'search-excerpt' : undefined}><SearchHighlight text={preview.text} query={search}/></p><div className="journal-entry-bottom"><time dateTime={item.date}>{formatDate(item.date)}</time><span>{item.minutes}분 읽기</span><Icon name="arrow" size={18}/></div></div>
             </RouteLink>; })}</div>
-            {!visiblePosts.length && <div className="journal-empty"><Icon name="search" size={28}/><h3>아직 찾는 기록이 없어요.</h3><p>다른 단어나 태그로 찾아보세요.</p><RouteLink to="/journal" go={go}>전체 기록 보기 <Icon name="arrow" size={16}/></RouteLink></div>}
+            {!visiblePosts.length && <div className="journal-empty"><Icon name={posts.length ? "search" : "book"} size={28}/><h3>{posts.length ? '아직 찾는 기록이 없어요.' : '아직 등록된 글이 없어요.'}</h3>{!!posts.length && <><p>다른 단어나 태그로 찾아보세요.</p><RouteLink to="/journal" go={go}>전체 기록 보기 <Icon name="arrow" size={16}/></RouteLink></>}</div>}
           </section>
           <DeskObjects arrangement={deskArrangement} go={go}/>
       </div> : isProjects ? <>
         <div className="journal-section-heading journal-project-heading"><h1 tabIndex={-1}>프로젝트</h1></div>
-        <ProjectShowcase go={go}/>
+        {projects.map(item => <ProjectShowcase key={item.slug} project={item} go={go}/>)}
+        {!projects.length && <section className="journal-empty"><Icon name="folder" size={28}/><h2>아직 등록된 프로젝트가 없어요.</h2></section>}
       </> : post ? <div className="journal-reading">
         <div className="journal-reading-margin"><RouteLink to={`/journal${route.search}`} go={go}><Icon name="back" size={16}/> 기록 목록</RouteLink></div>
         <PostArticle key={post.slug} post={post} go={go} listPath="/journal" articleBase="/journal/posts" searchQuery={search} toc={<JournalToc key={post.slug} post={post} scrollRef={scroll}/>} footer={
@@ -113,7 +115,7 @@ export function Journal({ route, go }: { route: Route; go: Navigate }) {
             <RouteLink className="journal-list-link" to={`/journal${route.search}`} go={go}><Icon name="notes" size={16}/> 글 목록</RouteLink>
           </nav>
         }/>
-      </div> : isProject ? <div className="journal-project-reading"><ProjectArticle go={go} listPath="/journal/projects" articleBase="/journal/posts"/></div> : <section className="journal-empty journal-missing"><h1 tabIndex={-1}>페이지를 찾을 수 없습니다.</h1><RouteLink to="/journal" go={go}>기록 목록으로 <Icon name="arrow" size={18}/></RouteLink></section>}
+      </div> : project ? <div className="journal-project-reading"><ProjectArticle project={project} go={go} listPath="/journal/projects" articleBase="/journal/posts"/></div> : <section className="journal-empty journal-missing"><h1 tabIndex={-1}>페이지를 찾을 수 없습니다.</h1><RouteLink to="/journal" go={go}>기록 목록으로 <Icon name="arrow" size={18}/></RouteLink></section>}
     </main>
     </ImageViewer>
   </div>;

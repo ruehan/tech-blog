@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './desk.css';
 import { StartLights } from './StartLights';
-import { NowNote } from './NowNote';
+import { NowNote, hasNowNote } from './NowNote';
 import type { Navigate } from './navigation';
 import { useDeskLayout } from './useDeskLayout';
 
@@ -10,7 +10,10 @@ const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
 
 export function DeskObjects({ arrangement, go }: { arrangement: number; go: Navigate }) {
   const { ref, layout } = useDeskLayout(arrangement);
-  const position = (index: number) => layout ? { left: layout.items[index].x, top: layout.items[index].y } : undefined;
+  const position = (index: number) => {
+    const item = layout?.items[index];
+    return item ? { left: item.x, top: item.y } : undefined;
+  };
   const [now, setNow] = useState(() => new Date());
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
@@ -36,9 +39,9 @@ export function DeskObjects({ arrangement, go }: { arrangement: number; go: Navi
   const secondAngle = now.getSeconds() * 6;
 
   return <aside ref={ref} className="desk-objects" data-arrangement={arrangement} data-layout={layout ? 'free' : 'stack'} aria-label="책상 위 소품">
-    <div className="desk-item desk-item-note" style={position(0)}><NowNote go={go}/></div>
-    <div className="desk-item desk-item-game" style={position(1)}><StartLights/></div>
-    <div className="desk-item desk-item-clock" style={position(2)}>
+    {hasNowNote && <div className="desk-item desk-item-note" style={position(0)}><NowNote go={go}/></div>}
+    <div className="desk-item desk-item-game" style={position(hasNowNote ? 1 : 0)}><StartLights/></div>
+    <div className="desk-item desk-item-clock" style={position(hasNowNote ? 2 : 1)}>
     <div className="desk-clock" role="group" aria-label="현재 시간">
       <div className="desk-clock-face">
         <svg viewBox="0 0 160 160" aria-hidden="true">
@@ -52,7 +55,7 @@ export function DeskObjects({ arrangement, go }: { arrangement: number; go: Navi
       <time className="desk-clock-time" dateTime={now.toISOString()} aria-label={`${now.getHours()}시 ${now.getMinutes()}분`}>{pad(now.getHours())}:{pad(now.getMinutes())}</time>
     </div>
     </div>
-    <div className="desk-item desk-item-calendar" style={position(3)}>
+    <div className="desk-item desk-item-calendar" style={position(hasNowNote ? 3 : 2)}>
     <div className="desk-calendar">
       <div className="desk-calendar-rings" aria-hidden="true"><i/><i/></div>
       <table aria-label={`${year}년 ${month + 1}월 달력`}>

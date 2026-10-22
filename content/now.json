@@ -1,17 +1,4 @@
 {
-  "updated": "2026-10-22",
-  "items": [
-    {
-      "label": "만드는 중",
-      "title": "hangyu / room",
-      "description": "3D 방과 글 읽는 공간을 함께 다듬고 있어요.",
-      "href": "/journal/projects/hangyu-room"
-    },
-    {
-      "label": "살펴보는 중",
-      "title": "자연스러운 화면 전환",
-      "description": "방에서 글로, 다시 방으로 이어지는 경험.",
-      "href": "/journal/posts/building-a-room-on-the-web"
-    }
-  ]
+  "updated": "",
+  "items": []
 }

@@ -1,9 +1,13 @@
-import now from '../content/now.json';
+import data from '../content/now.json';
 import { Icon } from './Icons';
 import { RouteLink, type Navigate } from './navigation';
 import './now-note.css';
 
+const now: { updated: string; items: { label: string; title: string; description: string; href: string }[] } = data;
+export const hasNowNote = now.items.length > 0;
+
 export function NowNote({ go }: { go?: Navigate }) {
+  if (!hasNowNote) return null;
   return <section className="now-note" aria-labelledby="now-note-heading">
     <h2 id="now-note-heading">요즘 하고 있는 것</h2>
     <ul>{now.items.map(item => {

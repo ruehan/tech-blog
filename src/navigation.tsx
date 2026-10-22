@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useState, type AnchorHTMLAttributes, type MouseEvent } from 'react';
+import { rememberView } from './view-preference';
 
 export type Route = { path: string; search: string };
 const currentRoute = (): Route => ({ path: window.location.pathname.replace(/\/$/, '') || '/', search: window.location.search });
 export function useRoute() {
   const [route, setRoute] = useState(currentRoute);
+  useEffect(() => { rememberView(route.path); }, [route.path]);
   useEffect(() => {
     const update = () => setRoute(currentRoute());
     window.addEventListener('popstate', update);

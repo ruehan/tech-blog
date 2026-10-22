@@ -62,11 +62,16 @@ test('production excludes drafts from all content and detects duplicate slugs', 
   } finally { await rm(directory, { recursive: true, force: true }); }
 });
 
-test('repository posts preserve old addresses and validate published image dimensions', async () => {
-  const posts = await loadPosts('content/posts', { includeDrafts: true, publicDirectory: 'public' });
+test('isolated fixtures validate published image dimensions and draft filtering', async () => {
+  const posts = await loadPosts('tests/fixtures/content/posts', { includeDrafts: true, publicDirectory: 'tests/fixtures/public' });
   assert.deepEqual(posts.map(p => p.slug), ['building-a-room-on-the-web', 'making-hover-transitions-smooth', 'from-the-room-to-the-cockpit']);
   const image = allNodes(posts[0].body).find(node => node.tag === 'img');
   assert.equal(image.attributes.width, 1440);
   assert.equal(image.attributes.height, 900);
-  assert.deepEqual((await loadPosts('content/posts')).map(p => p.slug), ['building-a-room-on-the-web']);
+  assert.deepEqual((await loadPosts('tests/fixtures/content/posts')).map(p => p.slug), ['building-a-room-on-the-web']);
+});
+
+
+test('deployment content starts empty, including drafts', async () => {
+  assert.deepEqual(await loadPosts('content/posts', { includeDrafts: true, publicDirectory: 'public' }), []);
 });

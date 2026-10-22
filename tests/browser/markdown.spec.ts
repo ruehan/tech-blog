@@ -34,7 +34,7 @@ test('both reading modes render images, tables, highlighted code and copy the or
 
 test('adding, editing and deleting one Markdown file updates both views without changing application code', async ({ page }) => {
   const slug = `content-workflow-${process.pid}`;
-  const filename = resolve(`content/posts/${slug}.md`);
+  const filename = resolve(`tests/fixtures/content/posts/${slug}.md`);
   const source = (body: string) => `---\ntitle: "작성 흐름 확인"\ndescription: "파일 기반 글 작성"\ndate: 2026-10-22\ntags: [작성흐름]\ndraft: true\n---\n\n## 자동 목차\n\n${body}\n`;
   let created = false;
   await page.goto('/journal');
