@@ -26,7 +26,7 @@ for (const path of staticRoutes) {
 }
 await writeFile(join(output, '404.html'), documentFor('/not-found'));
 // Only canonical public pages are listed; alternate reading modes and drafts stay out.
-const canonicalRoutes = staticRoutes.filter(path => path === '/' || path.startsWith('/journal'));
+const canonicalRoutes = staticRoutes.filter(path => path === '/' || path === '/about' || path.startsWith('/journal'));
 await writeFile(join(output, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${canonicalRoutes.map(path => `<url><loc>${escape(siteUrl + path)}</loc></url>`).join('\n')}\n</urlset>\n`);
 await writeFile(join(output, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${siteUrl}/sitemap.xml\n`);
 console.log(`Prerendered ${staticRoutes.length} public pages, 404, sitemap and robots for ${siteUrl}.`);

@@ -59,3 +59,5 @@
   .journal-toc-links a{padding:10px 12px;font-size:11px}
   .journal-with-toc .markdown-body :is(h2,h3,h4,h5,h6){scroll-margin-top:40px}
 }
+
+@media(max-width:360px){.journal-rail{gap:3px;padding:6px}.journal-rail .rail-button{width:40px}.journal-rail-divider{margin:0 2px}.journal-static .journal-header{gap:12px}.journal-static .journal-header nav{gap:10px;font-size:11px}}

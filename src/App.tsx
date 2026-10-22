@@ -20,7 +20,7 @@ function RailButton({ icon, label, ...props }: ButtonHTMLAttributes<HTMLButtonEl
 
 export default function App() {
   const { route, go } = useRoute();
-  const journalOpen = route.path === '/journal' || route.path.startsWith('/journal/');
+  const journalOpen = route.path === '/about' || route.path === '/journal' || route.path.startsWith('/journal/');
   const inSpace = route.path === '/';
   const bookOpen = route.path === '/posts' || route.path.startsWith('/posts/');
   const libraryOpen = bookOpen || route.path === '/projects';
@@ -122,6 +122,7 @@ export default function App() {
         <RailButton icon="room" label="나의 방 01" aria-current={world === 'room' ? 'page' : undefined} onClick={() => jumpToWorld('room')}/>
         <RailButton icon="book" label="글 목록 열기" onClick={() => openContent('/posts')}/>
         <RailButton icon="folder" label="프로젝트 목록 열기" onClick={() => openContent('/projects')}/>
+        <RailButton icon="person" label="소개" onClick={() => openContent('/about')}/>
         <RailButton icon="desktop" label="컴퓨터 02" aria-current={world === 'desktop' ? 'page' : undefined} onClick={() => jumpToWorld('desktop')}/>
         <RailButton icon="circuit" label="서킷 03" aria-current={world === 'circuit' ? 'page' : undefined} onClick={() => jumpToWorld('circuit')}/>
       </nav>

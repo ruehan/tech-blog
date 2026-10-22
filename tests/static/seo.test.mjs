@@ -16,7 +16,7 @@ const htmlFor = path => readFile(join(output, `${path.slice(1)}/index.html`), 'u
 const find = (document, tag, attribute, value) => DomUtils.findAll(node => node.name === tag && node.attribs?.[attribute] === value, document.children);
 
 test('deployment publishes articles and metadata without removed sample content', async () => {
-  for (const [path, text] of [['/journal', posts[0].title], ['/journal/projects', '아직 등록된 프로젝트가 없어요.']]) {
+  for (const [path, text] of [['/journal', posts[0].title], ['/journal/projects', '아직 등록된 프로젝트가 없어요.'], ['/about', 'hangyu입니다.']]) {
     const document = parseDocument(await htmlFor(path));
     assert.ok(DomUtils.textContent(document).includes(text));
     assert.equal(find(document, 'link', 'rel', 'canonical')[0].attribs.href, `https://hangyu.blog${path}`);
@@ -29,8 +29,9 @@ test('deployment publishes articles and metadata without removed sample content'
   for (const base of ['journal/projects', 'projects']) await assert.rejects(stat(join(output, base, 'hangyu-room/index.html')), { code: 'ENOENT' });
   await assert.rejects(stat(join(output, 'images/posts/room-blog/journal.png')), { code: 'ENOENT' });
   const sitemap = await readFile(join(output, 'sitemap.xml'), 'utf8');
-  assert.equal((sitemap.match(/<loc>/g) ?? []).length, 3 + posts.length);
+  assert.equal((sitemap.match(/<loc>/g) ?? []).length, 4 + posts.length);
   assert.ok(!sitemap.includes('/projects/hangyu-room'));
+  assert.ok(sitemap.includes('<loc>https://hangyu.blog/about</loc>'));
   for (const post of posts) {
     const canonical = `https://hangyu.blog/journal/posts/${post.slug}`;
     assert.ok(sitemap.includes(`<loc>${canonical}</loc>`));
@@ -79,6 +80,11 @@ test('published articles work with and without JavaScript, including book mode a
     assert.equal(await plain.locator('article img').count(), imageCount(posts[0].body));
     await plain.getByRole('link', { name: '프로젝트', exact: true }).click();
     assert.match(await plain.locator('main').innerText(), /아직 등록된 프로젝트가 없어요/);
+    await plain.getByRole('link', { name: '소개', exact: true }).click();
+    assert.equal(new URL(plain.url()).pathname, '/about');
+    assert.ok((await plain.locator('main').innerText()).includes('직무와 경력'));
+    assert.equal(await plain.getByRole('link', { name: 'ruehan98@gmail.com', exact: true }).getAttribute('href'), 'mailto:ruehan98@gmail.com');
+    assert.equal(await plain.locator('.about-project').count(), 4);
     const page = await browser.newPage();
     const errors = [], scenes = [];
     page.on('pageerror', error => errors.push(error.message));

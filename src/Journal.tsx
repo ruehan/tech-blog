@@ -10,6 +10,7 @@ import { JournalReadingSettings, useReadingPreferences } from './JournalReadingS
 import { ImageViewer } from './ImageViewer';
 import { SearchHighlight } from './SearchHighlight';
 import { searchPreview } from './search';
+import { About } from './About';
 import { PostSort } from './PostSort';
 import { parsePostSort, postSortSearch, sortPosts } from './post-sort';
 import './journal.css';
@@ -21,6 +22,7 @@ const number = (value: number) => String(value).padStart(2, '0');
 export function Journal({ route, go }: { route: Route; go: Navigate }) {
   const reading = useReadingPreferences();
   const scroll = useRef<HTMLDivElement>(null);
+  const isAbout = route.path === '/about';
   const isIndex = route.path === '/journal';
   const isProjects = route.path === '/journal/projects';
   const project = projects.find(item => route.path === `/journal/projects/${item.slug}`);
@@ -81,14 +83,15 @@ export function Journal({ route, go }: { route: Route; go: Navigate }) {
     <nav className="journal-rail" aria-label="블로그 메뉴">
       <RouteLink className="rail-button" to="/journal" go={go} aria-label="글 기록" aria-current={isIndex || post ? 'page' : undefined} title="글 기록"><Icon name="notes"/><span className="journal-tooltip">글 기록</span></RouteLink>
       <RouteLink className="rail-button" to="/journal/projects" go={go} aria-label="프로젝트" aria-current={isProjects || isProject ? 'page' : undefined} title="프로젝트"><Icon name="folder"/><span className="journal-tooltip">프로젝트</span></RouteLink>
+      <RouteLink className="rail-button" to="/about" go={go} aria-label="소개" aria-current={isAbout ? 'page' : undefined} title="소개"><Icon name="person"/><span className="journal-tooltip">소개</span></RouteLink>
       <span className="journal-rail-divider"/>
       <JournalReadingSettings preferences={reading.preferences} onChange={reading.setPreferences}/>
       <button className="rail-button" type="button" onClick={toggleTheme} aria-label="밤에 읽기" aria-pressed={night} title={night ? '밝게 읽기' : '밤에 읽기'}><Icon name={night ? 'sun' : 'moon'}/><span className="journal-tooltip">{night ? '밝게 읽기' : '밤에 읽기'}</span></button>
       <RouteLink className="rail-button" to="/" go={go} aria-label="3D 방으로" title="3D 방으로"><Icon name="room"/><span className="journal-tooltip">3D 방으로</span></RouteLink>
     </nav>
 
-    <main className={`journal-main${isIndex ? ' journal-with-desk' : ''}${post || isProject ? ' journal-with-reading' : ''}${post?.sections.length ? ' journal-with-toc' : ''}`} id="journal-main" tabIndex={-1}>
-      {isIndex ? <div className="journal-index-layout">
+    <main className={`journal-main${isAbout ? ' journal-with-about' : ''}${isIndex ? ' journal-with-desk' : ''}${post || isProject ? ' journal-with-reading' : ''}${post?.sections.length ? ' journal-with-toc' : ''}`} id="journal-main" tabIndex={-1}>
+      {isAbout ? <About go={go}/> : isIndex ? <div className="journal-index-layout">
           <section className="journal-entries" aria-labelledby="entries-heading">
             <div className="journal-section-heading"><h1 id="entries-heading" tabIndex={-1}>글 <span>{posts.length}</span></h1><PostSort value={sort} onChange={value => go(`/journal${postSortSearch(route.search, value)}`)}/></div>
             <form className="journal-search" role="search" onSubmit={submitSearch}><label className="sr-only" htmlFor="journal-search">글 검색</label><input ref={searchInput} id="journal-search" type="search" placeholder="제목·본문 검색" value={draftSearch} onChange={event => setDraftSearch(event.target.value)}/>{(draftSearch || search) && <button type="button" aria-label="검색어 지우기" onClick={clearSearch}><Icon name="close" size={16}/></button>}<button type="submit" aria-label="검색"><Icon name="search" size={18}/></button></form>

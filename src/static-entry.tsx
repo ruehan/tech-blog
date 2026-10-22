@@ -2,10 +2,11 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { PostArticle, ProjectArticle } from './Blog';
 import { posts, projects, formatDate } from './content';
 import { pageMetadata, metadataTags, siteUrl } from './seo';
+import { About } from './About';
 import { ProjectShowcase } from './ProjectShowcase';
 
 export { posts, pageMetadata, metadataTags, siteUrl };
-export const staticRoutes = ['/', '/journal', '/posts', '/projects', '/journal/projects', ...projects.flatMap(project => [`/projects/${project.slug}`, `/journal/projects/${project.slug}`]), ...posts.flatMap(post => [`/journal/posts/${post.slug}`, `/posts/${post.slug}`])];
+export const staticRoutes = ['/', '/about', '/journal', '/posts', '/projects', '/journal/projects', ...projects.flatMap(project => [`/projects/${project.slug}`, `/journal/projects/${project.slug}`]), ...posts.flatMap(post => [`/journal/posts/${post.slug}`, `/posts/${post.slug}`])];
 
 export function renderPage(path: string) {
   const post = posts.find(item => path === `/journal/posts/${item.slug}` || path === `/posts/${item.slug}`);
@@ -13,9 +14,9 @@ export function renderPage(path: string) {
   const isProjects = path.endsWith('/projects');
   const notFound = !staticRoutes.includes(path);
   return renderToStaticMarkup(<div className="journal journal-static" style={{ '--reading-width': '780px', '--reading-size-offset': '0px' } as React.CSSProperties}>
-    <header className="journal-header"><a className="brand" href="/journal">hangyu<span className="brand-light"> / room</span></a><nav aria-label="블로그 메뉴"><a href="/journal">글 기록</a><a href="/journal/projects">프로젝트</a></nav></header>
-    <main className={`journal-main${post || project ? ' journal-with-reading' : ''}${post?.sections.length ? ' journal-with-toc' : ''}`} id="journal-main">
-      {post ? <div className="journal-reading"><div className="journal-reading-margin"><a href="/journal">기록 목록</a></div><PostArticle post={post} go={() => {}} listPath="/journal" articleBase="/journal/posts" toc={post.sections.length ? <nav className="journal-toc" aria-label="목차"><span className="journal-toc-label">목차</span><div className="journal-toc-links">{post.sections.map(section => <a key={section.id} href={`#${section.id}`}>{section.title}</a>)}</div></nav> : undefined}/></div>
+    <header className="journal-header"><a className="brand" href="/journal">hangyu<span className="brand-light"> / room</span></a><nav aria-label="블로그 메뉴"><a href="/journal">글 기록</a><a href="/journal/projects">프로젝트</a><a href="/about">소개</a></nav></header>
+    <main className={`journal-main${path === '/about' ? ' journal-with-about' : ''}${post || project ? ' journal-with-reading' : ''}${post?.sections.length ? ' journal-with-toc' : ''}`} id="journal-main">
+      {path === '/about' ? <About go={() => {}}/> : post ? <div className="journal-reading"><div className="journal-reading-margin"><a href="/journal">기록 목록</a></div><PostArticle post={post} go={() => {}} listPath="/journal" articleBase="/journal/posts" toc={post.sections.length ? <nav className="journal-toc" aria-label="목차"><span className="journal-toc-label">목차</span><div className="journal-toc-links">{post.sections.map(section => <a key={section.id} href={`#${section.id}`}>{section.title}</a>)}</div></nav> : undefined}/></div>
         : project ? <div className="journal-project-reading"><ProjectArticle project={project} go={() => {}} listPath="/journal/projects" articleBase="/journal/posts"/></div>
         : notFound ? <section className="journal-empty"><h1>페이지를 찾을 수 없습니다.</h1><a href="/journal">기록 목록으로</a></section>
         : isProjects ? <section><div className="journal-section-heading journal-project-heading"><h1>프로젝트</h1></div>{projects.map(item => <ProjectShowcase key={item.slug} project={item}/>)}{!projects.length && <div className="journal-empty"><h2>아직 등록된 프로젝트가 없어요.</h2></div>}</section>

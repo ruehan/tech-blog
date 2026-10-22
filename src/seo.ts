@@ -1,4 +1,5 @@
 import type { MarkdownNode, Post } from './content-types';
+import { profile } from './profile';
 import { projects } from './project-data';
 
 export const siteUrl: string = import.meta.env.SITE_URL;
@@ -20,9 +21,9 @@ export function pageMetadata(path: string, posts: Post[]) {
   const canonicalPath = clean === '/posts' ? '/journal' : clean.startsWith('/posts/') || clean === '/projects' || clean.startsWith('/projects/') ? `/journal${clean}` : clean;
   const post = posts.find(item => canonicalPath === `/journal/posts/${item.slug}`);
   const project = projects.find(item => canonicalPath === `/journal/projects/${item.slug}`);
-  const known = post || project || ['/', '/journal', '/journal/projects'].includes(canonicalPath);
-  const title = post?.title ?? (canonicalPath === '/journal' ? '글 기록' : canonicalPath.startsWith('/journal/projects') && known ? '프로젝트' : canonicalPath === '/' ? '작은 취향의 공간' : '페이지를 찾을 수 없습니다');
-  const description = post?.description ?? siteDescription;
+  const known = post || project || ['/', '/about', '/journal', '/journal/projects'].includes(canonicalPath);
+  const title = post?.title ?? (canonicalPath === '/about' ? '소개' : canonicalPath === '/journal' ? '글 기록' : canonicalPath.startsWith('/journal/projects') && known ? '프로젝트' : canonicalPath === '/' ? '작은 취향의 공간' : '페이지를 찾을 수 없습니다');
+  const description = post?.description ?? (canonicalPath === '/about' ? profile.description : siteDescription);
   const image = new URL(post?.image ?? (post && firstImage(post.body)) ?? defaultImage, siteUrl).href;
   const canonical = new URL(canonicalPath, siteUrl).href;
   const noindex = !known || !!post?.draft;

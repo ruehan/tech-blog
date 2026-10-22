@@ -1,0 +1,46 @@
+.journal-main.journal-with-about{max-width:1280px}
+.about-page{color:var(--journal-ink,#2e4438);font-size:calc(15px + var(--reading-size-offset,0px));line-height:1.95;overflow-wrap:anywhere}
+.about-intro{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);align-items:center;gap:46px;padding:12px 0 52px}
+.about-label{margin:0 0 18px;color:var(--journal-muted);font-size:12px}
+.about-page h1{font-size:clamp(32px,3.3vw,46px);line-height:1.4;letter-spacing:-1.5px;font-weight:600;margin:0 0 22px;outline:none;word-break:keep-all}
+.about-role{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:24px;font-size:13px}
+.about-description{color:var(--journal-muted);margin:0 0 14px;word-break:keep-all}
+.about-contact{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+.about-contact a{display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:8px 12px;border:1px solid var(--journal-border);border-radius:10px;font-size:12px}
+.about-contact a:hover,.about-post-link:hover,.about-footer a:hover{background:var(--journal-active,#e8eddf)}
+.about-room{margin:0;min-width:0}
+.about-room img{display:block;width:100%;height:auto;border-radius:16px;border:1px solid var(--journal-border)}
+.about-room figcaption{display:flex;flex-direction:column;gap:10px;margin-top:14px;font-size:11px;color:var(--journal-muted)}
+.about-room a{display:inline-flex;align-items:center;gap:9px;align-self:flex-start;min-height:36px;color:var(--journal-ink,#2e4438)}
+.about-section{border-top:1px solid var(--journal-border);padding:32px 0 38px}
+.about-section h2{margin:0 0 24px;font-size:20px;font-weight:500;letter-spacing:-.6px}
+.about-section h3{margin:0 0 10px;font-size:17px;font-weight:500;letter-spacing:-.3px}
+.about-section p{margin:0;color:var(--journal-muted);word-break:keep-all}
+.about-experience-row{display:grid;grid-template-columns:160px minmax(0,1fr);gap:24px}
+.about-experience-row+.about-experience-row{margin-top:32px;padding-top:32px;border-top:1px solid var(--journal-border)}
+.about-experience-row h3{display:flex;align-items:center;flex-wrap:wrap;gap:12px}
+.about-experience .about-period{font-size:12px;padding-top:4px}
+.about-experience .about-job{color:var(--journal-ink,#2e4438);font-size:13px;margin-bottom:9px}
+.about-projects{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:38px}
+.about-tools{display:flex;flex-wrap:wrap;gap:6px;list-style:none;padding:0;margin:17px 0 13px}
+.about-tools li{border:1px solid var(--journal-border);border-radius:7px;padding:2px 8px;font-size:10px;color:var(--journal-muted)}
+.about-post-link{display:inline-flex;align-items:center;gap:10px;min-height:42px;border-radius:8px;font-size:12px}
+.about-interests{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:38px}
+.about-footer{border-top:1px solid var(--journal-border);padding-top:24px;display:flex;justify-content:flex-end}
+.about-footer a{display:inline-flex;align-items:center;gap:16px;min-height:44px;border-radius:8px;font-size:13px}
+@media(max-width:1000px){.about-intro{grid-template-columns:1fr;gap:26px}.about-room{max-width:540px}.about-projects,.about-interests{gap:28px}}
+@media(max-width:700px){.about-intro{padding-top:0;padding-bottom:32px}.about-page{font-size:calc(14px + var(--reading-size-offset,0px))}.about-page h1{font-size:33px}.about-section{padding:26px 0}.about-experience-row{grid-template-columns:1fr;gap:9px}.about-projects,.about-interests{grid-template-columns:1fr;gap:28px}.about-contact a{min-height:44px}.about-section h2{font-size:19px}}
+
+.about-work{display:grid;gap:22px;margin-top:24px}
+.about-work-group h4{font-size:14px;font-weight:500;margin:0 0 8px;color:var(--journal-ink,#2e4438)}
+.about-work-group ul{margin:0;padding-left:18px;color:var(--journal-muted)}
+.about-work-group li{padding-left:3px;margin:4px 0;word-break:keep-all}
+.about-work-group li::marker{color:var(--journal-muted);font-size:.7em}
+
+.about-section .about-project-context{font-size:11px;margin-bottom:10px}
+.about-reference{display:inline-flex;align-items:center;gap:9px;min-height:40px;margin-top:6px;font-size:12px;color:var(--journal-ink,#2e4438)}
+.about-reference:hover{text-decoration:underline;text-underline-offset:4px}
+.about-skills{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin:0}
+.about-skills dt{font-size:14px;margin-bottom:9px}
+.about-skills dd{margin:0;font-size:13px;color:var(--journal-muted)}
+@media(max-width:700px){.about-skills{grid-template-columns:1fr;gap:20px}}
