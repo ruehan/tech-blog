@@ -7,7 +7,7 @@ test('both reading modes render images, tables, highlighted code and copy the or
   for (const prefix of ['/posts', '/journal/posts']) {
     await page.goto(`${prefix}/building-a-room-on-the-web`);
     const article = page.locator('article.article');
-    await expect(article.locator('.draft-label')).toHaveCount(0);
+    await expect(article.locator('.article-heading .draft-label')).toHaveCount(0);
     await expect(article.locator('.article-image')).toHaveCount(2);
     const image = article.locator('.article-image img').first();
     await image.scrollIntoViewIfNeeded();
@@ -44,7 +44,7 @@ test('adding, editing and deleting one Markdown file updates both views without 
     await expect(page.getByRole('heading', { name: '작성 흐름 확인', exact: true })).toBeVisible();
     await page.getByRole('link', { name: /파일 기반 글 작성/ }).click();
     await expect(page).toHaveURL(new RegExp(`/journal/posts/${slug}$`));
-    await expect(page.locator('.article .draft-label')).toHaveText('초안');
+    await expect(page.locator('.article-heading .draft-label')).toHaveText('초안');
     await page.getByRole('navigation', { name: '목차' }).getByRole('link', { name: '자동 목차' }).click();
     expect(decodeURIComponent(new URL(page.url()).hash)).toBe('#자동-목차');
     await page.reload();

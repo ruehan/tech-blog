@@ -5,6 +5,10 @@ description: "하나의 오브젝트 안에서 반복되던 진입 동작. 포�
 date: 2026-10-21
 tags: ["React","인터랙션"]
 draft: true
+series:
+  slug: building-hangyu-room
+  title: "이 블로그를 만드는 과정"
+  order: 2
 minutes: 3
 ---
 

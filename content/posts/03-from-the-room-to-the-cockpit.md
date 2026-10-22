@@ -5,6 +5,10 @@ description: "서킷을 내려다보던 카메라를 운전석으로 옮기며, 
 date: 2026-10-21
 tags: ["3D","심레이싱"]
 draft: true
+series:
+  slug: building-hangyu-room
+  title: "이 블로그를 만드는 과정"
+  order: 3
 minutes: 2
 ---
 

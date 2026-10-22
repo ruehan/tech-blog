@@ -8,6 +8,8 @@ import { DeskObjects } from './DeskObjects';
 import { JournalToc } from './JournalToc';
 import { JournalReadingSettings, useReadingPreferences } from './JournalReadingSettings';
 import { ImageViewer } from './ImageViewer';
+import { SearchHighlight } from './SearchHighlight';
+import { searchPreview } from './search';
 import './journal.css';
 import './journal-theme.css';
 import './journal-reading.css';
@@ -88,10 +90,12 @@ export function Journal({ route, go }: { route: Route; go: Navigate }) {
             <form className="journal-search" role="search" onSubmit={submitSearch}><label className="sr-only" htmlFor="journal-search">글 검색</label><input ref={searchInput} id="journal-search" type="search" placeholder="제목·본문 검색" value={draftSearch} onChange={event => setDraftSearch(event.target.value)}/>{(draftSearch || search) && <button type="button" aria-label="검색어 지우기" onClick={clearSearch}><Icon name="close" size={16}/></button>}<button type="submit" aria-label="검색"><Icon name="search" size={18}/></button></form>
             <nav className="journal-tags" aria-label="태그 필터"><RouteLink to={filterHref('')} go={go} aria-current={!tag ? 'true' : undefined}>전체</RouteLink>{allTags.map(value => <RouteLink key={value} to={filterHref(value)} go={go} aria-current={tag === value ? 'true' : undefined}>{value}</RouteLink>)}</nav>
             {(search || tag) && <div className="journal-results" role="status"><span>{search && `“${search}” · `}{visiblePosts.length}개의 기록</span><RouteLink to="/journal" go={go}>필터 지우기 <Icon name="close" size={13}/></RouteLink></div>}
-            <div className="journal-post-list">{visiblePosts.map(item => <RouteLink key={item.slug} className="journal-entry" to={`/journal/posts/${item.slug}${route.search}`} go={go}>
+            <div className="journal-post-list">{visiblePosts.map(item => {
+              const preview = search ? searchPreview(item, search) : { text: item.description, anchor: '' };
+              return <RouteLink key={item.slug} className="journal-entry" to={`/journal/posts/${item.slug}${route.search}${preview.anchor ? `#${encodeURIComponent(preview.anchor)}` : ''}`} go={go}>
               <div className={`journal-spine journal-spine-${posts.indexOf(item) % 3}`} aria-hidden="true"><Icon name={['book', 'focus', 'steering'][posts.indexOf(item) % 3]} size={22}/><span>{number(posts.indexOf(item) + 1)}</span></div>
-              <div className="journal-entry-body"><div className="journal-entry-meta"><span>{item.tags.join(' / ')}</span>{item.draft && <span className="draft-label">초안</span>}</div><h2>{item.title}</h2><p>{item.description}</p><div className="journal-entry-bottom"><time dateTime={item.date}>{formatDate(item.date)}</time><span>{item.minutes}분 읽기</span><Icon name="arrow" size={18}/></div></div>
-            </RouteLink>)}</div>
+              <div className="journal-entry-body"><div className="journal-entry-meta"><span><SearchHighlight text={item.tags.join(' / ')} query={search}/></span>{item.draft && <span className="draft-label">초안</span>}</div><h2><SearchHighlight text={item.title} query={search}/></h2><p className={search ? 'search-excerpt' : undefined}><SearchHighlight text={preview.text} query={search}/></p><div className="journal-entry-bottom"><time dateTime={item.date}>{formatDate(item.date)}</time><span>{item.minutes}분 읽기</span><Icon name="arrow" size={18}/></div></div>
+            </RouteLink>; })}</div>
             {!visiblePosts.length && <div className="journal-empty"><Icon name="search" size={28}/><h3>아직 찾는 기록이 없어요.</h3><p>다른 단어나 태그로 찾아보세요.</p><RouteLink to="/journal" go={go}>전체 기록 보기 <Icon name="arrow" size={16}/></RouteLink></div>}
           </section>
           <DeskObjects arrangement={deskArrangement}/>
@@ -100,7 +104,7 @@ export function Journal({ route, go }: { route: Route; go: Navigate }) {
         <RouteLink className="journal-project-card" to={`/journal/projects/${project.slug}`} go={go}><div className="journal-project-image"><img src={asset('interactive/room-glb-verified.png')} alt="책장과 컴퓨터, 심레이싱 장비가 놓인 hangyu의 방"/></div><div className="journal-project-info"><span className="status-badge">진행 중 · 개인 프로젝트</span><h2>{project.title}</h2><p>{project.description}</p><div className="article-tags">{project.tags.map(value => <span key={value}>{value}</span>)}</div><span className="journal-note-link">만드는 과정 보기 <Icon name="arrow" size={18}/></span></div></RouteLink>
       </> : post ? <div className="journal-reading">
         <div className="journal-reading-margin"><RouteLink to={`/journal${route.search}`} go={go}><Icon name="back" size={16}/> 기록 목록</RouteLink></div>
-        <PostArticle key={post.slug} post={post} go={go} listPath="/journal" articleBase="/journal/posts" toc={<JournalToc key={post.slug} post={post} scrollRef={scroll}/>} footer={
+        <PostArticle key={post.slug} post={post} go={go} listPath="/journal" articleBase="/journal/posts" searchQuery={search} toc={<JournalToc key={post.slug} post={post} scrollRef={scroll}/>} footer={
           <nav className="journal-pagination" aria-label="글 이동">
             <div className="journal-neighbours">
               {previousPost && <RouteLink className="journal-previous" to={`/journal/posts/${previousPost.slug}${route.search}`} go={go}><span><Icon name="back" size={15}/> 이전 글</span><strong>{previousPost.title}</strong></RouteLink>}

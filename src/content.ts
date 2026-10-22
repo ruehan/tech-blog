@@ -1,4 +1,5 @@
 import posts from 'virtual:blog-posts';
+import { normalizeSearch, searchTerms } from './search';
 export { posts };
 export type { Post } from './content-types';
 
@@ -10,9 +11,8 @@ export const project = {
 export const allTags = [...new Set(posts.flatMap(post => post.tags))];
 export const formatDate = (date: string) => date.replaceAll('-', '.');
 
-const normalizeSearch = (text: string) => text.normalize('NFKC').toLocaleLowerCase().replace(/\s+/g, ' ').trim();
 export function filterPosts(tag: string, query: string) {
-  const terms = normalizeSearch(query).split(' ').filter(Boolean);
+  const terms = searchTerms(query);
   return posts.filter(post => {
     if (tag && !post.tags.includes(tag)) return false;
     const text = normalizeSearch([

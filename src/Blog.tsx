@@ -5,6 +5,9 @@ import { RouteLink, type Navigate, type Route } from './navigation';
 import { asset } from './worlds';
 import { MarkdownBody } from './MarkdownBody';
 import { ZoomableImage } from './ImageViewer';
+import { SeriesContents } from './SeriesContents';
+import { searchPreview } from './search';
+import { metadataTags, pageMetadata } from './seo';
 import './blog.css';
 
 const scrollPositions = new Map<string, number>();
@@ -17,7 +20,14 @@ export function useReadingPosition(ref: RefObject<HTMLElement | null>, key: stri
     if (heading?.getClientRects().length) heading.focus({ preventScroll: true });
     let hash = window.location.hash.slice(1);
     try { hash = decodeURIComponent(hash); } catch { /* Keep malformed fragments harmless. */ }
-    if (hash) document.getElementById(hash)?.scrollIntoView();
+    if (hash) {
+      const target = document.getElementById(hash);
+      target?.scrollIntoView();
+      if (target && new URLSearchParams(window.location.search).get('q')) {
+        target.tabIndex = -1;
+        target.focus({ preventScroll: true });
+      }
+    }
     // Capture before a shorter replacement article can clamp the old scroll offset.
     const save = () => { scrollPositions.set(key, element.scrollTop); };
     element.addEventListener('scroll', save, { passive: true });
@@ -116,7 +126,7 @@ export function Book({ route, go, onClose }: { route: Route; go: Navigate; onClo
   </dialog>;
 }
 
-export function PostArticle({ post, go, listPath = '/posts', articleBase = '/posts', footer, toc }: { post: Post; go: Navigate; listPath?: string; articleBase?: string; footer?: ReactNode; toc?: ReactNode }) {
+export function PostArticle({ post, go, listPath = '/posts', articleBase = '/posts', footer, toc, searchQuery = '' }: { post: Post; go: Navigate; listPath?: string; articleBase?: string; footer?: ReactNode; toc?: ReactNode; searchQuery?: string }) {
   const [share, setShare] = useState('');
   const [copyFallback, setCopyFallback] = useState('');
   async function copyLink() {
@@ -130,7 +140,8 @@ export function PostArticle({ post, go, listPath = '/posts', articleBase = '/pos
           <div className="article-byline"><span>hangyu <span className="byline-separator">/</span> <time dateTime={post.date}>{formatDate(post.date)}</time></span><span>{post.minutes}분 읽기</span>{post.draft && <span className="draft-label">초안</span>}</div>
         </header>
         {toc ?? (post.sections.length > 0 && <nav className="book-toc" aria-label="목차"><span className="content-kicker">이 글의 순서</span>{post.sections.map(section => <a href={`#${section.id}`} key={section.id}>{section.title}</a>)}</nav>)}
-        <MarkdownBody key={post.slug} body={post.body}/>
+        <SeriesContents post={post} go={go} articleBase={articleBase}/>
+        <MarkdownBody key={post.slug} body={post.body} searchTarget={searchQuery ? searchPreview(post, searchQuery).anchor : ''}/>
         <div className="article-end"><button className="share-button" onClick={copyLink}><Icon name="link" size={17}/> 링크 복사</button><span role="status">{share}</span>{copyFallback && <input className="copy-fallback" aria-label="글 주소" readOnly value={copyFallback} onFocus={event => event.target.select()}/>}</div>
         {footer ?? <section className="related-posts"><span className="content-kicker">함께 읽기</span>{posts.filter(item => item.slug !== post.slug).map(item => <RouteLink key={item.slug} to={`${articleBase}/${item.slug}`} go={go}>{item.title}<Icon name="arrow" size={18}/></RouteLink>)}</section>}
       </article>;
@@ -164,12 +175,23 @@ export function ReadingPage({ route, go, onReturn }: { route: Route; go: Navigat
 
 export function ContentMetadata({ route }: { route: Route }) {
   useEffect(() => {
-    const path = route.path === '/journal' ? '/posts' : route.path.replace(/^\/journal\//, '/');
-    const post = posts.find(post => path === `/posts/${post.slug}`);
-    const title = post?.title ?? (path === '/posts' ? '글 기록' : path.startsWith('/projects') ? '프로젝트' : path === '/' ? '작은 취향의 공간' : '페이지를 찾을 수 없습니다');
-    const description = post?.description ?? '개발하고, 만들고, 배우는 과정을 기록하는 hangyu의 개인 공간.';
-    document.title = `${title} — hangyu / room`;
-    document.querySelector('meta[name="description"]')?.setAttribute('content', description);
+    const metadata = pageMetadata(route.path, posts);
+    document.title = metadata.title;
+    document.head.querySelectorAll('[data-page-meta],meta[name="description"]').forEach(element => element.remove());
+    for (const [kind, name, content] of metadataTags(metadata)) {
+      const element = document.createElement('meta');
+      element.setAttribute(kind, name); element.content = content; element.dataset.pageMeta = '';
+      document.head.append(element);
+    }
+    const canonical = document.createElement('link');
+    canonical.rel = 'canonical'; canonical.href = metadata.canonical; canonical.dataset.pageMeta = '';
+    document.head.append(canonical);
+    if (metadata.structuredData) {
+      const data = document.createElement('script');
+      data.type = 'application/ld+json'; data.dataset.pageMeta = '';
+      data.textContent = JSON.stringify(metadata.structuredData);
+      document.head.append(data);
+    }
   }, [route.path]);
   return null;
 }

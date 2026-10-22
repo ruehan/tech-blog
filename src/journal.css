@@ -19,6 +19,9 @@
 @media(max-width:700px){.journal{scroll-padding-bottom:110px}.journal-rail{bottom:calc(18px + env(safe-area-inset-bottom,0px))}}
 
 .journal-project-heading{margin-bottom:28px}
+.journal-static .journal-header nav{display:flex;gap:20px;font-size:12px}
+.journal-static :is(.article-end,.code-block button){display:none}
+.journal-static .book-toc{margin:24px 0}
 
 .journal-search input::-webkit-search-cancel-button{display:none}
 .journal-pagination{margin-top:28px}
@@ -49,7 +52,7 @@
   .journal-with-toc .journal-reading{max-width:none}
   .journal-with-toc .article{display:grid;grid-template-columns:minmax(0,1fr) 200px;column-gap:56px;align-items:start}
   .journal-with-toc .article>*{grid-column:1;min-width:0}
-  .journal-with-toc .article>.journal-toc{grid-column:2;grid-row:1 / span 5;align-self:start;top:32px;margin:8px 0 0;border:0}
+  .journal-with-toc .article>.journal-toc{grid-column:2;grid-row:1 / span 6;align-self:start;top:32px;margin:8px 0 0;border:0}
   .journal-toc-label{display:block;font-size:11px;padding:0 14px 14px;color:var(--journal-ink)}
   .journal-toc-toggle{display:none}
   .journal-toc-links{max-height:calc(100svh - 110px);padding:0 2px 4px}

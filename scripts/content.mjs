@@ -20,7 +20,7 @@ export function parsePost(source, file = 'post.md') {
   catch (error) { fail(`메타데이터 오류: ${error.message}`); }
   if (!metadata || typeof metadata !== 'object' || Array.isArray(metadata)) fail('메타데이터는 필드와 값으로 작성해주세요.');
   for (const field of Object.keys(metadata)) {
-    if (!['slug', 'title', 'description', 'date', 'tags', 'draft', 'minutes'].includes(field)) fail(`알 수 없는 필드: ${field}`);
+    if (!['slug', 'title', 'description', 'date', 'tags', 'draft', 'minutes', 'series', 'image'].includes(field)) fail(`알 수 없는 필드: ${field}`);
   }
   for (const field of ['title', 'description', 'date']) {
     if (typeof metadata[field] !== 'string' || !metadata[field].trim()) fail(`${field} 필드에 문자열이 필요합니다.`);
@@ -34,8 +34,14 @@ export function parsePost(source, file = 'post.md') {
   if (!Array.isArray(tags) || tags.some(tag => typeof tag !== 'string' || !tag.trim())) fail('tags에는 문자열 목록이 필요합니다.');
   if (metadata.draft !== undefined && typeof metadata.draft !== 'boolean') fail('draft는 true 또는 false여야 합니다.');
   if (metadata.minutes !== undefined && (!Number.isInteger(metadata.minutes) || metadata.minutes < 1)) fail('minutes는 1 이상의 정수여야 합니다.');
+  if (metadata.series !== undefined) {
+    const series = metadata.series;
+    if (!series || typeof series !== 'object' || Array.isArray(series) || Object.keys(series).some(key => !['slug', 'title', 'order'].includes(key)) || typeof series.slug !== 'string' || !slugPattern.test(series.slug) || typeof series.title !== 'string' || !series.title.trim() || !Number.isInteger(series.order) || series.order < 1) fail('series에는 slug, title, 1 이상의 정수 order가 필요합니다.');
+    metadata.series = { slug: series.slug, title: series.title.trim(), order: series.order };
+  }
+  if (metadata.image !== undefined && (typeof metadata.image !== 'string' || !/^(?:\/(?!\/)|https:\/\/)/i.test(metadata.image))) fail('image는 /images/... 또는 https://... 주소여야 합니다.');
   if (!match[2].trim()) fail('본문이 비어 있습니다.');
-  return { metadata: { slug, title: metadata.title.trim(), description: metadata.description.trim(), date, tags: [...new Set(tags.map(tag => tag.trim()))], draft: metadata.draft ?? true, minutes: metadata.minutes }, markdown: match[2] };
+  return { metadata: { slug, title: metadata.title.trim(), description: metadata.description.trim(), date, tags: [...new Set(tags.map(tag => tag.trim()))], draft: metadata.draft ?? true, minutes: metadata.minutes, series: metadata.series, image: metadata.image }, markdown: match[2] };
 }
 
 export function compilePost(source, file = 'post.md') {
@@ -107,19 +113,45 @@ export function compilePost(source, file = 'post.md') {
     });
   }
   const document = parseDocument(html);
-  const searchText = DomUtils.textContent(document).replace(/\s+/g, ' ').trim();
-  return { ...metadata, minutes: metadata.minutes ?? Math.max(1, Math.ceil(searchText.replace(/\s/g, '').length / 500)), sections, body: nodes(document.children), searchText };
+  const body = nodes(document.children);
+  const textOf = node => node.type === 'text' ? node.value : node.type === 'code' ? node.text : node.tag === 'img' ? node.attributes.alt ?? '' : node.children.map(textOf).join('');
+  const searchBlocks = [];
+  for (const [index, node] of body.entries()) {
+    if (node.type === 'text') continue;
+    const text = textOf(node).replace(/\s+/g, ' ').trim();
+    if (!text) continue;
+    let id = node.type === 'element' ? node.attributes.id : node.id;
+    if (!id) {
+      const base = `search-block-${index + 1}`;
+      id = base;
+      for (let suffix = 2; ids.has(id); suffix++) id = `${base}-${suffix}`;
+      ids.add(id);
+      if (node.type === 'element') node.attributes.id = id;
+      else node.id = id;
+    }
+    searchBlocks.push({ id, text });
+  }
+  const searchText = searchBlocks.map(block => block.text).join(' ');
+  return { ...metadata, minutes: metadata.minutes ?? Math.max(1, Math.ceil(searchText.replace(/\s/g, '').length / 500)), sections, body, searchText, searchBlocks };
 }
 
 export async function loadPosts(directory, { includeDrafts = false, publicDirectory } = {}) {
   const files = (await readdir(directory)).filter(file => file.endsWith('.md')).sort();
   const slugs = new Set();
   const posts = [];
+  const series = new Map();
   for (const file of files) {
     const source = await readFile(join(directory, file), 'utf8');
     const { metadata } = parsePost(source, file);
     if (slugs.has(metadata.slug)) throw new Error(`${file}: 중복된 slug: ${metadata.slug}`);
     slugs.add(metadata.slug);
+    if (metadata.series) {
+      const entry = series.get(metadata.series.slug) ?? { title: metadata.series.title, orders: new Set() };
+      if (entry.title !== metadata.series.title) throw new Error(`${file}: 같은 series slug에는 같은 title을 사용해주세요.`);
+      if (entry.orders.has(metadata.series.order)) throw new Error(`${file}: 시리즈 순서가 중복됩니다: ${metadata.series.order}`);
+      entry.orders.add(metadata.series.order);
+      series.set(metadata.series.slug, entry);
+    }
     // A draft's body never enters the module generated for production.
     if (!includeDrafts && metadata.draft) continue;
     const post = compilePost(source, file);
@@ -139,6 +171,9 @@ export async function loadPosts(directory, { includeDrafts = false, publicDirect
         }
       };
       await visit(post.body);
+      if (post.image?.startsWith('/')) {
+        await visit([{ type: 'element', tag: 'img', attributes: { src: post.image }, children: [] }]);
+      }
     }
     posts.push(post);
   }

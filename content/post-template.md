@@ -4,6 +4,8 @@ description: "목록에 표시할 짧은 설명"
 date: 2026-10-21
 tags: [React]
 draft: true
+# series: { slug: my-series, title: "시리즈 제목", order: 1 }
+# image: /images/posts/my-post/cover.png
 ---
 
 ## 시작하며

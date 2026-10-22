@@ -5,6 +5,11 @@ description: "책장, 컴퓨터, 베이스, 그리고 심레이싱. 관심사가
 date: 2026-10-21
 tags: [React, 3D]
 draft: false
+series:
+  slug: building-hangyu-room
+  title: "이 블로그를 만드는 과정"
+  order: 1
+image: /images/posts/room-blog/room.png
 ---
 
 ## 공간을 입구로 삼기 {#a-room-as-an-entry}

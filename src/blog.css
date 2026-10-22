@@ -63,6 +63,18 @@
 .markdown-body ol{padding-left:27px}.markdown-body input[type=checkbox]{accent-color:#56734a;margin-right:7px}
 .markdown-body hr{border:0;border-top:1px solid #dce1d3;margin:36px 0}
 .article-image{margin:30px 0}.article-image img,.markdown-body p img{max-width:100%;height:auto;display:block;border-radius:10px;background:#edf0e5}.article-image figcaption{font-size:11px;line-height:1.8;color:#718266;margin-top:10px;text-align:center;word-break:keep-all}
+.article-series{margin:24px 0;border:1px solid var(--journal-border,#dce0d3);border-radius:12px;font-size:12px;color:var(--journal-ink,#40563a)}
+.article-series summary{cursor:pointer;padding:16px;line-height:1.8;overflow-wrap:anywhere}
+.article-series summary>span:last-child{float:right;margin-left:12px;font-variant-numeric:tabular-nums;color:var(--journal-muted,#687564)}
+.article-series summary:focus-visible{outline:2px solid #7c9c68;outline-offset:2px;border-radius:12px}
+.article-series ol{list-style:none;padding:0 10px;margin:0}
+.article-series li a{display:flex;align-items:baseline;gap:12px;padding:12px 8px;border-radius:6px;line-height:1.7;overflow-wrap:anywhere}
+.article-series li a>span:first-child{color:var(--journal-muted,#687564);font-variant-numeric:tabular-nums;flex-shrink:0}
+.article-series a[aria-current=page]{background:var(--journal-active,#e5ebdd);font-weight:500}
+.article-series a:hover{background:var(--journal-active,#e5ebdd);color:inherit}
+.series-neighbours{display:flex;justify-content:space-between;gap:16px;margin:10px 18px;border-top:1px solid var(--journal-border,#dce0d3)}
+.series-neighbours:empty{display:none}
+.series-neighbours a{display:inline-flex;gap:8px;align-items:center;min-height:44px;padding:8px 0}
 .article-table{overflow-x:auto;margin:26px 0;max-width:100%}.article-table table{width:100%;border-collapse:collapse;font-size:13px;line-height:1.8}.article-table th,.article-table td{padding:12px 16px;border:1px solid #d6decc;text-align:left}.article-table th{background:#edf0e5;font-weight:500;white-space:nowrap}
 .code-block figcaption{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:44px;padding:7px 12px 7px 20px}.code-block figcaption button{min-height:30px;padding:6px 12px;border-radius:7px;color:#dce7d2;font-size:11px}.code-block figcaption button:hover{background:#ffffff12;color:#fff}
 .code-block pre:focus-visible,.article-table:focus-visible{outline:2px solid #7c9c68;outline-offset:-2px}

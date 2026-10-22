@@ -26,6 +26,10 @@
 .journal-with-reading .article-body :is(blockquote,.article-note p){font-size:.95em}
 .journal-with-reading .code-block pre{font-size:.8em}
 .journal-with-reading .article-table table{font-size:.875em}
+.journal mark{background:#e6dba6;color:#33442b;border-radius:2px;padding:0 .06em}
+.journal[data-theme=night] mark{background:#5b6138;color:#f5f0cc}
+.journal .search-excerpt{overflow-wrap:anywhere;word-break:normal}
+.journal .markdown-body [data-search-match=true]{scroll-margin-top:88px;outline:2px solid #8d9e61;outline-offset:6px;border-radius:4px}
 @media(min-width:1200px){
   .journal-main.journal-with-toc{max-width:calc(var(--reading-width) + 468px)}
   .journal-with-toc .journal-reading{max-width:none}
