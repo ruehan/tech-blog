@@ -3,8 +3,9 @@ title: "메모와 파일을 먹이로 주는 앱"
 slug: bytepet-feeding-and-storage
 description: "BytePet에 메모와 파일을 먹이처럼 건네고 로컬에 보관하는 기능을 만들었다. 저장 완료와 먹는 모션을 연결하고, 검색·미리보기·휴지통으로 다시 꺼내 쓰는 흐름을 다듬은 과정을 기록한다."
 date: 2026-10-26
+publishedAt: 2026-10-26T06:54:58Z
 tags: [BytePet, 데스크톱 앱, 파일 보관함, 개발 기록]
-draft: true
+draft: false
 series: { slug: building-bytepet, title: "바탕화면에 작은 친구를 놓기 — BytePet 제작기", order: 2 }
 image: /images/posts/bytepet-feeding-and-storage/food-shelf.png
 ---
