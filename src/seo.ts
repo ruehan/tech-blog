@@ -1,9 +1,9 @@
 import type { MarkdownNode, Post } from './content-types';
 import { profile } from './profile';
-import { projects } from './project-data';
+import { apexProjects as projects, writingPath } from './apex-data';
 
 export const siteUrl: string = import.meta.env.SITE_URL;
-export const siteName = 'hangyu / room';
+export const siteName = 'hangyu / apex';
 export const siteDescription = '개발하고, 만들고, 배우는 과정을 기록하는 hangyu의 개인 공간.';
 const defaultImage = '/images/site/room.png';
 
@@ -18,13 +18,13 @@ function firstImage(nodes: MarkdownNode[]): string | undefined {
 
 export function pageMetadata(path: string, posts: Post[]) {
   const clean = path.replace(/\/$/, '') || '/';
-  const canonicalPath = clean === '/posts' ? '/journal' : clean.startsWith('/posts/') || clean === '/projects' || clean.startsWith('/projects/') ? `/journal${clean}` : clean;
-  const post = posts.find(item => canonicalPath === `/journal/posts/${item.slug}`);
-  const project = projects.find(item => canonicalPath === `/journal/projects/${item.slug}`);
-  const known = post || project || ['/', '/about', '/journal', '/journal/projects'].includes(canonicalPath);
-  const title = post?.title ?? (canonicalPath === '/about' ? '소개' : canonicalPath === '/journal' ? '글 기록' : canonicalPath.startsWith('/journal/projects') && known ? '프로젝트' : canonicalPath === '/' ? '작은 취향의 공간' : '페이지를 찾을 수 없습니다');
-  const description = post?.description ?? (canonicalPath === '/about' ? profile.description : siteDescription);
-  const image = new URL(post?.image ?? (post && firstImage(post.body)) ?? defaultImage, siteUrl).href;
+  const canonicalPath = writingPath(clean.replace(/^\/room(?=\/)/, ''));
+  const post = posts.find(item => canonicalPath === `/writing/${item.slug}`);
+  const project = projects.find(item => canonicalPath === `/projects/${item.slug}`);
+  const known = post || project || ['/', '/room', '/about', '/writing', '/projects', '/races'].includes(canonicalPath);
+  const title = post?.title ?? project?.title ?? (canonicalPath === '/about' ? '소개' : canonicalPath === '/writing' ? '개발' : canonicalPath === '/projects' ? '프로젝트' : canonicalPath === '/races' ? '레이스 기록' : canonicalPath === '/room' ? 'hangyu의 3D 방' : canonicalPath === '/' ? '개발과 서킷 사이' : '페이지를 찾을 수 없습니다');
+  const description = post?.description ?? project?.description ?? (canonicalPath === '/about' ? profile.description : siteDescription);
+  const image = new URL(post?.image ?? (post && firstImage(post.body)) ?? project?.cover?.src ?? defaultImage, siteUrl).href;
   const canonical = new URL(canonicalPath, siteUrl).href;
   const noindex = !known || !!post?.draft;
   const structuredData = post && !noindex ? {

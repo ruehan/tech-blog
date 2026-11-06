@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { PerspectiveCamera, MathUtils, Vector3 } from 'three';
 import { applyRoomCamera } from '../src/room-camera.ts';
 
-const binary = readFileSync('blog-room-v27/interactive/room.glb');
+const binary = readFileSync('blog-room-v28/interactive/room-with-piano.glb');
 const jsonLength = binary.readUInt32LE(12);
 const gltf = JSON.parse(binary.subarray(20, 20 + jsonLength).toString());
 const cameraIndex = gltf.nodes.findIndex((node: { name: string }) => node.name === 'WEB_Camera_Main');

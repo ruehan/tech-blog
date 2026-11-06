@@ -1,0 +1,91 @@
+[
+  {
+    "id": "n1",
+    "kind": "race",
+    "category": "N1",
+    "title": "현대 N 페스티벌 관람 노트",
+    "description": "현대 N 페스티벌을 기록하는 첫 페이지. 소리, 속도, 그리고 관중석.",
+    "date": "",
+    "tags": [
+      "현대 N1",
+      "관람 노트"
+    ],
+    "image": "apex/assets/n-festival.jpg",
+    "source": "https://www.hyundai-n.com/en/experience/n-festival/about-korea",
+    "credit": "Hyundai N · N Festival",
+    "url": "/races/n1/",
+    "race": {
+      "event": "현대 N 페스티벌",
+      "viewing": "trackside",
+      "eventDate": null,
+      "circuit": null,
+      "sample": true
+    }
+  },
+  {
+    "id": "wec",
+    "kind": "race",
+    "category": "WEC",
+    "title": "르망 24시를 보는 방법",
+    "description": "긴 호흡으로 따라가는 내구 레이스. 한 랩 너머의 이야기를 읽는 시간.",
+    "date": "",
+    "tags": [
+      "WEC",
+      "Le Mans"
+    ],
+    "image": "apex/assets/lemans.jpg",
+    "source": "https://toyotagazooracing.com/wec/release/2025/rd04-race2/",
+    "credit": "TOYOTA GAZOO Racing · 2025 Le Mans",
+    "url": "/races/wec/",
+    "race": {
+      "event": "르망 24시",
+      "viewing": "broadcast",
+      "eventDate": null,
+      "circuit": null,
+      "sample": true
+    }
+  },
+  {
+    "id": "tcr",
+    "kind": "race",
+    "category": "TCR",
+    "title": "TCR을 좋아하는 이유",
+    "description": "익숙한 실루엣, 전혀 다른 움직임. TCR을 좋아하는 이유.",
+    "date": "",
+    "tags": [
+      "TCR",
+      "Hyundai Motorsport"
+    ],
+    "image": "apex/assets/tcr.jpg",
+    "source": "https://www.hyundai.com/worldwide/en/newsroom/detail/hyundai-motorsport-customer-racing-celebrates-double-victory-at-home-round-of-kumho-fia-tcr-world-tour-0000001030",
+    "credit": "Hyundai Motor Company · TCR",
+    "url": "/races/tcr/",
+    "race": {
+      "event": "TCR",
+      "viewing": "trackside",
+      "eventDate": null,
+      "circuit": null,
+      "sample": true
+    }
+  },
+  {
+    "id": "f1",
+    "kind": "race",
+    "category": "F1",
+    "title": "F1 피트스톱과 전략 메모",
+    "description": "결과보다 선택의 과정이 궁금한 날. F1 전략 관전 노트.",
+    "date": "",
+    "tags": [
+      "F1",
+      "Strategy"
+    ],
+    "url": "/races/f1/",
+    "race": {
+      "event": "F1",
+      "viewing": "broadcast",
+      "eventDate": null,
+      "circuit": null,
+      "sample": true
+    }
+  }
+]

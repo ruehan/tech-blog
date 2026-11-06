@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test('paused room and static circuit stop rendering while controls and resume still work', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/room');
   await expect(page.getByRole('button', { name: '조명 끄기', exact: true })).toBeEnabled();
   await page.getByRole('button', { name: '애니메이션 일시정지', exact: true }).click();
   await expect.poll(() => page.evaluate(async () => (await import('/tests/browser/room-probe.ts')).measureRenderedFrames(300))).toBeLessThanOrEqual(2);
@@ -25,7 +25,7 @@ test('paused room and static circuit stop rendering while controls and resume st
 });
 
 test('hidden tabs and open articles stop the scene and resume without skipping the cinematic', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/room');
   await expect(page.getByRole('button', { name: '조명 끄기', exact: true })).toBeEnabled();
   await page.getByRole('button', { name: '책 펼치기', exact: true }).click();
   await page.evaluate(() => {
@@ -51,7 +51,7 @@ test.describe('adaptive resolution', () => {
 
   test('quality switch restores rendering settings without replacing the scene and remembers selection', async ({ page }) => {
     await page.setViewportSize({ width: 2560, height: 1440 });
-    await page.goto('/');
+    await page.goto('/room');
     await expect(page.getByRole('button', { name: '조명 끄기', exact: true })).toBeEnabled();
     await page.getByRole('button', { name: '애니메이션 일시정지', exact: true }).click();
     const toggle = page.getByRole('switch', { name: '60fps 최적화' });
@@ -87,7 +87,7 @@ test.describe('adaptive resolution', () => {
 
   test('a large Retina viewport keeps its pixel budget through UI updates and pause', async ({ page }) => {
     await page.setViewportSize({ width: 2560, height: 1440 });
-    await page.goto('/');
+    await page.goto('/room');
     await expect(page.getByRole('button', { name: '조명 끄기', exact: true })).toBeEnabled();
     const dpr = () => page.evaluate(async () => (await import('/tests/browser/room-probe.ts')).readRenderStats().dpr);
     await expect.poll(dpr).toBeLessThanOrEqual(0.75);
@@ -103,7 +103,7 @@ test.describe('adaptive resolution', () => {
   });
 
   test('sustained frame load reduces actual canvas resolution without moving the camera', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/room');
     await expect(page.getByRole('button', { name: '조명 끄기', exact: true })).toBeEnabled();
     const before = await page.evaluate(async () => {
       const probe = await import('/tests/browser/room-probe.ts');
@@ -128,7 +128,7 @@ test('quality switch remains usable on mobile when storage is unavailable', asyn
     Storage.prototype.getItem = () => { throw new Error('Storage unavailable'); };
     Storage.prototype.setItem = () => { throw new Error('Storage unavailable'); };
   });
-  await page.goto('/');
+  await page.goto('/room');
   await expect(page.getByRole('button', { name: '조명 끄기', exact: true })).toBeEnabled();
   const toggle = page.getByRole('switch', { name: '60fps 최적화' });
   await expect(toggle).toBeChecked();

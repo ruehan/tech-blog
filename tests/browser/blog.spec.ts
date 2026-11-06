@@ -1,14 +1,14 @@
 import { test, expect } from '@playwright/test';
 
 test('posts appear when the book opens and closing posts immediately starts closing the book', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/room');
   await expect(page.getByRole('button', { name: '조명 끄기', exact: true })).toBeEnabled();
   await page.getByRole('button', { name: '조명 끄기', exact: true }).click();
   const before = await page.evaluate(async () => (await import('/tests/browser/room-probe.ts')).readWorldCamera());
   await page.getByRole('button', { name: '책 펼치기', exact: true }).click();
   await expect(page.getByRole('button', { name: '연출 건너뛰기' })).toBeVisible();
   await expect.poll(async () => page.evaluate(async () => (await import('/tests/browser/room-probe.ts')).readWorldCamera().position[0])).toBeLessThan(8);
-  await expect(page).toHaveURL(/\/$/);
+  await expect(page).toHaveURL(/\/room$/);
   await expect(page.getByRole('dialog')).toHaveCount(0);
   await expect(page).toHaveURL(/\/posts$/, { timeout: 6500 });
   await expect(page.getByRole('dialog')).toBeVisible();
@@ -31,7 +31,7 @@ test('posts appear when the book opens and closing posts immediately starts clos
   await expect(page.locator('.post-card')).toHaveCount(1);
   expect(await page.evaluate(async () => (await import('/tests/browser/room-probe.ts')).readBookPose())).toEqual(book);
   await page.keyboard.press('Escape');
-  await expect(page).toHaveURL(/\/$/);
+  await expect(page).toHaveURL(/\/room$/);
   await expect(page.getByRole('button', { name: '연출 건너뛰기' })).toBeVisible();
   // No enlarged page retracts first: the cover must already be closing.
   await expect.poll(async () => page.evaluate(async () => Math.abs((await import('/tests/browser/room-probe.ts')).readBookPose().cover[1])), { timeout: 1500 }).toBeLessThan(0.95);
@@ -43,13 +43,13 @@ test('posts appear when the book opens and closing posts immediately starts clos
 });
 
 test('book entry can be cancelled or skipped without losing the reading destination', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/room');
   await expect(page.getByRole('button', { name: '조명 끄기', exact: true })).toBeEnabled();
   await page.getByRole('button', { name: '책 펼치기', exact: true }).click();
   await expect(page.getByRole('button', { name: '연출 건너뛰기' })).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(page.getByRole('button', { name: '연출 건너뛰기' })).toHaveCount(0);
-  await expect(page).toHaveURL(/\/$/);
+  await expect(page).toHaveURL(/\/room$/);
   await page.getByRole('button', { name: '책 펼치기', exact: true }).click();
   await page.getByRole('button', { name: '연출 건너뛰기' }).click();
   await expect(page.getByRole('dialog')).toBeVisible();
@@ -69,6 +69,8 @@ test('direct article links load without 3D, support sharing and browser history'
   await expect(page).toHaveTitle(/호버가 자꾸 다시 시작되던 이유/);
   await expect(page.locator('canvas')).toHaveCount(0);
   expect(await page.evaluate(() => performance.getEntriesByType('resource').some(entry => entry.name.endsWith('.glb')))).toBe(false);
+  await page.evaluate(() => document.fonts.ready);
+  await expect.poll(() => page.getByRole('dialog').evaluate(element => element.getAnimations().length)).toBe(0);
   await page.locator('.book-page-scroll').evaluate(element => { element.scrollTop = 600; });
   const position = await page.locator('.book-page-scroll').evaluate(element => element.scrollTop);
   await page.getByRole('link', { name: '글 목록', exact: true }).click();
@@ -111,7 +113,7 @@ test('mobile reading, empty tags, missing articles and reduced motion remain usa
 
 test('desktop Projects folder opens project details and preserves the desktop on return', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('/');
+  await page.goto('/room');
   await page.getByRole('button', { name: '컴퓨터 속으로' }).click();
   await expect(page.locator('main.app')).toHaveAttribute('data-ready', 'true');
   await page.getByRole('button', { name: 'Projects 폴더 열기' }).click();
@@ -126,7 +128,7 @@ test('desktop Projects folder opens project details and preserves the desktop on
 });
 
 test('Projects waits for the actual folder animation and closing early cancels the opening', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/room');
   await page.getByRole('button', { name: '컴퓨터 02' }).click();
   await expect(page.locator('main.app')).toHaveAttribute('data-ready', 'true');
   const rest = await page.evaluate(async () => (await import('/tests/browser/room-probe.ts')).readFolderPose());
@@ -139,7 +141,7 @@ test('Projects waits for the actual folder animation and closing early cancels t
   await page.getByRole('button', { name: 'Projects 폴더 닫기' }).click();
   await page.waitForTimeout(2700);
   await expect(page.getByRole('dialog')).toHaveCount(0);
-  await expect(page).toHaveURL(/\/$/);
+  await expect(page).toHaveURL(/\/room$/);
   await page.getByRole('button', { name: 'Projects 폴더 열기' }).click();
   await expect(page).toHaveURL(/\/projects$/);
   await expect(page.getByRole('dialog')).toBeVisible();
@@ -150,7 +152,7 @@ test('Projects waits for the actual folder animation and closing early cancels t
 
 test('posts remain reachable even when the 3D room fails to load', async ({ page }) => {
   await page.route('**/interactive/room.glb', route => route.abort());
-  await page.goto('/');
+  await page.goto('/room');
   await expect(page.getByRole('alert')).toBeVisible();
   await page.getByRole('button', { name: '글 목록 열기' }).click();
   await page.locator('.post-card').first().click();
@@ -162,6 +164,8 @@ test('large book keeps the index fixed and turns only the selected page in eithe
   const spread = page.getByRole('dialog');
   await expect(spread).toBeVisible();
   await expect(page.locator('.book-paper')).toBeVisible();
+  await page.evaluate(() => document.fonts.ready);
+  await expect.poll(() => spread.evaluate(element => element.getAnimations().length)).toBe(0);
   expect((await spread.boundingBox())!.width).toBeGreaterThan(1300);
   const indexBounds = await page.locator('.book-index').boundingBox();
   await page.locator('.post-card').nth(1).click();

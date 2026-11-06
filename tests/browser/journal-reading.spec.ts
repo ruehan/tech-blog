@@ -1,11 +1,11 @@
 import { test, expect } from '@playwright/test';
 
-const articlePath = '/journal/posts/building-a-room-on-the-web';
+const articlePath = '/room/journal/posts/building-a-room-on-the-web';
 
 test('night reading persists across journal routes and reloads without loading 3D', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.goto('/journal');
+  await page.goto('/room/journal');
   const journal = page.locator('.journal');
   const toggle = page.getByRole('button', { name: '밤에 읽기', exact: true });
   await expect(journal).toHaveAttribute('data-theme', 'day');
@@ -33,7 +33,7 @@ test('theme toggle remains usable when local storage is blocked', async ({ page 
   await page.addInitScript(() => {
     Object.defineProperty(window, 'localStorage', { get() { throw new DOMException('Blocked', 'SecurityError'); } });
   });
-  await page.goto('/journal');
+  await page.goto('/room/journal');
   await page.getByRole('button', { name: '밤에 읽기', exact: true }).click();
   await expect(page.locator('.journal')).toHaveAttribute('data-theme', 'night');
   await page.locator('.journal-entry').first().click();

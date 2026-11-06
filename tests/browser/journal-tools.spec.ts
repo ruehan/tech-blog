@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const articlePath = '/journal/posts/building-a-room-on-the-web';
+const articlePath = '/room/journal/posts/building-a-room-on-the-web';
 
 test('reading preferences resize prose and code, preserve the outline and persist across routes and reloads', async ({ page }) => {
   await page.goto(articlePath);
@@ -118,7 +118,7 @@ test('reading settings tolerate corrupt or blocked storage, and stay scoped to t
 });
 
 test('back navigation closes the image without overwriting the destination scroll position', async ({ page }) => {
-  await page.goto('/journal');
+  await page.goto('/room/journal');
   await page.locator('.journal-entry').first().click();
   await page.getByRole('button', { name: /^이미지 확대:/ }).first().click();
   await expect(page.getByRole('dialog', { name: '이미지 크게 보기' })).toBeVisible();

@@ -6,6 +6,7 @@ const defaults: Preferences = { size: 'normal', width: 'normal' };
 
 export function useReadingPreferences() {
   const [preferences, setPreferences] = useState<Preferences>(() => {
+    if (typeof window === 'undefined') return defaults;
     try {
       const saved = JSON.parse(localStorage.getItem('journal-reading') ?? 'null');
       return {

@@ -1,15 +1,17 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, useImperativeHandle, type Ref } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useImperativeHandle, type Ref } from 'react';
 import { useFrame, useLoader, useThree, type ThreeEvent } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import { AnimationAction, FileLoader, Group, LoopOnce, LoopRepeat, Matrix4, Object3D, PerspectiveCamera, RectAreaLight, Vector3 } from 'three';
 import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
 import { useModel } from './models';
-import { asset, type WorldId } from './worlds';
+import { asset, worlds, type WorldId } from './worlds';
 import { sampleInto, type RoomManifest, type RuntimeClip } from './animation';
 import { compileRuntimeClips } from './runtime-tracks';
 import { applyRoomCamera, applyRoomRestZoom } from './room-camera';
 import { blendRoomPose, captureRoomPose, ROOM_ALIGNMENT_SECONDS, type RoomPose } from './room-transition';
 import { Icon } from './Icons';
+import { PianoPlayer } from './PianoPlayer';
+import type { PianoAudio } from './piano-audio';
 
 RectAreaLightUniformsLib.init();
 export interface RoomHandle { activate: (id: string) => void; cancel: () => void; skip: () => void }
@@ -23,18 +25,40 @@ const HOVER_LEAVE_MS = 100;
 // closing the book. Skip the enlargement/retraction without a visible pose jump.
 const BOOK_READ_TIME = 5;
 const BOOK_RETURN_TIME = 323 / 24;
+// Approach ends at 3s; show a brief authored key phrase, then hold the closeup.
+const PIANO_OPEN_TIME = 4.5;
+const PIANO_RETURN_TIME = 10.75;
 const labelInfo = [
   { id: 'featured_book', root: 'INT_FeatureBook', text: '책 펼치기', icon: 'book', offset: [0, 0.45, 0] },
   { id: 'monitor', root: 'INT_Monitor', text: '컴퓨터 속으로', icon: 'desktop', offset: [0, 0.75, 0] },
   { id: 'racing', root: 'SIMRIG', text: '서킷으로', icon: 'circuit', offset: [0, 1.6, 0] },
   { id: 'bass', root: 'INT_Bass', text: '베이스 연주', icon: 'music', offset: [0, 1.3, 0] },
+  { id: 'grand_piano', root: 'INT_GrandPiano', text: '피아노 연주', icon: 'piano', offset: [0, 1.3, 0] },
 ];
 
 export function Room(props: Props) {
-  const model = useModel('interactive/room.glb');
+  const model = useModel(worlds.room.file);
   const raw = useLoader(FileLoader, [asset('interactive/manifest.json'), asset('interactive/runtime-tracks.json')]);
   const manifest = useMemo(() => JSON.parse(raw[0] as string) as RoomManifest, [raw]);
   const runtime = useMemo(() => (JSON.parse(raw[1] as string) as { clips: Record<string, RuntimeClip> }).clips, [raw]);
+  const pianoNotes = useMemo(() => new Map(manifest.piano.keys.map(key => [
+    `piano_note_${key.midi}`, `Press_${key.note.replace('#', 'sharp')}`,
+  ])), [manifest]);
+  const pianoKeys = useMemo(() => manifest.piano.keys.map(key => {
+    const node = model.root.getObjectByName(key.node)!;
+    return { node, midi: key.midi, rest: node.rotation.x, travel: Number(node.userData.press_angle_rad) };
+  }), [manifest, model]);
+  const pianoCameraClip = useMemo(() => {
+    const clip = model.animations.find(clip => clip.name === manifest.piano.performance_clip)!.clone();
+    clip.name = 'Piano_Camera_Hold';
+    clip.tracks = clip.tracks.filter(track => track.name.startsWith('WEB_Camera_Main.'));
+    return clip;
+  }, [manifest, model]);
+  const pianoPhase = useRef<'entering' | 'playing' | 'returning' | null>(null);
+  const pianoRestoreFocus = useRef(false);
+  const [pianoOpen, setPianoOpen] = useState(false);
+  const pianoEngine = useRef<PianoAudio | null>(null);
+  const connectPiano = useCallback((engine: PianoAudio | null) => { pianoEngine.current = engine; }, []);
   const { camera } = useThree();
   const playing = useRef(new Map<string, Playing>());
   const cinematic = useRef(false);
@@ -130,6 +154,8 @@ export function Room(props: Props) {
   function clear() {
     alignment.current = null;
     bookPhase.current = null;
+    pianoPhase.current = null; setPianoOpen(false); pianoEngine.current?.stop();
+    for (const key of pianoKeys) key.node.rotation.x = key.rest;
     clearTimeout(hoverLeaveTimer.current);
     pointerTargets.current = { mesh: null, label: null };
     for (const [group, item] of playing.current) if (hoverMaterials.has(group) && item.action) {
@@ -161,9 +187,11 @@ export function Room(props: Props) {
   }
   function activate(id: string) {
     if (cinematic.current) return;
+    if (pianoNotes.has(id)) id = 'grand_piano';
     if (id === 'featured_book' && latest.current.paused) { latest.current.onRead(); return; }
     if (id === 'room_lighting') { latest.current.onLights(); return; }
-    const prefix = prefixes[id]; if (!prefix) return;
+    const piano = id === 'grand_piano';
+    const prefix = prefixes[id]; if (!prefix && !piano) return;
     if (latest.current.paused && id === 'bass') return;
     // Navigation stays usable when reduced motion or pause is selected.
     if (latest.current.paused && (id === 'monitor' || id === 'racing')) {
@@ -175,11 +203,19 @@ export function Room(props: Props) {
       bookPhase.current = 'entering';
       play('cinematic', 'Book_Click', false, settleToRest);
     } else {
+      if (piano) pianoPhase.current = 'entering';
       const portal = id === 'monitor' || id === 'racing';
-      play('cinematic', portal ? `${prefix}_Portal_Approach` : `${prefix}_Click`, false, () => {
+      play('cinematic', piano ? manifest.piano.performance_clip : portal ? `${prefix}_Portal_Approach` : `${prefix}_Click`, false, () => {
         if (portal) { finish(); latest.current.onNavigate(id === 'monitor' ? 'desktop' : 'circuit'); }
         else settleToRest();
       });
+    }
+    if (piano && latest.current.paused) {
+      const item = playing.current.get('cinematic')!;
+      item.time = PIANO_OPEN_TIME;
+      if (item.action) item.action.time = PIANO_OPEN_TIME;
+      updateAnimation(0);
+      return;
     }
     // Evaluate the authored first frame without displaying it. Restore the
     // currently visible pose and move to that first frame before advancing time.
@@ -197,16 +233,51 @@ export function Room(props: Props) {
     bookPhase.current = 'reading';
     latest.current.onRead();
   }
+  function holdPiano() {
+    if (pianoPhase.current !== 'entering') return;
+    const item = playing.current.get('cinematic')!;
+    const angles = pianoKeys.map(key => key.node.rotation.x);
+    item.action?.stop();
+    const cameraAction = model.mixer.clipAction(pianoCameraClip).reset().setLoop(LoopOnce, 1).play();
+    cameraAction.clampWhenFinished = true;
+    cameraAction.time = item.time; cameraAction.paused = true; item.action = cameraAction;
+    model.mixer.update(0);
+    pianoKeys.forEach((key, index) => { key.node.rotation.x = latest.current.paused ? key.rest : angles[index]; });
+    pianoPhase.current = 'playing'; setPianoOpen(true);
+  }
+  function closePiano() {
+    pianoRestoreFocus.current = true;
+    pianoEngine.current?.stop(); setPianoOpen(false);
+    if (latest.current.paused) { finish(); return; }
+    const item = playing.current.get('cinematic');
+    if (!item || pianoPhase.current !== 'playing') { finish(); return; }
+    item.time = PIANO_RETURN_TIME;
+    if (item.action) { item.action.time = PIANO_RETURN_TIME; item.action.paused = false; }
+    pianoPhase.current = 'returning';
+  }
   function skip() {
     const item = playing.current.get('cinematic');
-    if (bookPhase.current === 'entering' && item) {
+    if (pianoPhase.current === 'entering' && item) {
+      alignment.current = null; item.time = PIANO_OPEN_TIME;
+      if (item.action) item.action.time = PIANO_OPEN_TIME;
+      updateAnimation(0);
+    } else if (pianoPhase.current === 'playing') closePiano();
+    else if (bookPhase.current === 'entering' && item) {
       alignment.current = null;
       item.time = BOOK_READ_TIME;
       if (item.action) item.action.time = BOOK_READ_TIME;
       updateAnimation(0);
     } else finish();
   }
-  useImperativeHandle(props.ref, () => ({ activate, cancel: finish, skip }));
+  useImperativeHandle(props.ref, () => ({ activate, cancel: () => pianoPhase.current === 'playing' ? closePiano() : finish(), skip }));
+  useEffect(() => { if (!props.active && pianoPhase.current) finish(); }, [props.active]);
+  useEffect(() => {
+    if (!props.active) { pianoRestoreFocus.current = false; return; }
+    if (busy || !pianoRestoreFocus.current) return;
+    pianoRestoreFocus.current = false;
+    const frame = requestAnimationFrame(() => document.querySelector<HTMLButtonElement>('.room-rail [aria-label="피아노"]')?.focus({ preventScroll: true }));
+    return () => cancelAnimationFrame(frame);
+  }, [busy, props.active]);
   useEffect(() => {
     if (!props.active || bookPhase.current !== 'reading') return;
     if (props.paused) { finish(); return; }
@@ -243,6 +314,8 @@ export function Room(props: Props) {
     if (bookPhase.current === 'entering') {
       dt = Math.min(dt, Math.max(0, BOOK_READ_TIME - playing.current.get('cinematic')!.time));
     } else if (bookPhase.current === 'reading') dt = 0;
+    if (pianoPhase.current === 'entering') dt = Math.min(dt, Math.max(0, PIANO_OPEN_TIME - playing.current.get('cinematic')!.time));
+    else if (pianoPhase.current === 'playing') dt = 0;
     model.mixer.update(dt);
     for (const [action, remaining] of fading.current) {
       if (remaining <= dt) {
@@ -276,14 +349,26 @@ export function Room(props: Props) {
     if (!playing.current.has('opening')) runtimeClips.get(props.lightsOn ? 'Lights_On' : 'Lights_Off')?.(1);
     const active = playing.current.get('cinematic') ?? playing.current.get('opening');
     if (active && sourceCamera instanceof PerspectiveCamera && camera instanceof PerspectiveCamera) {
-      const lensTrack = runtime[active.name]?.camera_lens_mm_and_sensor_width_mm;
+      const runtimeClip = runtime[active.name];
+      const lensTrack = runtimeClip?.camera_lens_mm_and_sensor_width_mm;
       // applyRoomCamera updates only the camera's ancestor chain, not the whole model.
-      applyRoomCamera(camera, sourceCamera, lensTrack ? sampleInto(lensTrack, active.time, lensSample.current) : undefined);
+      applyRoomCamera(camera, sourceCamera, lensTrack ? sampleInto(lensTrack, active.time, lensSample.current, runtimeClip.fps, runtimeClip.interpolation === 'STEP') : undefined);
     }
     if (bookPhase.current === 'entering' && active && active.time >= BOOK_READ_TIME) completed.push(holdBook);
+    if (pianoPhase.current === 'entering' && active && active.time >= PIANO_OPEN_TIME) completed.push(holdPiano);
     completed.forEach(done => done());
   }
-  useFrame((_, delta) => updateAnimation(props.paused ? 0 : Math.min(delta, 0.05)));
+  useFrame((_, delta) => {
+    updateAnimation(props.paused ? 0 : Math.min(delta, 0.05));
+    if (pianoPhase.current === 'playing' || pianoPhase.current === 'returning') {
+      const pressed = !props.paused ? pianoEngine.current?.keys() : undefined;
+      for (const key of pianoKeys) {
+        const down = pressed?.has(key.midi);
+        const target = key.rest + (down ? key.travel : 0);
+        key.node.rotation.x += (target - key.node.rotation.x) * (1 - Math.exp(-Math.min(delta, 0.05) / (down ? 0.018 : 0.055)));
+      }
+    }
+  });
   function interaction(object: Object3D | null): string | null {
     while (object) {
       if (object.userData.interaction_id) return object.userData.interaction_id;
@@ -329,5 +414,6 @@ export function Room(props: Props) {
     {props.labels && !busy && hotspots.map(label => <Html key={label.id} position={label.position} center zIndexRange={[20, 0]}>
       <button className="hotspot" aria-label={label.text} disabled={props.paused && label.id === 'bass'} onPointerEnter={() => pointerHover(label.id, 'label')} onPointerLeave={() => pointerHover(null, 'label')} onClick={() => activate(label.id)}><Icon name={label.icon} size={18}/></button>
     </Html>)}
+    {pianoOpen && <Html><PianoPlayer onClose={closePiano} onEngine={connectPiano}/></Html>}
   </group>;
 }

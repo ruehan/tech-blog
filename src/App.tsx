@@ -19,7 +19,14 @@ function RailButton({ icon, label, ...props }: ButtonHTMLAttributes<HTMLButtonEl
 }
 
 export default function App() {
-  const { route, go } = useRoute();
+  const { route: browserRoute, go: browserGo } = useRoute();
+  const route = { ...browserRoute, path: browserRoute.path.replace(/^\/room(?=\/|$)/, '') || '/' };
+  const go = useCallback((href: string) => {
+    if (href === '/') browserGo('/room');
+    else if (/^\/(projects|journal|about)(\/|$|\?)/.test(href)) browserGo(`/room${href}`);
+    else if (/^\/posts(\/|$|\?)/.test(href)) browserGo(href);
+    else window.location.assign(href);
+  }, [browserGo]);
   const journalOpen = route.path === '/about' || route.path === '/journal' || route.path.startsWith('/journal/');
   const inSpace = route.path === '/';
   const bookOpen = route.path === '/posts' || route.path.startsWith('/posts/');
@@ -102,11 +109,11 @@ export default function App() {
     go(href);
   };
 
-  if (journalOpen) return <><ContentMetadata route={route}/><Journal route={route} go={contentNavigate}/></>;
+  if (journalOpen) return <><ContentMetadata route={browserRoute}/><Journal route={route} go={contentNavigate}/></>;
 
-  return <><ContentMetadata route={route}/>{spaceMounted && <main inert={!inSpace} aria-hidden={!inSpace || undefined} className={`app ${!inSpace ? 'space-inactive' : ''} ${!inSpace && !libraryOpen ? 'space-covered' : ''} ${world} ${view}-view ${world === 'room' && !lightsOn ? 'night' : ''}`} data-world={world} data-view={view} data-ready={ready}>
+  return <><ContentMetadata route={browserRoute}/>{spaceMounted && <main inert={!inSpace} aria-hidden={!inSpace || undefined} className={`app ${!inSpace ? 'space-inactive' : ''} ${!inSpace && !libraryOpen ? 'space-covered' : ''} ${world} ${view}-view ${world === 'room' && !lightsOn ? 'night' : ''}`} data-world={world} data-view={view} data-ready={ready}>
     <header className="header">
-      <a className="brand" href="#room" onClick={event => { event.preventDefault(); jumpToWorld('room'); }} aria-label="Hangyu's room, 메인 방으로"><span>hangyu<span className="brand-light"> / room</span></span></a>
+      <a className="brand" href="/" aria-label="HANGYU APEX 홈으로"><span>hangyu<span className="brand-light"> / apex</span></span></a>
     </header>
 
     <div className="viewport" aria-label={`${config.label} 3D 뷰어. 드래그로 회전하고 스크롤로 확대합니다.`}>
@@ -128,7 +135,7 @@ export default function App() {
       </nav>
       {ready && <div className="rail-group" role="group" aria-label="공간 조작">
         {busy ? <RailButton icon="arrow" label="연출 건너뛰기" onClick={() => roomRef.current?.skip()}/> : world === 'room' ?
-          <RailButton icon="music" label="음악" disabled={paused} onClick={() => roomRef.current?.activate('bass')}/>
+          <><RailButton icon="music" label="음악" disabled={paused} onClick={() => roomRef.current?.activate('bass')}/><RailButton icon="piano" label="피아노" onClick={() => roomRef.current?.activate('grand_piano')}/></>
         : world === 'desktop' ? <RailButton icon="folder" label={`Projects 폴더 ${folderOpen ? '닫기' : '열기'}`} aria-pressed={folderOpen} onClick={toggleFolder}/>
         : <><RailButton icon="steering" label="운전석 시점" aria-pressed={view === 'cockpit'} onClick={() => setView('cockpit')}/><RailButton icon="circuit" label="서킷 전체" aria-pressed={view === 'overview'} onClick={() => setView('overview')}/><RailButton icon="focus" label="차량 가까이" aria-pressed={view === 'car'} onClick={() => setView('car')}/></>}
       </div>}

@@ -1,0 +1,3 @@
+/* Fit the personal name inside the reference wordmark; keep its original composition. */
+.portal-title{font-size:clamp(54px,7.5vw,120px)}
+@media(max-width:720px){.portal-title{font-size:clamp(40px,10.5vw,72px);gap:12px}.portal-home .wordmark{font-size:22px}}

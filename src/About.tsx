@@ -6,7 +6,7 @@ import { Icon } from './Icons';
 import { RouteLink, type Navigate } from './navigation';
 import './about.css';
 
-export function About({ go }: { go: Navigate }) {
+export function About({ go, articleBase = '/journal/posts', listPath = '/journal' }: { go: Navigate; articleBase?: string; listPath?: string }) {
   const [selectedCase, setSelectedCase] = useState<ResearchCaseSelection | null>(null);
   return <article className="about-page" aria-labelledby="about-heading">
     <header className="about-intro">
@@ -21,7 +21,7 @@ export function About({ go }: { go: Navigate }) {
           <a href={profile.portfolio}><Icon name="folder" size={17}/>포트폴리오</a>
         </nav>
       </div>
-      <figure className="about-room"><img src="/images/site/room.png" alt="직접 만든 책장과 책상, 베이스, 심레이싱 장비가 있는 3D 방" width="1440" height="900"/><figcaption>Blender에서 직접 만들고 웹으로 옮긴 방.<RouteLink to="/" go={go}>방 둘러보기 <Icon name="arrow" size={15}/></RouteLink></figcaption></figure>
+      <figure className="about-room"><img src="/images/site/room.png" alt="직접 만든 책장과 책상, 베이스, 심레이싱 장비가 있는 3D 방" width="1440" height="900"/><figcaption>Blender에서 직접 만들고 웹으로 옮긴 방.<RouteLink to="/room" go={go}>방 둘러보기 <Icon name="arrow" size={15}/></RouteLink></figcaption></figure>
     </header>
 
     <section className="about-section" aria-labelledby="experience-heading">
@@ -49,7 +49,7 @@ export function About({ go }: { go: Navigate }) {
           <p className="about-project-context">{project.context}</p><h3>{project.name}</h3><p>{project.description}</p>
           <ul className="about-tools" aria-label={`${project.name}에 사용한 도구`}>{project.tools.map(tool => <li key={tool}>{tool}</li>)}</ul>
           {project.reference && <a className="about-post-link" href={project.reference.href}>{project.reference.label}<Icon name="arrow" size={16}/></a>}
-          {post && <RouteLink className="about-post-link" to={`/journal/posts/${post.slug}`} go={go}>{project.name} 제작기 읽기 <Icon name="arrow" size={16}/></RouteLink>}
+          {post && <RouteLink className="about-post-link" to={`${articleBase}/${post.slug}`} go={go}>{project.name} 제작기 읽기 <Icon name="arrow" size={16}/></RouteLink>}
         </section>;
       })}</div>
     </section>
@@ -64,6 +64,6 @@ export function About({ go }: { go: Navigate }) {
       <div className="about-interests">{profile.interests.map(interest => <section key={interest.name}><h3>{interest.name}</h3><p>{interest.description}</p></section>)}</div>
     </section>
     {selectedCase && <ResearchCaseDialog selected={selectedCase} onClose={() => setSelectedCase(null)}/>}
-    <footer className="about-footer"><RouteLink to="/journal" go={go}>글 기록 보기 <Icon name="arrow" size={17}/></RouteLink></footer>
+    <footer className="about-footer"><RouteLink to={listPath} go={go}>글 기록 보기 <Icon name="arrow" size={17}/></RouteLink></footer>
   </article>;
 }

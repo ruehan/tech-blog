@@ -10,8 +10,8 @@ import { optimizeModel } from '../scripts/optimize-model.mjs';
 test('compressed models retain geometry, material indices, interaction roots and sampled animation poses', async () => {
   await MeshoptDecoder.ready;
   const io = new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies({ 'meshopt.decoder': MeshoptDecoder });
-  for (const file of ['interactive/room.glb', 'worlds/computer-desktop.glb', 'worlds/apex-circuit.glb', 'worlds/formula-car-animated.glb']) {
-    const input = await readFile(`blog-room-v27/${file}`);
+  for (const file of ['blog-room-v28/interactive/room-with-piano.glb', ...['computer-desktop.glb', 'apex-circuit.glb', 'formula-car-animated.glb'].map(name => `blog-room-v27/worlds/${name}`)]) {
+    const input = await readFile(file);
     const output = await optimizeModel(input);
     assert.ok(output.length < input.length * 0.7, `${file}: meaningful size reduction`);
     const before = (await io.readBinary(input)).getRoot();
@@ -66,4 +66,33 @@ test('compressed models retain geometry, material indices, interaction roots and
       }
     }
   }
+});
+
+test('v28 piano bindings include all 88 keys and preserve legacy sidecar targets', async () => {
+  const io = new NodeIO().registerExtensions(ALL_EXTENSIONS);
+  const root = (await io.readBinary(await readFile('blog-room-v28/interactive/room-with-piano.glb'))).getRoot();
+  const manifest = JSON.parse(await readFile('blog-room-v28/interactive/manifest.json', 'utf8'));
+  const runtime = JSON.parse(await readFile('blog-room-v28/interactive/runtime-tracks.json', 'utf8')).clips;
+  const nodes = root.listNodes();
+  const piano = nodes.find(node => node.getName() === manifest.piano.root)!;
+  assert.equal(piano.getExtras().interaction_id, 'grand_piano');
+  assert.deepEqual(manifest.piano.keys.map(key => key.midi), Array.from({ length: 88 }, (_, i) => i + 21));
+  for (const key of manifest.piano.keys) {
+    const node = nodes.find(node => node.getName() === key.node)!;
+    assert.equal(node.getExtras().interaction_id, `piano_note_${key.midi}`);
+    assert.ok(piano.listChildren().includes(node));
+    const clip = root.listAnimations().find(clip => clip.getName() === `Press_${key.note.replace('#', 'sharp')}`)!;
+    assert.equal(clip.listChannels().length, 1);
+    assert.equal(clip.listChannels()[0].getTargetNode(), node);
+  }
+  const performance = root.listAnimations().find(clip => clip.getName() === manifest.piano.performance_clip)!;
+  assert.equal(performance.listChannels().filter(channel => channel.getTargetNode()?.getName() === 'WEB_Camera_Main').length, 2);
+  assert.equal(new Set(performance.listChannels().map(channel => channel.getTargetNode())).size, 89);
+  for (const [name, duration] of [['Music_Click', 15], ['Piano_Performance', 14]] as const) {
+    const track = runtime[name];
+    assert.equal(track.camera_lens_mm_and_sensor_width_mm.length, duration * track.fps + 1);
+  }
+  const old = (await io.readBinary(await readFile('blog-room-v27/interactive/room.glb'))).getRoot();
+  assert.deepEqual(root.listMaterials().slice(0, old.listMaterials().length).map(m => m.getName()), old.listMaterials().map(m => m.getName()));
+  assert.deepEqual(nodes.slice(0, old.listNodes().length).map(n => n.getName()), old.listNodes().map(n => n.getName()));
 });

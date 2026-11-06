@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test('left shortcuts open content immediately and keep all controls together', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/room');
   const menu = page.getByRole('complementary', { name: '공간 메뉴' });
   await expect(menu).toBeVisible();
   await expect(page.locator('.tools, .world-actions, .footer, .library-shortcut')).toHaveCount(0);
@@ -21,12 +21,12 @@ test('left shortcuts open content immediately and keep all controls together', a
   await menu.getByRole('button', { name: '안내 숨기기', exact: true }).click();
   await expect(page.locator('.hotspot')).toHaveCount(0);
   await menu.getByRole('button', { name: '안내 보기', exact: true }).click();
-  await expect(page.locator('.hotspot')).toHaveCount(4);
+  await expect(page.locator('.hotspot')).toHaveCount(5);
   await page.screenshot({ path: '.local/left-rail-desktop.png' });
 });
 
 test('switching worlds from the left menu cancels an in-flight book animation', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/room');
   await expect(page.getByRole('button', { name: '조명 끄기', exact: true })).toBeEnabled();
   await page.getByRole('button', { name: '책 펼치기', exact: true }).click();
   await expect(page.getByRole('button', { name: '연출 건너뛰기' })).toBeVisible();
@@ -50,7 +50,7 @@ test('left menu remains reachable on mobile and short landscape screens', async 
   await page.emulateMedia({ reducedMotion: 'reduce' });
   for (const viewport of [{ width: 390, height: 844 }, { width: 844, height: 390 }]) {
     await page.setViewportSize(viewport);
-    await page.goto('/');
+    await page.goto('/room');
     await expect(page.getByRole('button', { name: '조명 끄기', exact: true })).toBeEnabled();
     const menu = page.getByRole('complementary', { name: '공간 메뉴' });
     const bounds = (await menu.boundingBox())!;
@@ -68,7 +68,7 @@ test('left menu remains reachable on mobile and short landscape screens', async 
 });
 
 test('a content shortcut cancels a pending folder opening without closing an already opened folder', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/room');
   await page.getByRole('button', { name: '컴퓨터 02' }).click();
   await page.getByRole('button', { name: 'Projects 폴더 열기' }).click();
   await page.waitForTimeout(350);
@@ -76,7 +76,7 @@ test('a content shortcut cancels a pending folder opening without closing an alr
   await expect(page).toHaveURL(/\/posts$/);
   await page.getByRole('button', { name: '목록 닫기' }).click();
   await page.waitForTimeout(2800);
-  await expect(page).toHaveURL(/\/$/);
+  await expect(page).toHaveURL(/\/room$/);
   await expect(page.getByRole('dialog')).toHaveCount(0);
   await page.getByRole('button', { name: 'Projects 폴더 열기' }).click();
   await expect(page).toHaveURL(/\/projects$/);

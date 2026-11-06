@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
 
-for (const label of ['책 펼치기', '베이스 연주', '컴퓨터 속으로', '서킷으로']) {
+for (const label of ['책 펼치기', '베이스 연주', '피아노 연주', '컴퓨터 속으로', '서킷으로']) {
   test(`${label}: aligns from the orbit view without a first-frame snap and can be cancelled`, async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/room');
     await expect(page.getByRole('button', { name: '조명 끄기', exact: true })).toBeEnabled();
     // Use the actual OrbitControls so the camera starts away from the authored pose.
     await page.mouse.move(850, 450);
@@ -41,7 +41,7 @@ for (const label of ['책 펼치기', '베이스 연주', '컴퓨터 속으로',
 }
 
 test('alignment pauses in place, resumes and allows skipping directly to the open book', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/room');
   await expect(page.getByRole('button', { name: '조명 끄기', exact: true })).toBeEnabled();
   await page.getByRole('button', { name: '책 펼치기', exact: true }).click();
   await page.getByRole('button', { name: '애니메이션 일시정지', exact: true }).click();
@@ -58,7 +58,7 @@ test('alignment pauses in place, resumes and allows skipping directly to the ope
 
 for (const action of ['book', 'music']) {
   test(`${action}: the final frame blends into the resting room before controls resume`, async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/room');
     await expect(page.getByRole('button', { name: '조명 끄기', exact: true })).toBeEnabled();
     await page.getByRole('button', { name: '조명 끄기', exact: true }).click();
     const before = await page.evaluate(async () => (await import('/tests/browser/room-probe.ts')).readWorldCamera());

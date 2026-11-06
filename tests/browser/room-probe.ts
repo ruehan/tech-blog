@@ -2,7 +2,7 @@
 import { _roots, addAfterEffect } from '@react-three/fiber';
 import { Box3, DirectionalLight, Object3D, PerspectiveCamera, Raycaster, Vector2, Vector3 } from 'three';
 
-type RoomFrame = { zoom: number; fov: number; quaternion: number[]; position: number[]; controlsEnabled: boolean; editorScale: number; time: number; hover: { book: number; monitor: number; simulator: number; music: number[] } };
+type RoomFrame = { zoom: number; fov: number; quaternion: number[]; position: number[]; controlsEnabled: boolean; editorScale: number; time: number; pianoPressed: number; hover: { book: number; monitor: number; simulator: number; music: number[] } };
 let frames: RoomFrame[] = [];
 let unsubscribe: (() => void) | undefined;
 
@@ -78,6 +78,7 @@ export function startRoomCapture() {
       controlsEnabled: state.controls?.enabled ?? false,
       editorScale: editor.scale.x,
       time: performance.now(),
+      pianoPressed: state.scene.getObjectByName('INT_GrandPiano')?.children.filter(node => node.userData.piano_key_midi && Math.abs(node.rotation.x) > 0.001).length ?? 0,
       hover: {
         book: state.scene.getObjectByName('WEB_INT_FeatureBook')!.position.z,
         monitor: state.scene.getObjectByName('WEB_Monitor_Cues_Hover_Top')!.scale.y,
@@ -124,6 +125,15 @@ export function readWorldCamera() {
   const canvas = document.querySelector('canvas')!;
   const camera = _roots.get(canvas)!.store.getState().camera as PerspectiveCamera;
   return { position: camera.position.toArray(), quaternion: camera.quaternion.toArray(), fov: camera.fov, zoom: camera.zoom, near: camera.near };
+}
+
+export function readPianoPose() {
+  const canvas = document.querySelector('canvas')!;
+  const { scene } = _roots.get(canvas)!.store.getState();
+  const piano = scene.getObjectByName('INT_GrandPiano')!;
+  return piano.children.filter(node => node.userData.piano_key_midi).map(node => ({
+    midi: node.userData.piano_key_midi as number, angle: node.rotation.x, animated: node.matrixAutoUpdate,
+  }));
 }
 
 export function readBookPose() {

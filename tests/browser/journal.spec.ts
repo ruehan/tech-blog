@@ -6,7 +6,7 @@ test('journal reads and shares articles without loading the 3D scene', async ({ 
     if (/\.glb(?:\?|$)|WorldScene|\/three\./.test(request.url())) sceneRequests.push(request.url());
   });
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
-  await page.goto('/journal');
+  await page.goto('/room/journal');
   await expect(page.locator('.journal-header a')).toHaveCount(1);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('글 3');
   await expect(page.locator('.journal-entry')).toHaveCount(3);
@@ -14,7 +14,7 @@ test('journal reads and shares articles without loading the 3D scene', async ({ 
   await page.getByRole('link', { name: /호버가 자꾸 다시 시작되던 이유/ }).click();
   await expect(page).toHaveURL(/\/journal\/posts\/making-hover-transitions-smooth$/);
   await expect(page.getByRole('heading', { level: 1 })).toBeFocused();
-  await expect(page).toHaveTitle('호버가 자꾸 다시 시작되던 이유 — hangyu / room');
+  await expect(page).toHaveTitle('호버가 자꾸 다시 시작되던 이유 — hangyu / apex');
   await page.getByRole('navigation', { name: '목차' }).getByRole('link', { name: '메시보다 상호작용 단위로 판단하기' }).click();
   await expect(page).toHaveURL(/#interaction-root$/);
   await expect(page.locator('.article-body pre')).toContainText('function interaction');
@@ -35,7 +35,7 @@ test.describe('desk clock and calendar', () => {
   test('local time and calendar update across midnight and leap day', async ({ page }) => {
     await page.clock.install({ time: new Date('2028-02-29T14:59:30Z') });
     await page.clock.pauseAt(new Date('2028-02-29T14:59:31Z'));
-    await page.goto('/journal');
+    await page.goto('/room/journal');
     await expect(page.getByRole('group', { name: '현재 시간' })).toContainText('23:59');
     await expect(page.getByRole('table', { name: '2028년 2월 달력' })).toBeVisible();
     await expect(page.locator('.desk-calendar tbody time')).toHaveCount(29);
@@ -63,7 +63,7 @@ test.describe('desk clock and calendar', () => {
       await page.addInitScript(value => { Math.random = () => (value + 0.1) / 3; }, arrangement);
       for (const width of [2560, 1440, 1280, 1100, 390, 320]) {
         await page.setViewportSize({ width, height: 900 });
-        await page.goto('/journal');
+        await page.goto('/room/journal');
         const desk = page.locator('.desk-objects');
         await expect(desk).toHaveAttribute('data-arrangement', String(Math.floor((arrangement + 0.1) / 3 * 0x100000000)));
         await expect(desk).toHaveAttribute('data-layout', width >= 1280 ? 'free' : 'stack');
@@ -87,7 +87,7 @@ test.describe('desk clock and calendar', () => {
 });
 
 test('body search includes headings, lists and code, and clearing preserves the selected tag', async ({ page }) => {
-  await page.goto('/journal?tag=3D');
+  await page.goto('/room/journal?tag=3D');
   const input = page.getByRole('searchbox', { name: '글 검색' });
   // These terms occur only in the article's code, with deliberately mixed casing and spacing.
   await input.fill('  CAMERA.POSITION.SET   QUATERNION  ');
@@ -109,14 +109,14 @@ test('body search includes headings, lists and code, and clearing preserves the 
   await input.fill('회전과 확대');
   await input.press('Enter');
   await expect(page.getByRole('heading', { name: '아직 찾는 기록이 없어요.' })).toBeVisible();
-  await page.goto('/journal?tag=React&q=' + encodeURIComponent('같은 오브젝트 안에서 메시'));
+  await page.goto('/room/journal?tag=React&q=' + encodeURIComponent('같은 오브젝트 안에서 메시'));
   await expect(page.locator('.journal-entry')).toHaveCount(1);
   await expect(page.locator('.journal-entry')).toContainText('호버가 자꾸 다시 시작되던 이유');
 });
 
 test('article navigation stays in filtered results and restores the list scroll position', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 640 });
-  await page.goto('/journal?tag=3D&q=' + encodeURIComponent('카메라'));
+  await page.goto('/room/journal?tag=3D&q=' + encodeURIComponent('카메라'));
   const list = page.locator('.journal');
   const entries = page.locator('.journal-entry');
   await expect(entries).toHaveCount(2);
@@ -141,7 +141,7 @@ test('article navigation stays in filtered results and restores the list scroll 
 });
 
 test('journal search and tags combine, survive back navigation, and handle empty results', async ({ page }) => {
-  await page.goto('/journal');
+  await page.goto('/room/journal');
   await page.getByRole('navigation', { name: '태그 필터' }).getByRole('link', { name: 'React', exact: true }).click();
   await expect(page.locator('.journal-entry')).toHaveCount(2);
   await page.getByRole('searchbox', { name: '글 검색' }).fill('호버');
@@ -162,14 +162,14 @@ test('journal search and tags combine, survive back navigation, and handle empty
 });
 
 test('journal project and missing routes stay in the ordinary blog', async ({ page }) => {
-  await page.goto('/journal/projects');
+  await page.goto('/room/journal/projects');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('프로젝트');
   await page.getByRole('link', { name: '프로젝트 자세히 보기' }).click();
   await expect(page).toHaveURL(/\/journal\/projects\/hangyu-room$/);
   await expect(page.getByRole('heading', { name: '지금까지 만든 경험' })).toBeVisible();
   await page.getByRole('link', { name: '내 방을 웹으로 옮기는 일' }).click();
   await expect(page).toHaveURL(/\/journal\/posts\/building-a-room-on-the-web$/);
-  await page.goto('/journal/posts/missing');
+  await page.goto('/room/journal/posts/missing');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('페이지를 찾을 수 없습니다.');
   await page.getByRole('link', { name: '기록 목록으로' }).click();
   await expect(page).toHaveURL(/\/journal$/);
@@ -178,7 +178,7 @@ test('journal project and missing routes stay in the ordinary blog', async ({ pa
 
 test('journal is reachable before 3D loads and returning remounts a working room', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('/');
+  await page.goto('/room');
   await page.getByRole('button', { name: '일반 블로그로 보기' }).click();
   await expect(page.locator('canvas')).toHaveCount(0);
   await page.getByRole('link', { name: '3D 방으로', exact: true }).click();
@@ -196,7 +196,7 @@ test('journal is reachable before 3D loads and returning remounts a working room
 });
 
 test('switching to the journal cancels a pending desktop folder', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/room');
   await page.getByRole('button', { name: '컴퓨터 02' }).click();
   await page.getByRole('button', { name: 'Projects 폴더 열기' }).click();
   await page.getByRole('button', { name: '일반 블로그로 보기' }).click();
@@ -212,7 +212,7 @@ test('mobile journal keeps navigation reachable and articles within the viewport
   await page.emulateMedia({ reducedMotion: 'reduce' });
   for (const viewport of [{ width: 390, height: 844 }, { width: 320, height: 640 }, { width: 844, height: 390 }]) {
     await page.setViewportSize(viewport);
-    await page.goto('/journal');
+    await page.goto('/room/journal');
     const menu = page.getByRole('navigation', { name: '블로그 메뉴' });
     const bounds = (await menu.boundingBox())!;
     expect(bounds.x).toBeGreaterThanOrEqual(0);

@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 const newest = ['내 방을 웹으로 옮기는 일', '호버가 자꾸 다시 시작되던 이유', '방에서 출발선의 운전석까지'];
 
 test('journal sorting survives filters, reading, reload and history', async ({ page }) => {
-  await page.goto('/journal');
+  await page.goto('/room/journal');
   const titles = page.locator('.journal-entry h2');
   const sort = page.getByRole('combobox', { name: '글 정렬' });
   await expect(sort).toHaveValue('newest');
@@ -53,7 +53,7 @@ test('book sorting keeps the selected article and ordered page navigation', asyn
   await expect(sort).toBeVisible();
   await sort.selectOption('newest');
   await expect(titles).toHaveText([newest[0], newest[1]]);
-  await page.goto('/journal?sort=invalid');
+  await page.goto('/room/journal?sort=invalid');
   await expect(page.getByRole('combobox', { name: '글 정렬' })).toHaveValue('newest');
   await expect(page.locator('.journal-entry h2')).toHaveText(newest);
 });

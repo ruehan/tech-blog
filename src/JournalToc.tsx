@@ -6,7 +6,7 @@ import { Icon } from './Icons';
 export function JournalToc({ post, scrollRef }: { post: Post; scrollRef: RefObject<HTMLDivElement | null> }) {
   const [active, setActive] = useState(post.sections[0]?.id ?? '');
   const [expanded, setExpanded] = useState(false);
-  const [wide, setWide] = useState(() => window.matchMedia('(min-width: 1200px)').matches);
+  const [wide, setWide] = useState(() => typeof window === 'undefined' || window.matchMedia('(min-width: 1200px)').matches);
   const listId = useId();
   const listRef = useRef<HTMLDivElement>(null);
 

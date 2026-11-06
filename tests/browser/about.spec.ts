@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test('about opens from the journal without loading 3D and includes contact and supplied work experience', async ({ page }) => {
   const scenes: string[] = [];
   page.on('request', request => { if (/\.glb|WorldScene/.test(request.url())) scenes.push(request.url()); });
-  await page.goto('/journal');
+  await page.goto('/room/journal');
   await page.getByRole('link', { name: '소개', exact: true }).click();
   await expect(page).toHaveURL(/\/about$/);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('안녕하세요,hangyu입니다.');
@@ -25,7 +25,7 @@ test('about opens from the journal without loading 3D and includes contact and s
   await expect(page.locator('.about-reference')).toHaveCount(4);
   await expect(page.locator('link[rel=canonical]')).toHaveAttribute('href', 'https://hangyu.blog/about');
   await expect(page.locator('meta[name=robots]')).toHaveAttribute('content', 'index, follow');
-  await expect(page).toHaveTitle('소개 — hangyu / room');
+  await expect(page).toHaveTitle('소개 — hangyu / apex');
   await page.reload();
   await expect(page.locator('canvas')).toHaveCount(0);
   expect(scenes).toEqual([]);
@@ -35,7 +35,7 @@ test('about opens from the journal without loading 3D and includes contact and s
 });
 
 test('about is reachable from the room during an animation and preserves the room preference', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/room');
   await expect(page.getByRole('button', { name: '책 펼치기', exact: true })).toBeEnabled();
   await page.getByRole('button', { name: '책 펼치기', exact: true }).click();
   await page.getByRole('button', { name: '소개', exact: true }).click();
@@ -45,12 +45,12 @@ test('about is reachable from the room during an animation and preserves the roo
   await page.waitForTimeout(1500);
   await expect(page).toHaveURL(/\/about$/);
   await page.getByRole('link', { name: '방 둘러보기', exact: true }).click();
-  await expect(page).toHaveURL(/\/$/);
+  await expect(page).toHaveURL(/\/room$/);
   await expect(page.locator('main.app')).toBeVisible();
 });
 
 test('about and its expanded menu fit mobile and night theme', async ({ page }) => {
-  await page.goto('/about');
+  await page.goto('/room/about');
   await page.getByRole('button', { name: '밤에 읽기', exact: true }).click();
   for (const width of [1440, 390, 320]) {
     await page.setViewportSize({ width, height: 844 });

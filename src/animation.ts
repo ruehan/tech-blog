@@ -33,6 +33,13 @@ export interface RuntimeClip {
   camera_lens_mm_and_sensor_width_mm?: Samples;
 }
 export interface RoomManifest {
+  piano: {
+    root: string;
+    performance_clip: string;
+    demo_clip: string;
+    press_clips: string[];
+    keys: { midi: number; node: string; note: string }[];
+  };
   interaction_roots: Record<string, string>;
   clips: { name: string; duration: number }[];
   light_setup: { name: string; color_linear: number[]; blender_energy_watts: number; matrix_world_blender: number[][]; size: number }[];

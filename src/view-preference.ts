@@ -1,6 +1,7 @@
 const storageKey = 'blog-view-mode';
 
 export function rememberView(path: string) {
+  path = path.replace(/^\/room(?=\/|$)/, '') || '/';
   const mode = path === '/journal' || path.startsWith('/journal/') ? 'journal'
     : path === '/' || path === '/posts' || path.startsWith('/posts/') || path === '/projects' || path.startsWith('/projects/') ? 'room'
     : null;

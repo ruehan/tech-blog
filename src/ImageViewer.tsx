@@ -29,7 +29,7 @@ export function ImageViewer({ children, routeKey }: { children: ReactNode; route
   useEffect(() => {
     if (!selected) return;
     const element = dialog.current!;
-    const journal = element.closest<HTMLElement>('.journal')!;
+    const journal = element.closest<HTMLElement>('.journal, .apex-site')!;
     const overflow = journal.style.overflow;
     const scrollTop = journal.scrollTop;
     const openedUrl = window.location.href;

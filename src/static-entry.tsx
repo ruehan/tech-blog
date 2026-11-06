@@ -4,11 +4,15 @@ import { posts, projects, formatDate } from './content';
 import { pageMetadata, metadataTags, siteUrl } from './seo';
 import { About } from './About';
 import { ProjectShowcase } from './ProjectShowcase';
+import { ApexPage } from './ApexApp';
+import { apexProjects } from './apex-data';
 
-export { posts, pageMetadata, metadataTags, siteUrl };
-export const staticRoutes = ['/', '/about', '/journal', '/posts', '/projects', '/journal/projects', ...projects.flatMap(project => [`/projects/${project.slug}`, `/journal/projects/${project.slug}`]), ...posts.flatMap(post => [`/journal/posts/${post.slug}`, `/posts/${post.slug}`])];
+export { posts, apexProjects, pageMetadata, metadataTags, siteUrl };
+export const staticRoutes = ['/', '/room', '/room/projects', '/room/journal', '/room/journal/projects', '/room/about', '/about', '/writing', '/races', '/races/n1', '/races/wec', '/races/tcr', '/races/f1', '/journal', '/posts', '/projects', '/journal/projects', ...apexProjects.flatMap(project => [`/projects/${project.slug}`, `/journal/projects/${project.slug}`]), ...projects.map(project => `/room/projects/${project.slug}`), ...posts.flatMap(post => [`/writing/${post.slug}`, `/journal/posts/${post.slug}`, `/posts/${post.slug}`, `/room/journal/posts/${post.slug}`])];
 
 export function renderPage(path: string) {
+  if (!/^\/(room|posts)(\/|$)/.test(path)) return renderToStaticMarkup(<ApexPage route={{ path, search: '' }} go={() => {}}/>);
+  path = path.replace(/^\/room(?=\/|$)/, '') || '/';
   const post = posts.find(item => path === `/journal/posts/${item.slug}` || path === `/posts/${item.slug}`);
   const project = projects.find(item => path === `/projects/${item.slug}` || path === `/journal/projects/${item.slug}`);
   const isProjects = path.endsWith('/projects');

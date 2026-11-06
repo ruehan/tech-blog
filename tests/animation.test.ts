@@ -19,10 +19,10 @@ test('Blender coordinates and camera lens convert to glTF conventions', () => {
 });
 
 test('all room sidecar bindings resolve to the supplied GLB materials', () => {
-  const binary = readFileSync('blog-room-v27/interactive/room.glb');
+  const binary = readFileSync('blog-room-v28/interactive/room-with-piano.glb');
   const gltf = JSON.parse(binary.subarray(20, 20 + binary.readUInt32LE(12)).toString());
-  const runtime = JSON.parse(readFileSync('blog-room-v27/interactive/runtime-tracks.json', 'utf8'));
-  const manifest = JSON.parse(readFileSync('blog-room-v27/interactive/manifest.json', 'utf8'));
+  const runtime = JSON.parse(readFileSync('blog-room-v28/interactive/runtime-tracks.json', 'utf8'));
+  const manifest = JSON.parse(readFileSync('blog-room-v28/interactive/manifest.json', 'utf8'));
   for (const [name, clip] of Object.entries(runtime.clips) as [string, RuntimeClip][]) {
     for (const track of clip.materials) {
       for (const binding of track.bindings) for (const index of binding.gltf_material_indices) assert.ok(gltf.materials[index], `${name}: missing material ${index}`);

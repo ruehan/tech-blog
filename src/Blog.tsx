@@ -6,35 +6,12 @@ import { MarkdownBody } from './MarkdownBody';
 import { ZoomableImage } from './ImageViewer';
 import { SeriesContents } from './SeriesContents';
 import { searchPreview } from './search';
-import { metadataTags, pageMetadata } from './seo';
+import { useReadingPosition } from './reading-runtime';
+export { useReadingPosition, ContentMetadata } from './reading-runtime';
 import { PostSort } from './PostSort';
 import { parsePostSort, postSortSearch, sortPosts } from './post-sort';
 import './blog.css';
 
-const scrollPositions = new Map<string, number>();
-export function useReadingPosition(ref: RefObject<HTMLElement | null>, key: string) {
-  useLayoutEffect(() => {
-    const element = ref.current;
-    if (!element) return;
-    element.scrollTop = scrollPositions.get(key) ?? 0;
-    const heading = element.querySelector<HTMLElement>('h1');
-    if (heading?.getClientRects().length) heading.focus({ preventScroll: true });
-    let hash = window.location.hash.slice(1);
-    try { hash = decodeURIComponent(hash); } catch { /* Keep malformed fragments harmless. */ }
-    if (hash) {
-      const target = document.getElementById(hash);
-      target?.scrollIntoView();
-      if (target && new URLSearchParams(window.location.search).get('q')) {
-        target.tabIndex = -1;
-        target.focus({ preventScroll: true });
-      }
-    }
-    // Capture before a shorter replacement article can clamp the old scroll offset.
-    const save = () => { scrollPositions.set(key, element.scrollTop); };
-    element.addEventListener('scroll', save, { passive: true });
-    return () => { element.removeEventListener('scroll', save); };
-  }, [key, ref]);
-}
 export function Library({ route, go, onClose }: { route: Route; go: Navigate; onClose: () => void }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const scroll = useRef<HTMLDivElement>(null);
@@ -180,27 +157,4 @@ export function ReadingPage({ route, go, onReturn }: { route: Route; go: Navigat
       {project ? <ProjectArticle project={project} go={go}/> : <section className="content-empty not-found"><span className="content-kicker">404 / NOT FOUND</span><h1 tabIndex={-1}>이 페이지는 아직 없어요.</h1><p>주소를 확인하거나 책장에서 다른 글을 찾아보세요.</p><RouteLink className="content-primary" to="/posts" go={go}>글 목록으로 <Icon name="arrow" size={18}/></RouteLink></section>}
     </main><footer className="reading-footer">hangyu / room <span>만들고 배우는 과정을 기록합니다.</span></footer>
   </div>;
-}
-
-export function ContentMetadata({ route }: { route: Route }) {
-  useEffect(() => {
-    const metadata = pageMetadata(route.path, posts);
-    document.title = metadata.title;
-    document.head.querySelectorAll('[data-page-meta],meta[name="description"]').forEach(element => element.remove());
-    for (const [kind, name, content] of metadataTags(metadata)) {
-      const element = document.createElement('meta');
-      element.setAttribute(kind, name); element.content = content; element.dataset.pageMeta = '';
-      document.head.append(element);
-    }
-    const canonical = document.createElement('link');
-    canonical.rel = 'canonical'; canonical.href = metadata.canonical; canonical.dataset.pageMeta = '';
-    document.head.append(canonical);
-    if (metadata.structuredData) {
-      const data = document.createElement('script');
-      data.type = 'application/ld+json'; data.dataset.pageMeta = '';
-      data.textContent = JSON.stringify(metadata.structuredData);
-      document.head.append(data);
-    }
-  }, [route.path]);
-  return null;
 }

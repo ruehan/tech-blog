@@ -1,10 +1,72 @@
-# Hangyu’s room
+# hangyu / apex
+
+기존 글과 기능을 유지하면서 `apex-log-2026-11-06` 디자인을 적용한 개인 블로그입니다.
+리디자인 작업 브랜치는 `feat/apex-log-redesign`입니다.
+
+## 새 화면과 기존 주소
+
+| 주소 | 내용 |
+| --- | --- |
+| `/` | APEX 원본 서킷, 차량·출발 신호 애니메이션, 메뉴와 테마 |
+| `/writing` | 기존 Markdown 글, 본문 검색·태그·정렬 |
+| `/writing/:slug` | 글 본문, 시리즈·목차·이미지 확대·읽기 설정·링크/코드 복사 |
+| `/projects` | 기존 프로젝트 데이터와 소개에 등록된 프로젝트 |
+| `/projects/:slug` | 프로젝트 상세와 연결된 제작기 |
+| `/races` | 원본 대표 사진·레이스 기록·종목/관람 방식 필터·사진 갤러리 |
+| `/about` | 기존 경력·소개·연구 사례 |
+| `/room` | 기존 3D 방, 컴퓨터, 서킷, 음악·피아노 |
+| `/room/journal` | 책상 소품과 기존 일반 블로그 화면 |
+| `/posts`, `/posts/:slug` | 기존 책 형태 읽기 화면 |
+
+이전에 공유한 `/journal`, `/journal/posts/:slug`, `/journal/projects/:slug` 주소도
+계속 열립니다. 새 디자인을 표시하고 글의 canonical 주소는 `/writing/:slug`로 통일합니다.
+기존 화면의 내부 주소는 `/room/journal`, `/room/about`, `/room/projects` 아래에서 유지합니다.
+홈은 저장된 예전 보기 모드와 관계없이 APEX 랜딩을 표시합니다.
+
+## 콘텐츠를 이어서 관리하기
+
+- **글:** `content/posts/*.md`가 계속 원본입니다. 파일과 slug를 바꾸지 않았습니다.
+  `npm run post -- my-post "글 제목"`으로 초안을 만들고, 이미지 파일은 기존처럼 `public/images/`에 둡니다.
+  기존 본문·시리즈·발행일·초안 처리와 빌드 검증을 그대로 사용합니다.
+- **프로젝트:** `content/projects.json`에 등록합니다. 현재 비어 있던 목록은 `src/profile.ts`의
+  실제 프로젝트 4개로 채웠습니다. `src/apex-data.ts`가 이를 화면 데이터로 연결하며,
+  같은 slug 또는 title로 프로젝트를 등록하면 JSON 기록을 우선 사용합니다.
+  현재 slug는 `room-experience`, `bytepet`, `ddang`, `rd-workos`입니다.
+  JSON의 `cover`, `previews`, `updates`, `sections`, `series`, `action`을 사용하면
+  이미지·진행 기록·관련 글을 추가할 수 있습니다. BytePet 제작기 3편은 기존 series로 연결됩니다.
+- **소개:** `src/profile.ts`의 경력·연구 사례·연락처를 수정합니다.
+- **레이스:** 원본 양식과 레이스 4개 기록·참고 사진·출처를 보존합니다. 예시 표시는 그대로 유지합니다.
+  `design/apex/races/`의 원본 페이지와 `design/apex/race-records.json`의 검색·갤러리 정보를 사용합니다.
+  실제 후기를 추가할 때도 대표 사진, 종목/관람 방식 필터와 글/사진 보기 양식 안에 등록합니다.
+- **음악:** 기존 `content/piano-tracks.json`과 `public/music/piano/`를 그대로 사용합니다.
+
+## 실행과 확인
+
+```sh
+npm run dev
+npm test
+npm run test:static
+npm run test:browser
+```
+
+개발 서버는 터미널에 표시된 주소로 접속합니다. `npm run build`는 정적 HTML과
+기존 주소, sitemap, 404 페이지를 함께 생성합니다. `SITE_URL` 설정도 유지합니다.
+APEX 랜딩은 `design/apex/home.html`, 원본 스타일·애니메이션·폰트는 `public/apex/`,
+새 화면과 콘텐츠 연결은 `src/ApexApp.tsx`, 글 상세는 `src/ApexArticle.tsx`, 소개는
+`src/ApexAbout.tsx`에서 관리합니다. 페이지 구조와 스타일은 APEX 원본 양식을 유지하고,
+`src/apex.css`에는 기존 콘텐츠·조작 기능을 연결하는 최소 규칙만 둡니다.
+서킷 랜딩과 글 화면은 기존 3D GLB를 로드하지 않습니다.
+Sites의 원본 hosting project ID는 가져오지 않았습니다.
+
+## 기존 3D 방 구현
 
 React 19 + React Three Fiber 9 + Drei + TypeScript + Vite로 만든 3D 공간 탐색 웹입니다.
 
 ## 구현 범위
 
 - 메인 방: 오프닝, 책·베이스 클릭 연출, 개별 호버, 모니터·시뮬레이터 포털 접근, 조명 전환.
+- v28 피아노: 본체·건반·안내 버튼·왼쪽 메뉴에서 피아노로 접근하고 짧은 건반 모션을 보여준 뒤, 원본 `Piano_Performance`의 4.5초 시점에 음악 창을 엽니다. 카메라는 확대된 위치에 머물고, MIDI를 재생하면 88건반과 피아노 음원이 같은 시간 기준으로 움직입니다. 닫기·Esc는 원본의 10.75초 복귀 구간으로 이어집니다. 원본 연출의 건반 트랙은 MIDI 재생 전에 해제합니다. 동작 줄이기에서는 접근·복귀를 생략하고 음악 선택은 사용할 수 있습니다.
+- 에셋 준비: `blog-room-v28/interactive`의 GLB·manifest·runtime-tracks를 한 세트로 사용합니다. `npm run assets`가 기존 `/assets/interactive/room.glb` 경로로 최적화하여 배포합니다. v28에서 수정된 베이스 카메라 경로와 렌즈도 함께 반영하며, 데스크톱·서킷·차량은 `blog-room-v27/worlds`를 유지합니다. `Piano_Demo`는 보존하지만 자동 재생하지 않아 Performance·개별 건반 클립과 중복되지 않습니다.
 - 컴퓨터: 데스크톱 애니메이션, Projects 폴더 열기·닫기.
 - 서킷: 운전석 1인칭 시점으로 진입하며, 서킷 전체·차량 근접 시점으로 전환 가능. 시점 초기화는 운전석으로 복귀.
 - 공통: 왼쪽의 작은 아이콘 메뉴에 방·글·프로젝트·컴퓨터·서킷 바로가기, 공간별 조작, 화면 설정을 모았습니다. 글·프로젝트는 바로 열고, 3D 오브젝트는 기존 클릭 연출을 재생합니다. 일시정지, 시점 초기화, 로딩·오류 상태, 모바일·가로 화면을 지원합니다. 운전석 외 시점에서는 드래그 회전과 확대 지원.
@@ -13,3 +75,23 @@ React 19 + React Three Fiber 9 + Drei + TypeScript + Vite로 만든 3D 공간 �
 - 프로젝트: 컴퓨터의 DesktopFolderOpen 클립이 끝나면 목록을 표시합니다. 열리는 도중 닫으면 목록을 열지 않습니다. 등록된 프로젝트가 없으면 빈 목록을 표시합니다.
 - 책·베이스·모니터·심레이싱의 클릭 연출은 현재 카메라 위치·회전·배율과 호버 자세에서 원본 첫 프레임까지 0.65초 동안 부드럽게 정렬한 뒤 시작합니다. 방으로 복귀하는 책·음악 연출과 최초 진입 연출도 마지막 프레임에서 기본 방의 카메라·자세·조명으로 0.65초 동안 전환한 뒤 조작을 다시 활성화합니다. 전환 중에도 일시정지·건너뛰기·Esc 취소가 가능합니다.
 - 책의 진입 연출은 건너뛰어 바로 읽거나 Esc로 취소할 수 있습니다. 동작 줄이기 또는 일시정지 상태에서도 콘텐츠에 바로 접근할 수 있습니다.
+
+## 피아노 곡 관리
+
+`public/music/piano/`에 `.mid` 또는 `.midi`를 넣고 `content/piano-tracks.json`에 등록합니다. 배열 순서대로 음악 창에 표시됩니다.
+
+```json
+{
+  "id": "my-song",
+  "title": "곡 제목",
+  "artist": "작곡·연주 정보",
+  "file": "/music/piano/my-song.mid",
+  "tracks": [0, 1]
+}
+```
+
+`tracks`는 선택 사항이며, 지정하면 0부터 시작하는 MIDI 트랙 번호를 선택합니다. 생략하면 타악기를 제외한 모든 트랙을 피아노로 연주합니다. 템포 변화·화음·벨로시티·서스테인 페달을 반영하고, 88건반(A0~C8) 밖의 음표는 제외합니다. 형식 0·1과 박자 기준 시간(PPQ)을 지원하며 최대 5MB/30,000음표까지 받습니다. `npm run assets`와 빌드에서 목록·경로·파일을 검증합니다.
+
+기본 두 곡은 동작 확인용으로 만든 짧은 예제 MIDI입니다. 원하는 곡으로 교체하거나 목록을 비워둘 수 있습니다. 음악은 재생 버튼을 눌러야 시작되며, 곡 변경·창 닫기·페이지 이동·백그라운드 전환 시 멈춥니다. 일시정지 후 재생하면 멈춘 위치에서 이어집니다.
+
+피아노 샘플은 [tonejs-instruments / Nicholaus Brosowsky](https://github.com/nbrosowsky/tonejs-instruments)의 CC BY 3.0 음원 15개를 원본 그대로 보관한 것입니다. 가까운 음을 피치 변환하여 사용하며, 출처는 `public/audio/piano/ATTRIBUTION.txt`와 음악 창에서 확인할 수 있습니다. MIDI 파싱은 [@tonejs/midi](https://github.com/Tonejs/Midi)를 사용합니다. 곡과 소리는 선택·재생 시에만 로드합니다.

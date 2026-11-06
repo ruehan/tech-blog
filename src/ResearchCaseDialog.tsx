@@ -13,7 +13,7 @@ export function ResearchCaseDialog({ selected, onClose }: { selected: ResearchCa
 
   useEffect(() => {
     const element = dialog.current!;
-    const journal = element.closest<HTMLElement>('.journal');
+    const journal = element.closest<HTMLElement>('.journal, .apex-site');
     const overflow = journal?.style.overflow ?? '';
     const scrollTop = journal?.scrollTop ?? 0;
     const openedUrl = window.location.href;

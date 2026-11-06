@@ -9,7 +9,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('research cases open inside a modal and restore reading position and focus on close', async ({ page }) => {
-  await page.goto('/about');
+  await page.goto('/room/about');
   const links = page.locator('.about-reference');
   await expect(links).toHaveCount(4);
   for (const link of await links.all()) {
@@ -32,7 +32,7 @@ test('research cases open inside a modal and restore reading position and focus 
 });
 
 test('Escape, backdrop and browser back close the modal without trapping navigation', async ({ page }) => {
-  await page.goto('/journal');
+  await page.goto('/room/journal');
   await page.getByRole('link', { name: '소개', exact: true }).click();
   const link = page.locator('.about-reference').first();
   await link.click();
@@ -58,7 +58,7 @@ test('Escape, backdrop and browser back close the modal without trapping navigat
 
 test('case viewer fits mobile, keeps the close control visible and offers the source in a new tab', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 640 });
-  await page.goto('/about');
+  await page.goto('/room/about');
   await page.getByRole('button', { name: '밤에 읽기', exact: true }).click();
   await page.locator('.about-reference').first().click();
   const dialog = page.getByRole('dialog');

@@ -4,7 +4,7 @@ import { resolve } from 'node:path';
 
 test('both reading modes render images, tables, highlighted code and copy the original code', async ({ page, context }) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
-  for (const prefix of ['/posts', '/journal/posts']) {
+  for (const prefix of ['/posts', '/room/journal/posts']) {
     await page.goto(`${prefix}/building-a-room-on-the-web`);
     const article = page.locator('article.article');
     await expect(article.locator('.article-heading .draft-label')).toHaveCount(0);
@@ -22,7 +22,7 @@ test('both reading modes render images, tables, highlighted code and copy the or
     await page.screenshot({ path: `.local/markdown-${prefix.includes('journal') ? 'journal' : 'book'}.png` });
   }
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/journal/posts/building-a-room-on-the-web');
+  await page.goto('/room/journal/posts/building-a-room-on-the-web');
   await page.locator('.article-table').scrollIntoViewIfNeeded();
   expect(await page.locator('.journal').evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true);
   await page.evaluate(() => { Object.defineProperty(navigator.clipboard, 'writeText', { configurable: true, value: async () => { throw new Error('denied'); } }); });
@@ -37,7 +37,7 @@ test('adding, editing and deleting one Markdown file updates both views without 
   const filename = resolve(`tests/fixtures/content/posts/${slug}.md`);
   const source = (body: string) => `---\ntitle: "작성 흐름 확인"\ndescription: "파일 기반 글 작성"\ndate: 2026-10-22\ntags: [작성흐름]\ndraft: true\n---\n\n## 자동 목차\n\n${body}\n`;
   let created = false;
-  await page.goto('/journal');
+  await page.goto('/room/journal');
   try {
     await writeFile(filename, source('처음 작성한 본문'), { flag: 'wx' });
     created = true;
@@ -53,7 +53,7 @@ test('adding, editing and deleting one Markdown file updates both views without 
     await expect(page.locator('.markdown-body')).toContainText('수정한 본문');
     await page.goto(`/posts/${slug}`);
     await expect(page.locator('.markdown-body')).toContainText('수정한 본문');
-    await page.goto('/journal?q=xyzneedle');
+    await page.goto('/room/journal?q=xyzneedle');
     await expect(page.locator('.journal-entry')).toHaveCount(1);
     await page.locator('.journal-entry').click();
     await unlink(filename);

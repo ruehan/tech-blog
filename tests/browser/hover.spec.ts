@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test('moving between monitor meshes keeps one continuous hover and exits smoothly', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/room');
   await expect(page.getByRole('button', { name: '조명 끄기', exact: true })).toBeEnabled();
   await page.getByRole('button', { name: '안내 숨기기', exact: true }).click();
   const points = await page.evaluate(async () => (await import('/tests/browser/room-probe.ts')).roomMeshPoints('monitor'));
@@ -38,7 +38,7 @@ test('moving between monitor meshes keeps one continuous hover and exits smoothl
 });
 
 test('all four label hovers enter once, hold their pose, and survive quick leave/re-entry', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/room');
   await expect(page.getByRole('button', { name: '조명 끄기', exact: true })).toBeEnabled();
   for (const [label, key, expected] of [
     ['책 펼치기', 'book', 0.23], ['컴퓨터 속으로', 'monitor', 1], ['서킷으로', 'simulator', 1], ['베이스 연주', 'music', 0],

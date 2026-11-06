@@ -4,6 +4,8 @@ import { relative, isAbsolute } from 'node:path';
 import { readFile } from 'node:fs/promises';
 import { loadPosts } from './scripts/content.mjs';
 import { resolveSiteUrl } from './site.config.mjs';
+import { apexHome } from './scripts/apex-home.mjs';
+import { apexRace, raceRoutes } from './scripts/apex-races.mjs';
 
 const moduleId = 'virtual:blog-posts';
 const resolvedId = `\0${moduleId}`;
@@ -15,6 +17,7 @@ export default defineConfig(({ command, mode }) => {
   const directory = fileURLToPath(new URL(`${root}content/posts`, import.meta.url));
   const publicDirectory = fileURLToPath(new URL(`${root}public`, import.meta.url));
   return {
+  build: { manifest: true },
   resolve: { alias: fixtures ? ['projects', 'now'].map(name => ({
     find: `../content/${name}.json`,
     replacement: fileURLToPath(new URL(`./tests/fixtures/content/${name}.json`, import.meta.url)),
@@ -29,6 +32,17 @@ export default defineConfig(({ command, mode }) => {
       return `export default ${JSON.stringify(await loadPosts(directory, { includeDrafts: command === 'serve' && mode !== 'production', publicDirectory }))};`;
     },
     configureServer(server) {
+      server.middlewares.use(async (request, response, next) => {
+        const path = request.url?.split('?')[0].replace(/\/$/, '') || '/';
+        if (path !== '/' && !raceRoutes.includes(path)) return next();
+        try {
+          const origin = resolveSiteUrl(process.env.SITE_URL || loadEnv(mode, process.cwd(), '').SITE_URL);
+          response.setHeader('Content-Type', 'text/html; charset=utf-8');
+          const pagePosts = await loadPosts(directory, { includeDrafts: mode !== 'production', publicDirectory });
+          const { apexProjects: pageProjects } = await server.ssrLoadModule('/src/apex-data.ts');
+          response.end(path === '/' ? await apexHome(origin, pagePosts, pageProjects) : await apexRace(path, { origin, posts: pagePosts, projects: pageProjects }));
+        } catch (error) { next(error); }
+      });
       if (fixtures) server.middlewares.use(async (request, response, next) => {
         const path = request.url?.split('?')[0];
         if (!['/images/posts/room-blog/room.png', '/images/posts/room-blog/journal.png'].includes(path)) return next();

@@ -2,26 +2,32 @@ import { mkdir, copyFile, readFile, writeFile, access, rename } from 'node:fs/pr
 import { dirname } from 'node:path';
 import { createHash } from 'node:crypto';
 import { optimizeModel } from './optimize-model.mjs';
+import { checkPianoCatalog } from './check-piano.mjs';
+
+await checkPianoCatalog();
 
 // Keep the supplied Blender export untouched; publish only runtime assets.
 const files = [
-  'interactive/room.glb', 'interactive/manifest.json', 'interactive/runtime-tracks.json',
-  'interactive/room-glb-verified.png', 'worlds/computer-desktop.glb',
-  'worlds/apex-circuit.glb', 'worlds/formula-car-animated.glb',
+  ['blog-room-v28/interactive/room-with-piano.glb', 'interactive/room.glb'],
+  ['blog-room-v28/interactive/manifest.json', 'interactive/manifest.json'],
+  ['blog-room-v28/interactive/runtime-tracks.json', 'interactive/runtime-tracks.json'],
+  ...['interactive/room-glb-verified.png', 'worlds/computer-desktop.glb',
+    'worlds/apex-circuit.glb', 'worlds/formula-car-animated.glb']
+    .map(file => [`blog-room-v27/${file}`, file]),
 ];
 const cachePath = 'public/assets/.prepared.json';
 let cache = {};
 try { cache = JSON.parse(await readFile(cachePath, 'utf8')); } catch { /* First preparation. */ }
 const pipeline = await Promise.all(['scripts/prepare-assets.mjs', 'scripts/optimize-model.mjs', 'package-lock.json'].map(file => readFile(file)));
 const nextCache = {};
-for (const file of files) {
+for (const [sourcePath, file] of files) {
   const target = `public/assets/${file}`;
   await mkdir(dirname(target), { recursive: true });
   if (!file.endsWith('.glb')) {
-    await copyFile(`blog-room-v27/${file}`, target);
+    await copyFile(sourcePath, target);
     continue;
   }
-  const source = await readFile(`blog-room-v27/${file}`);
+  const source = await readFile(sourcePath);
   const hash = createHash('sha256').update(source);
   for (const part of pipeline) hash.update(part);
   const key = hash.digest('hex');

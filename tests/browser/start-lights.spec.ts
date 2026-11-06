@@ -5,7 +5,7 @@ async function setup(page: Page) {
   await page.addInitScript(() => { Math.random = () => 0.5; });
   await page.clock.install({ time });
   await page.clock.pauseAt(new Date(time.getTime() + 1000));
-  await page.goto('/journal');
+  await page.goto('/room/journal');
 }
 
 async function lightsOut(page: Page) {
@@ -121,7 +121,7 @@ test('a blocked storage and reduced-motion preference still allow a complete rou
 test('the desk device stays beside or below the posts and within narrow screens', async ({ page }) => {
   for (const width of [1440, 1100, 844, 390, 320]) {
     await page.setViewportSize({ width, height: 900 });
-    await page.goto('/journal');
+    await page.goto('/room/journal');
     const game = page.locator('.start-lights');
     await game.scrollIntoViewIfNeeded();
     const bounds = (await game.boundingBox())!;

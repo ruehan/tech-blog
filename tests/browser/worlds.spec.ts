@@ -9,7 +9,7 @@ test('opening starts at its first pose and settles continuously into the closer 
     await assetGate;
     await route.continue();
   });
-  await page.goto('/');
+  await page.goto('/room');
   await page.evaluate(async () => {
     const probe = await import('/tests/browser/room-probe.ts');
     probe.startRoomCapture();
@@ -47,7 +47,7 @@ test('opening starts at its first pose and settles continuously into the closer 
 test('room lighting, animated portal, folder, circuit closeup and return', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.goto('/');
+  await page.goto('/room');
   await expect(page.locator('main')).toHaveAttribute('data-ready', 'true');
   await expect(page.getByRole('button', { name: '조명 끄기', exact: true })).toBeEnabled({ timeout: 20_000 });
   await page.screenshot({ path: '.local/desktop-room.png' });
@@ -83,7 +83,7 @@ test('room lighting, animated portal, folder, circuit closeup and return', async
 test('mobile and reduced motion navigation stay available', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('/');
+  await page.goto('/room');
   await expect(page.locator('main')).toHaveAttribute('data-ready', 'true');
   await expect(page.getByRole('button', { name: '애니메이션 재생', exact: true })).toBeVisible();
   await page.screenshot({ path: '.local/mobile-room.png' });
@@ -104,7 +104,7 @@ test('mobile and reduced motion navigation stay available', async ({ page }) => 
 test('sim racing portal enters the authored first-person cockpit and reset returns to it', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.goto('/');
+  await page.goto('/room');
   await expect(page.getByRole('button', { name: '조명 끄기', exact: true })).toBeEnabled();
   await page.getByRole('button', { name: '서킷으로', exact: true }).click();
   await expect(page.locator('main')).toHaveAttribute('data-world', 'circuit');
@@ -135,7 +135,7 @@ test('sim racing portal enters the authored first-person cockpit and reset retur
 
 test('failed world loads show recovery and allow returning to room', async ({ page }) => {
   await page.route('**/worlds/computer-desktop.glb', route => route.abort());
-  await page.goto('/');
+  await page.goto('/room');
   await expect(page.locator('main')).toHaveAttribute('data-ready', 'true');
   await page.getByRole('button', { name: '컴퓨터 02' }).click();
   await expect(page.getByRole('alert')).toContainText('공간을 불러오지 못했어요');
