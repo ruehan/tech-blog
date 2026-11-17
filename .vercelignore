@@ -1,0 +1,12 @@
+# CLI deployments upload the working tree; keep secrets and local artefacts out.
+.env*
+!.env.example
+.local
+.vercel
+node_modules
+dist
+test-results
+playwright-report
+.playwright-mcp
+Blog Room v28 Update
+apex-log-2026-11-06
