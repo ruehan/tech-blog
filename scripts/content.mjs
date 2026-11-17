@@ -48,6 +48,12 @@ export function parsePost(source, file = 'post.md') {
 
 export function compilePost(source, file = 'post.md') {
   const { metadata, markdown } = parsePost(source, file);
+  const compiled = compileMarkdown(markdown, file);
+  return { ...metadata, minutes: metadata.minutes ?? Math.max(1, Math.ceil(compiled.searchText.replace(/\s/g, '').length / 500)), ...compiled };
+}
+
+/** Markdown body → sanitized node tree. Shared by posts and gallery album bodies. */
+export function compileMarkdown(markdown, file = 'post.md') {
   const sections = [];
   const codeBlocks = [];
   const ids = new Set(['journal-main', 'journal-search', 'entries-heading', 'library-title']);
@@ -134,7 +140,7 @@ export function compilePost(source, file = 'post.md') {
     searchBlocks.push({ id, text });
   }
   const searchText = searchBlocks.map(block => block.text).join(' ');
-  return { ...metadata, minutes: metadata.minutes ?? Math.max(1, Math.ceil(searchText.replace(/\s/g, '').length / 500)), sections, body, searchText, searchBlocks };
+  return { sections, body, searchText, searchBlocks };
 }
 
 export async function loadPosts(directory, { includeDrafts = false, publicDirectory } = {}) {

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { posts } from './content';
 import { apexProjects } from './apex-data';
-import races from '../design/apex/race-records.json';
+import { useGallery, type GalleryAlbum } from './gallery/api';
 import { Icon } from './Icons';
 import { RouteLink, type Navigate } from './navigation';
 
@@ -9,7 +9,12 @@ export function ApexSearch({ go, onClose }: { go: Navigate; onClose: () => void 
   const dialog = useRef<HTMLDialogElement>(null);
   const input = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState('');
-  const records = [...posts.map(post => ({ title: post.title, description: post.description, category: post.tags[0], tags: post.tags, url: `/writing/${post.slug}` })), ...apexProjects.map(project => ({ title: project.title, description: project.description, category: '프로젝트', tags: project.tags, url: `/projects/${project.slug}` })), ...races];
+  // Albums come from the gallery API; search still works for posts and projects if it is unavailable.
+  const races = useGallery<{ albums: GalleryAlbum[] }>('albums?category=race').data?.albums ?? [];
+  const general = useGallery<{ albums: GalleryAlbum[] }>('albums?category=general').data?.albums ?? [];
+  const albums = [...races.map(album => ({ title: album.title, description: album.description, category: '레이스 기록', tags: album.tags, url: `/races/${album.slug}` })),
+    ...general.map(album => ({ title: album.title, description: album.description, category: '사진', tags: album.tags, url: `/photos/general/${album.slug}` }))];
+  const records = [...posts.map(post => ({ title: post.title, description: post.description, category: post.tags[0], tags: post.tags, url: `/writing/${post.slug}` })), ...apexProjects.map(project => ({ title: project.title, description: project.description, category: '프로젝트', tags: project.tags, url: `/projects/${project.slug}` })), ...albums];
   const results = records.filter(record => [record.title, record.description, record.category, ...record.tags].join(' ').toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()));
   useEffect(() => {
     const previous = document.activeElement as HTMLElement | null;

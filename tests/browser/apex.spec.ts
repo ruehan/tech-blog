@@ -99,28 +99,33 @@ test('article and about pages retain the reference template structure', async ({
   await expect(page.getByRole('heading', { name: '직무와 경력' })).toBeVisible();
 });
 
-test('original race filters, photos, detail pages and credits are preserved', async ({ page }) => {
+test('race records are albums: album list first, then a mosaic of photos', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.goto('/races/');
-  await expect(page.locator('.race-lead')).toBeVisible();
-  await expect(page.locator('#race-grid .race-card')).toHaveCount(4);
-  await page.getByRole('button', { name: 'TCR', exact: true }).click();
-  await expect(page.locator('#race-grid .race-card:visible')).toHaveCount(1);
-  await page.getByRole('button', { name: '사진으로 보기', exact: true }).click();
-  await expect(page.locator('#photo-wall .photo-tile:visible')).toHaveCount(1);
-  await page.locator('#photo-wall .photo-tile:visible button').click();
+  await expect(page.locator('.album-tile')).toHaveCount(4);
+  await expect(page.locator('.filters, .view-switch, .race-lead, #viewing-filter')).toHaveCount(0);
+  await page.locator('.album-tile', { hasText: 'TCR을 좋아하는 이유' }).click();
+  await expect(page).toHaveURL(/\/races\/tcr$/);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('TCR을 좋아하는 이유');
+  await expect(page).toHaveTitle(/TCR을 좋아하는 이유/);
+  await expect(page.locator('.mosaic-photo')).toHaveCount(1);
+  await expect(page.locator('.prose, .article-toc')).toHaveCount(0);
+  await page.locator('.mosaic-photo').click();
   await expect(page.getByRole('dialog', { name: '사진 확대 보기' })).toBeVisible();
-  await expect(page.locator('#photo-image')).toHaveAttribute('src', '/apex/assets/tcr.jpg');
+  await expect(page.locator('#photo-dialog .lightbox-frame img')).toHaveAttribute('src', '/apex/assets/tcr.jpg');
+  await expect(page.locator('#photo-source')).toHaveAttribute('href', /hyundai\.com/);
   await page.getByRole('button', { name: '사진 닫기' }).click();
-  await page.getByRole('button', { name: '글로 보기', exact: true }).click();
-  await page.locator('#race-grid .race-card:visible').click();
-  await expect(page).toHaveURL(/\/races\/tcr\/$/);
-  await expect(page.locator('.reading-layout .prose')).toContainText('샘플');
-  await expect(page.getByRole('navigation', { name: '글 목차' })).toBeVisible();
-  await page.getByRole('button', { name: '사진 출처', exact: true }).click();
-  await expect(page.getByRole('dialog', { name: '사진 출처' })).toBeVisible();
+  await page.goto('/races/no-such-race');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('찾을 수 없습니다');
   expect(errors).toEqual([]);
+});
+
+test('photos home lists general and space only, and space is empty for now', async ({ page }) => {
+  await page.goto('/photos');
+  await expect(page.locator('.gallery-sections .album-tile-text b')).toHaveText(['일반', '우주']);
+  await page.goto('/photos/space');
+  await expect(page.getByText('아직 올린 사진이 없어요.')).toBeVisible();
 });
 
 test('reference search dialog includes real articles and projects on the landing and inside pages', async ({ page }) => {

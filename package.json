@@ -12,17 +12,22 @@
     "test": "node --experimental-strip-types --test tests/*.test.ts",
     "test:browser": "playwright test",
     "test:static": "npm run build && node --test tests/static/*.test.mjs",
-    "post": "node scripts/new-post.mjs"
+    "post": "node scripts/new-post.mjs",
+    "db:migrate": "node scripts/db-migrate.mjs",
+    "db:seed": "node scripts/db-migrate.mjs --seed"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.2.1",
     "@react-three/drei": "^10.0.0",
     "@react-three/fiber": "^9.8.2",
     "@tonejs/midi": "^2.0.28",
+    "aws4fetch": "^1.0.20",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "three": "^0.186.1"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.16",
     "@gltf-transform/core": "^4.5.1",
     "@gltf-transform/extensions": "^4.5.1",
     "@gltf-transform/functions": "^4.5.1",

@@ -8,7 +8,7 @@ export function ApexAbout({ go }: { go: Navigate }) {
   return <div className="wrap about-page">
     <header className="page-heading"><h1 tabIndex={-1}>소개</h1></header>
     <div className="profile-layout">
-      <div className="profile-intro"><h2>코드를 쓰는 시간,<br/>레이스를 보는 시간.</h2><p>{profile.role},<br/>{profile.name}입니다.</p><div className="profile-series"><a href="/races/?series=F1">F1</a><a href="/races/?series=WEC">WEC</a><a href="/races/?series=TCR">TCR</a><a href="/races/?series=N1">현대 N1</a></div><p className="profile-contact"><a className="text-link" href={profile.github}>GitHub</a> · <a className="text-link" href={`mailto:${profile.email}`}>이메일</a> · <a className="text-link" href={profile.portfolio}>포트폴리오</a></p></div>
+      <div className="profile-intro"><h2>코드를 쓰는 시간,<br/>레이스를 보는 시간.</h2><p>{profile.role},<br/>{profile.name}입니다.</p><div className="profile-series"><a href="/races/">F1</a><a href="/races/">WEC</a><a href="/races/">TCR</a><a href="/races/">현대 N1</a></div><p className="profile-contact"><a className="text-link" href={profile.github}>GitHub</a> · <a className="text-link" href={`mailto:${profile.email}`}>이메일</a> · <a className="text-link" href={profile.portfolio}>포트폴리오</a></p></div>
       <div className="profile-story">
         <section><h2>여기에 남기는 것</h2><p>{profile.introduction[2]}</p><p>기술 이야기는 읽기 편하게, 레이스 이야기는 사진과 함께 남기려 합니다.</p></section>
         <section><h2>개발 이야기</h2><p>{profile.introduction[0]}</p><p>{profile.introduction[1]}</p><RouteLink className="text-link" to="/writing" go={go}>개발 기록 읽기</RouteLink></section>

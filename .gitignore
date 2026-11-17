@@ -6,3 +6,7 @@ public/assets/
 .local/
 test-results/
 playwright-report/
+.env*
+!.env.example
+.vercel/
+.playwright-mcp/

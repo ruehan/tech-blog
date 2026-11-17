@@ -6,6 +6,7 @@ import { resolve, join, extname, relative } from 'node:path';
 import { parseDocument, DomUtils } from 'htmlparser2';
 import { chromium, expect } from '@playwright/test';
 import { loadPosts } from '../../scripts/content.mjs';
+import { developmentApi } from '../../server/runtime.mjs';
 
 const posts = await loadPosts('content/posts', { publicDirectory: 'public' });
 const output = resolve('dist');
@@ -29,6 +30,12 @@ test('old and new article URLs publish full content and canonical metadata witho
     }
   }
   assert.ok(!sitemap.includes('/journal'));
+  for (const path of ['/races', '/photos', '/photos/general', '/photos/space']) assert.ok(sitemap.includes(`<loc>https://hangyu.blog${path}</loc>`));
+  assert.ok(!sitemap.includes('_album') && !sitemap.includes('/admin'));
+  const shell = parseDocument(await htmlFor('/races/_album'));
+  assert.equal(find(shell, 'link', 'rel', 'canonical').length, 0);
+  assert.equal(find(shell, 'meta', 'name', 'robots')[0].attribs.content, 'index, follow');
+  assert.equal(find(parseDocument(await htmlFor('/admin')), 'meta', 'name', 'robots')[0].attribs.content, 'noindex, follow');
   assert.ok(!sitemap.includes('<loc>https://hangyu.blog/room'));
   for (const path of ['/writing/rendering', '/writing/tokens', '/projects/lap-compare']) {
     await assert.rejects(stat(join(output, path, 'index.html')), { code: 'ENOENT' });
@@ -42,9 +49,26 @@ test('old and new article URLs publish full content and canonical metadata witho
 });
 
 test('production preserves reading, discovery, mobile layout, no-JS content and original book mode', { timeout: 180000 }, async () => {
+  // The gallery API runs in-process (in-memory PGlite) and album paths follow vercel.json's rewrites.
+  const gallery = await developmentApi({}, { projectRoot: process.cwd(), memory: true });
+  const rewrites = JSON.parse(await readFile('vercel.json', 'utf8')).rewrites.filter(rule => !rule.source.startsWith('/api'));
   const server = createServer(async (request, response) => {
     try {
-      let file = resolve(output, `.${decodeURIComponent(new URL(request.url, 'http://localhost').pathname)}`);
+      const url = new URL(request.url, 'http://localhost');
+      if (url.pathname.startsWith('/api/')) {
+        const result = await gallery.handle(new Request(`http://${request.headers.host}${request.url}`, { method: request.method, headers: request.headers }));
+        response.statusCode = result.status;
+        result.headers.forEach((value, key) => response.setHeader(key, value));
+        response.end(Buffer.from(await result.arrayBuffer()));
+        return;
+      }
+      let pathname = decodeURIComponent(url.pathname).replace(/\/$/, '') || '/';
+      const exists = await stat(resolve(output, `.${pathname}`)).then(() => true, () => false);
+      for (const rule of rewrites) {
+        const pattern = new RegExp(`^${rule.source.replace(/:\w+\*/g, '.*').replace(/:\w+/g, '[^/]+')}$`);
+        if (!exists && pattern.test(pathname)) { pathname = rule.destination; break; }
+      }
+      let file = resolve(output, `.${pathname}`);
       if (relative(output, file).startsWith('..')) throw new Error('Invalid path');
       try { if ((await stat(file)).isDirectory()) file = join(file, 'index.html'); }
       catch { file = join(output, '404.html'); response.statusCode = 404; }
@@ -112,8 +136,12 @@ test('production preserves reading, discovery, mobile layout, no-JS content and 
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('BytePet');
     assert.equal(await page.locator('.related a').count(), 3);
     await page.goto(base + '/races');
-    await expect(page.locator('.race-lead')).toBeVisible();
-    await expect(page.locator('#race-grid .race-card')).toHaveCount(4);
+    await expect(page.locator('.album-tile')).toHaveCount(4);
+    await page.goto(base + '/races/tcr');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText('TCR을 좋아하는 이유');
+    assert.equal(await page.locator('link[rel=canonical]').getAttribute('href'), 'https://hangyu.blog/races/tcr');
+    await page.goto(base + '/photos/space');
+    await expect(page.getByText('아직 올린 사진이 없어요.')).toBeVisible();
     assert.deepEqual(scenes, []);
     await page.goto(base + '/posts');
     await expect(page.getByRole('dialog', { name: '글 기록' })).toBeVisible();

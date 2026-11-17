@@ -1,0 +1,69 @@
+[
+  {
+    "slug": "n1",
+    "title": "현대 N 페스티벌 관람 노트",
+    "description": "현대 N 페스티벌을 기록하는 첫 페이지. 소리, 속도, 그리고 관중석.",
+    "tags": [
+      "현대 N1",
+      "관람 노트"
+    ],
+    "photos": [
+      {
+        "image": "/apex/assets/n-festival.jpg",
+        "width": 1920,
+        "height": 1010,
+        "alt": "Hyundai N · N Festival 참고 사진",
+        "credit": "Hyundai N · N Festival",
+        "sourceUrl": "https://www.hyundai-n.com/en/experience/n-festival/about-korea"
+      }
+    ]
+  },
+  {
+    "slug": "wec",
+    "title": "르망 24시를 보는 방법",
+    "description": "긴 호흡으로 따라가는 내구 레이스. 한 랩 너머의 이야기를 읽는 시간.",
+    "tags": [
+      "WEC",
+      "Le Mans"
+    ],
+    "photos": [
+      {
+        "image": "/apex/assets/lemans.jpg",
+        "width": 1200,
+        "height": 627,
+        "alt": "밤의 르망 서킷을 달리는 TOYOTA GAZOO Racing 레이스카",
+        "credit": "TOYOTA GAZOO Racing · 2025 Le Mans",
+        "sourceUrl": "https://toyotagazooracing.com/wec/release/2025/rd04-race2/"
+      }
+    ]
+  },
+  {
+    "slug": "tcr",
+    "title": "TCR을 좋아하는 이유",
+    "description": "익숙한 실루엣, 전혀 다른 움직임. TCR을 좋아하는 이유.",
+    "tags": [
+      "TCR",
+      "Hyundai Motorsport"
+    ],
+    "photos": [
+      {
+        "image": "/apex/assets/tcr.jpg",
+        "width": 1600,
+        "height": 900,
+        "alt": "Hyundai Motor Company · TCR 참고 사진",
+        "credit": "Hyundai Motor Company · TCR",
+        "sourceUrl": "https://www.hyundai.com/worldwide/en/newsroom/detail/hyundai-motorsport-customer-racing-celebrates-double-victory-at-home-round-of-kumho-fia-tcr-world-tour-0000001030"
+      }
+    ]
+  },
+  {
+    "slug": "f1",
+    "title": "F1 피트스톱과 전략 메모",
+    "description": "결과보다 선택의 과정이 궁금한 날. F1 전략 관전 노트.",
+    "tags": [
+      "F1",
+      "Strategy"
+    ],
+    "photos": []
+  }
+]

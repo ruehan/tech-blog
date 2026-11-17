@@ -12,7 +12,9 @@
 | `/writing/:slug` | 글 본문, 시리즈·목차·이미지 확대·읽기 설정·링크/코드 복사 |
 | `/projects` | 기존 프로젝트 데이터와 소개에 등록된 프로젝트 |
 | `/projects/:slug` | 프로젝트 상세와 연결된 제작기 |
-| `/races` | 원본 대표 사진·레이스 기록·종목/관람 방식 필터·사진 갤러리 |
+| `/races`, `/races/:slug` | 레이스 기록: 앨범 목록 → 앨범 안 사진 (메이슨리) |
+| `/photos` | 사진첩: 일반(앨범), 우주(앨범 없이 펼침) |
+| `/admin` | 사진첩·레이스 앨범 관리 (GitHub 로그인) |
 | `/about` | 기존 경력·소개·연구 사례 |
 | `/room` | 기존 3D 방, 컴퓨터, 서킷, 음악·피아노 |
 | `/room/journal` | 책상 소품과 기존 일반 블로그 화면 |
@@ -35,9 +37,7 @@
   JSON의 `cover`, `previews`, `updates`, `sections`, `series`, `action`을 사용하면
   이미지·진행 기록·관련 글을 추가할 수 있습니다. BytePet 제작기 3편은 기존 series로 연결됩니다.
 - **소개:** `src/profile.ts`의 경력·연구 사례·연락처를 수정합니다.
-- **레이스:** 원본 양식과 레이스 4개 기록·참고 사진·출처를 보존합니다. 예시 표시는 그대로 유지합니다.
-  `design/apex/races/`의 원본 페이지와 `design/apex/race-records.json`의 검색·갤러리 정보를 사용합니다.
-  실제 후기를 추가할 때도 대표 사진, 종목/관람 방식 필터와 글/사진 보기 양식 안에 등록합니다.
+- **레이스·사진:** DB(Neon)와 R2에 저장하고 `/admin`에서 작성합니다. 구조와 배포 설정은 [`docs/gallery.md`](docs/gallery.md)를 봅니다.
 - **음악:** 기존 `content/piano-tracks.json`과 `public/music/piano/`를 그대로 사용합니다.
 
 ## 실행과 확인

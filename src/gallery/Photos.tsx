@@ -1,0 +1,104 @@
+import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { Icon } from '../Icons';
+import { RouteLink, type Navigate } from '../navigation';
+import { photoSrcSet, type GalleryPhoto } from './api';
+import { packTiles, tileSize } from './mosaic.ts';
+
+export function PhotoImage({ photo, sizes, eager = false }: { photo: GalleryPhoto; sizes: string; eager?: boolean }) {
+  return <img src={photo.src.md} srcSet={photoSrcSet(photo)} sizes={sizes} width={photo.width} height={photo.height}
+    alt={photo.alt || photo.title || ''} loading={eager ? 'eager' : 'lazy'} decoding="async" style={photo.color ? { backgroundColor: photo.color } : undefined}/>;
+}
+
+function useColumns() {
+  const read = () => matchMedia('(max-width: 720px)').matches ? 2 : matchMedia('(max-width: 1000px)').matches ? 3 : 4;
+  const [columns, setColumns] = useState(read);
+  useEffect(() => {
+    const queries = ['(max-width: 720px)', '(max-width: 1000px)'].map(query => matchMedia(query));
+    const update = () => setColumns(read());
+    queries.forEach(query => query.addEventListener('change', update));
+    return () => queries.forEach(query => query.removeEventListener('change', update));
+  }, []);
+  return columns;
+}
+
+/** Uniform square-cell grid with tiles of 1×1, 2×1, 1×2 and 2×2 cells. */
+export function Mosaic<T>({ items, ratio, render, label, keyOf }: {
+  items: T[]; ratio: (item: T) => number; render: (item: T, index: number) => ReactNode; label: string; keyOf: (item: T) => string;
+}) {
+  const columns = useColumns();
+  const places = packTiles(items.map((item, index) => tileSize(ratio(item), index)), columns);
+  return <div className="mosaic-frame"><div className="mosaic" role="list" aria-label={label} style={{ '--mosaic-columns': columns } as React.CSSProperties}>
+    {items.map((item, index) => {
+      const place = places[index];
+      return <div role="listitem" key={keyOf(item)} className={`mosaic-tile${place.width === 2 && place.height === 2 ? ' mosaic-big' : ''}`}
+        style={{ gridColumn: `${place.column + 1} / span ${place.width}`, gridRow: `${place.row + 1} / span ${place.height}` }}>{render(item, index)}</div>;
+    })}
+  </div></div>;
+}
+
+/** Lightbox with the original APEX markup (dialog.lightbox) driven by React state. */
+export function PhotoLightbox({ photos, index, onIndex, onClose }: { photos: GalleryPhoto[]; index: number; onIndex: (index: number) => void; onClose: () => void }) {
+  const dialog = useRef<HTMLDialogElement>(null);
+  const frame = useRef<HTMLDivElement>(null);
+  const [zoomed, setZoomed] = useState(false);
+  const photo = photos[index];
+  useEffect(() => {
+    const element = dialog.current!;
+    const site = element.closest<HTMLElement>('.apex-site');
+    const overflow = site?.style.overflow ?? '';
+    const trigger = document.activeElement as HTMLElement | null;
+    if (site) site.style.overflow = 'hidden';
+    element.showModal();
+    return () => { element.close(); if (site) site.style.overflow = overflow; trigger?.focus({ preventScroll: true }); };
+  }, []);
+  useEffect(() => { setZoomed(false); frame.current?.scrollTo(0, 0); }, [index]);
+  if (!photo) return null;
+  const step = (delta: number) => onIndex((index + delta + photos.length) % photos.length);
+  const caption = [photo.caption, photo.takenAt && new Date(photo.takenAt).toLocaleDateString('ko-KR'), photo.credit && `사진: ${photo.credit}`].filter(Boolean).join(' · ');
+  return <dialog ref={dialog} id="photo-dialog" className="lightbox" aria-label="사진 확대 보기" onCancel={event => { event.preventDefault(); onClose(); }}
+    onKeyDown={event => { if (photos.length > 1 && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) { event.preventDefault(); step(event.key === 'ArrowLeft' ? -1 : 1); } }}
+    onClick={event => { if (event.target === event.currentTarget) onClose(); }}>
+    <div className="lightbox-top"><p id="photo-title">{photo.title || photo.album?.title || '사진'}</p><div>
+      <button type="button" aria-pressed={zoomed} onClick={() => setZoomed(value => !value)}>{zoomed ? '축소' : '확대'}</button>
+      <button type="button" className="icon-button" aria-label="사진 닫기" onClick={onClose}><Icon name="close"/></button>
+    </div></div>
+    <div className="lightbox-stage">
+      <button id="photo-prev" type="button" className="photo-nav" aria-label="이전 사진" hidden={photos.length < 2} onClick={() => step(-1)}>이전</button>
+      <div ref={frame} className={`lightbox-frame${zoomed ? ' zoomed' : ''}`}><button type="button" aria-label={zoomed ? '사진 축소' : '사진 확대'} onClick={() => setZoomed(value => !value)}>
+        <img key={photo.id} src={photo.src.lg} alt={photo.alt || photo.title || ''} style={photo.color ? { backgroundColor: photo.color } : undefined}/>
+      </button></div>
+      <button id="photo-next" type="button" className="photo-nav" aria-label="다음 사진" hidden={photos.length < 2} onClick={() => step(1)}>다음</button>
+    </div>
+    <div className="lightbox-bottom">
+      <div>{caption && <p id="photo-caption">{caption}</p>}{photo.sourceUrl && <a id="photo-source" href={photo.sourceUrl} target="_blank" rel="noopener noreferrer">사진 출처</a>}</div>
+      <div className="photo-links"><span id="photo-position" role="status">{index + 1} / {photos.length}</span></div>
+    </div>
+  </dialog>;
+}
+
+/** Photos in the mosaic grid; clicking one opens the shared lightbox. */
+export function PhotoWall({ photos, label, empty }: { photos: GalleryPhoto[]; label: string; empty?: ReactNode }) {
+  const [open, setOpen] = useState<number | null>(null);
+  if (!photos.length) return <>{empty}</>;
+  return <>
+    <Mosaic items={photos} ratio={photo => photo.width / photo.height} label={label} keyOf={photo => photo.id}
+      render={(photo, index) => <button type="button" className="mosaic-photo photo-open" aria-label={`${photo.title || photo.alt || '사진'} 크게 보기`} onClick={() => setOpen(index)}>
+        <PhotoImage photo={photo} sizes="(max-width: 720px) 100vw, 50vw"/>
+      </button>}/>
+    {open !== null && <PhotoLightbox photos={photos} index={open} onIndex={setOpen} onClose={() => setOpen(null)}/>}
+  </>;
+}
+
+/** Album (or section) tile: the cover fills the cell and the title sits on it. */
+export function AlbumTile({ title, meta, href, go, cover, fallback }: { title: string; meta: string; href: string; go: Navigate; cover: GalleryPhoto | null; fallback: string }) {
+  return <RouteLink className={`album-tile${cover ? '' : ' is-empty'}`} to={href} go={go}>
+    {cover ? <PhotoImage photo={cover} sizes="(max-width: 720px) 100vw, 50vw"/> : <span className="album-tile-mark" aria-hidden="true">{fallback}</span>}
+    <span className="album-tile-text"><b>{title}</b><small>{meta}</small></span>
+  </RouteLink>;
+}
+
+export function GalleryStatus({ error, loading }: { error?: Error; loading: boolean }) {
+  if (error) return <div className="race-empty gallery-status" role="alert"><p>{error.message}</p></div>;
+  if (loading) return <div className="gallery-status gallery-loading" role="status"><span className="sr-only">사진을 불러오는 중</span><i/><i/><i/></div>;
+  return null;
+}

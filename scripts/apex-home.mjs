@@ -10,7 +10,9 @@ export function brandTemplate(html) {
 }
 
 export async function referenceRecords(posts = [], projects = []) {
-  const races = JSON.parse(await readFile(new URL('../design/apex/race-records.json', import.meta.url), 'utf8'));
+  // Race albums live in the database now; the landing search uses the seeded samples known at build time.
+  const samples = JSON.parse(await readFile(new URL('../db/seed/race-albums.json', import.meta.url), 'utf8'));
+  const races = samples.map(sample => ({ id: sample.slug, kind: 'race', category: '레이스 기록', title: sample.title, description: sample.description, tags: sample.tags, url: `/races/${sample.slug}`, ...(sample.photos[0] ? { image: sample.photos[0].image.slice(1), source: sample.photos[0].sourceUrl, credit: sample.photos[0].credit } : {}) }));
   return [...races, ...posts.map(post => ({ id: post.slug, kind: 'dev', category: post.tags[0] || '개발 노트', title: post.title, description: post.description, tags: post.tags, url: `/writing/${post.slug}` })), ...projects.map(project => ({ id: project.slug, kind: 'project', category: '프로젝트', title: project.title, description: project.description, tags: project.tags, url: `/projects/${project.slug}` }))];
 }
 
@@ -25,7 +27,8 @@ export function adaptReference(html, origin, records) {
 
 export async function apexHome(origin = resolveSiteUrl(process.env.SITE_URL), posts = [], projects = []) {
   let html = await readFile(new URL('../design/apex/home.html', import.meta.url), 'utf8');
-  html = html.replace('<nav class="portal-contact" aria-label="연락처">', '<nav class="portal-contact" aria-label="연락처"><a href="/room">3D 방 <span aria-hidden="true">↗</span></a>')
+  html = html.replace('<a href="/races/">레이스 기록</a><a href="/about/">소개</a></nav>', '<a href="/races/">레이스 기록</a><a href="/photos/">사진</a><a href="/about/">소개</a></nav>')
+    .replace('<nav class="portal-contact" aria-label="연락처">', '<nav class="portal-contact" aria-label="연락처"><a href="/room">3D 방 <span aria-hidden="true">↗</span></a>')
     .replace('</head>', `<meta name="robots" content="index, follow"><meta property="og:title" content="HANGYU / APEX — 개발과 서킷 사이"><meta property="og:description" content="개발하고, 만들고, 배우는 과정을 기록하는 hangyu의 개인 공간."><meta property="og:type" content="website"><meta property="og:url" content="${origin}/"><meta property="og:image" content="${origin}/images/site/room.png"><meta name="twitter:card" content="summary_large_image"></head>`);
   return adaptReference(html, origin, await referenceRecords(posts, projects));
 }

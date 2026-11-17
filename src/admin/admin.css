@@ -1,0 +1,74 @@
+/* Gallery admin. Uses the APEX palette and font but its own compact layout. */
+@import url('/apex/style.css');
+html,body,#root{height:auto}body{overflow:auto;background:var(--bg);color:var(--ink);font-family:var(--body)}
+.admin{min-height:100dvh;font-size:14px}
+.admin button,.admin input,.admin select,.admin textarea{font:inherit;color:inherit}
+.admin input,.admin select,.admin textarea{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:4px;padding:8px 10px;min-width:0}
+.admin textarea{resize:vertical;line-height:1.6}
+.admin input[type=checkbox]{width:auto}
+.admin :focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.admin-center{display:grid;place-content:center;gap:18px;text-align:center;padding:16px}
+.admin-header{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:24px;padding:14px 24px;border-bottom:1px solid var(--line);background:var(--bg)}
+.admin-brand{font-weight:650;font-size:18px}.admin-brand span{color:var(--muted);margin:0 2px}.admin-brand small{font-weight:400;font-size:12px;color:var(--muted);margin-left:8px}
+.admin-header nav{display:flex;gap:4px;margin:0 auto}
+.admin-header nav button{padding:7px 16px;border-radius:4px;color:var(--muted)}
+.admin-header nav button[aria-pressed=true]{background:var(--panel);color:var(--ink);font-weight:600}
+.admin-user{display:flex;gap:12px;align-items:center;font-size:12px;color:var(--muted)}
+.admin-user button{text-decoration:underline}
+.admin-main{padding:24px;max-width:1500px;margin:0 auto}
+.admin-split{display:grid;grid-template-columns:320px minmax(0,1fr);gap:24px;align-items:start}
+.admin-panel{border:1px solid var(--line);border-radius:6px;padding:20px;min-width:0}
+.admin-panel h2{font-size:18px;font-weight:620;margin:0}
+.admin-list{position:sticky;top:80px;max-height:calc(100dvh - 104px);overflow:auto}
+.admin-list-head,.admin-form-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.admin-list ol,.admin-photo-grid{list-style:none;margin:0;padding:0}
+.admin-list li{display:flex;align-items:center;gap:6px;border-radius:4px}
+.admin-list li.is-selected{background:var(--panel)}
+.admin-list-item{display:flex;gap:10px;align-items:center;flex:1;min-width:0;text-align:left;padding:8px}
+.admin-list-item img,.admin-thumb-empty{width:52px;height:38px;object-fit:cover;border-radius:3px;background:var(--blue);flex:none}
+.admin-list-item span{display:flex;flex-direction:column;min-width:0}
+.admin-list-item b{font-weight:560;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.admin-list-item small{font-size:11px;color:var(--muted)}
+.admin-order{display:inline-flex;gap:2px}
+.admin-order button{width:26px;height:26px;border-radius:3px;color:var(--muted)}
+.admin-order button:hover:not(:disabled){background:var(--panel);color:var(--ink)}
+.admin-order button:disabled{opacity:.3}
+.admin-button{border:1px solid var(--line);border-radius:4px;padding:7px 14px;font-size:13px;display:inline-block}
+.admin-button.primary{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.admin-button:disabled{opacity:.4}
+.admin-button.danger,.admin .danger{color:#c2412d}
+.admin-actions{display:flex;align-items:center;gap:14px;font-size:13px}
+.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px}
+.admin-grid label{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--muted)}
+.admin-grid label small{font-size:11px}
+.admin-grid .wide{grid-column:1/-1}
+.admin-checks{display:flex;gap:22px;flex-wrap:wrap}
+.admin-checks label{flex-direction:row;align-items:center;color:var(--ink);font-size:13px}
+.admin-subhead{font-size:15px;font-weight:620;margin:32px 0 14px;padding-top:24px;border-top:1px solid var(--line)}
+.admin-hint{color:var(--muted);font-size:13px}
+.admin-error{color:#c2412d;font-size:13px}
+.admin-status{color:var(--muted);font-size:12px}
+.admin-drop{border:1.5px dashed var(--line);border-radius:6px;padding:22px;text-align:center;margin:14px 0}
+.admin-drop.is-dragging{border-color:var(--red);background:var(--panel)}
+.admin-drop p{margin:0 0 6px}.admin-drop small{color:var(--muted);font-size:11px}
+.admin-queue{list-style:none;padding:0;margin:0 0 14px;font-size:12px}
+.admin-queue li{display:flex;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid var(--line)}
+.admin-photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.admin-photo{border:1px solid var(--line);border-radius:6px;overflow:hidden;display:flex;flex-direction:column}
+.admin-photo.is-draft{opacity:.75}
+.admin-photo-image{position:relative;display:block;aspect-ratio:1.5;background:var(--panel)}
+.admin-photo-image img{width:100%;height:100%;object-fit:cover;display:block}
+.admin-badge{position:absolute;left:8px;top:8px;background:var(--ink);color:var(--bg);font-size:11px;padding:2px 7px;border-radius:3px}
+.admin-badge.muted{left:auto;right:8px;background:var(--panel);color:var(--ink)}
+.admin-photo form{display:flex;flex-direction:column;gap:6px;padding:10px;font-size:13px}
+.admin-photo input,.admin-photo textarea{padding:6px 8px;font-size:12px}
+.admin-row{display:flex;gap:6px;align-items:center}
+.admin-row label{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);white-space:nowrap}
+.admin-photo-actions{display:flex;align-items:center;gap:10px;font-size:12px;margin-top:4px}
+.admin-photo-actions .admin-button{margin-left:auto;padding:5px 12px}
+.admin-photo-actions a,.admin-photo-actions>button:not(.admin-button){text-decoration:underline;text-underline-offset:3px}
+@media(max-width:900px){
+  .admin-header{flex-wrap:wrap;gap:10px;padding:12px 16px}.admin-header nav{order:3;width:100%;margin:0}
+  .admin-main{padding:16px}.admin-split{grid-template-columns:1fr}.admin-list{position:static;max-height:none}
+  .admin-grid{grid-template-columns:1fr}
+}

@@ -21,8 +21,11 @@ export function pageMetadata(path: string, posts: Post[]) {
   const canonicalPath = writingPath(clean.replace(/^\/room(?=\/)/, ''));
   const post = posts.find(item => canonicalPath === `/writing/${item.slug}`);
   const project = projects.find(item => canonicalPath === `/projects/${item.slug}`);
-  const known = post || project || ['/', '/room', '/about', '/writing', '/projects', '/races'].includes(canonicalPath);
-  const title = post?.title ?? project?.title ?? (canonicalPath === '/about' ? '소개' : canonicalPath === '/writing' ? '개발' : canonicalPath === '/projects' ? '프로젝트' : canonicalPath === '/races' ? '레이스 기록' : canonicalPath === '/room' ? 'hangyu의 3D 방' : canonicalPath === '/' ? '개발과 서킷 사이' : '페이지를 찾을 수 없습니다');
+  // Gallery albums load at runtime; their pages are indexable and the client fills in the album title.
+  const galleryTitle = canonicalPath === '/photos' ? '사진' : canonicalPath === '/photos/general' ? '일반 사진첩' : canonicalPath === '/photos/space' ? '우주 사진'
+    : /^\/races\/[^/]+$/.test(canonicalPath) ? '레이스 기록' : /^\/photos\/general\/[^/]+$/.test(canonicalPath) ? '사진첩' : undefined;
+  const known = post || project || galleryTitle || ['/', '/room', '/about', '/writing', '/projects', '/races'].includes(canonicalPath);
+  const title = post?.title ?? project?.title ?? galleryTitle ?? (canonicalPath === '/about' ? '소개' : canonicalPath === '/writing' ? '개발' : canonicalPath === '/projects' ? '프로젝트' : canonicalPath === '/races' ? '레이스 기록' : canonicalPath === '/room' ? 'hangyu의 3D 방' : canonicalPath === '/' ? '개발과 서킷 사이' : '페이지를 찾을 수 없습니다');
   const description = post?.description ?? project?.description ?? (canonicalPath === '/about' ? profile.description : siteDescription);
   const image = new URL(post?.image ?? (post && firstImage(post.body)) ?? project?.cover?.src ?? defaultImage, siteUrl).href;
   const canonical = new URL(canonicalPath, siteUrl).href;

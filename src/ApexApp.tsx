@@ -14,8 +14,9 @@ import { RouteLink, useRoute, type Navigate, type Route } from './navigation';
 import { SearchHighlight } from './SearchHighlight';
 import { searchPreview } from './search';
 import { profile } from './profile';
+import { GalleryPage, galleryRoute } from './gallery/GalleryPages';
 
-const menus = [['/writing', '개발'], ['/projects', '프로젝트'], ['/races/', '레이스 기록'], ['/about', '소개']];
+const menus = [['/writing', '개발'], ['/projects', '프로젝트'], ['/races', '레이스 기록'], ['/photos', '사진'], ['/about', '소개']];
 
 export function ApexApp() {
   const { route, go: navigate } = useRoute();
@@ -26,7 +27,7 @@ export function ApexApp() {
     const target = new URL(href, window.location.href);
     const change = () => {
       timer.current = null; setLoading(false);
-      if (target.origin !== location.origin || target.pathname === '/' || /^\/(room|posts|races)(\/|$)/.test(target.pathname)) location.assign(target.href);
+      if (target.origin !== location.origin || target.pathname === '/' || /^\/(room|posts|admin)(\/|$)/.test(target.pathname)) location.assign(target.href);
       else navigate(target.pathname + target.search + target.hash);
     };
     if (target.pathname.replace(/\/$/, '') === route.path || matchMedia('(prefers-reduced-motion: reduce)').matches) change();
@@ -51,6 +52,7 @@ export function ApexPage({ route, go, loading = false }: { route: Route; go: Nav
   const isAbout = path === '/about';
   const post = posts.find(item => path === `/writing/${item.slug}`);
   const project = apexProjects.find(item => path === `/projects/${item.slug}`);
+  const gallery = galleryRoute(path);
   const scroll = useRef<HTMLDivElement>(null);
   const searchInput = useRef<HTMLInputElement>(null);
   const reading = useReadingPreferences();
@@ -70,7 +72,8 @@ export function ApexPage({ route, go, loading = false }: { route: Route; go: Nav
     try { localStorage.setItem('apex-theme', dark ? 'dark' : 'light'); } catch { /* Storage is optional. */ }
   }, [dark]);
   useEffect(() => { setDraftSearch(search); }, [search]);
-  useReadingPosition(scroll, path + route.search);
+  // Gallery filters live in the query string but should not reset the scroll position.
+  useReadingPosition(scroll, gallery?.kind === 'space' ? path : path + route.search);
   useEffect(() => {
     if (isWriting && query.get('search') === '1') searchInput.current?.focus();
   }, [isWriting, route.search]);
@@ -90,7 +93,7 @@ export function ApexPage({ route, go, loading = false }: { route: Route; go: Nav
     if (nextSearch.trim()) params.set('q', nextSearch.trim());
     return `/writing${params.size ? `?${params}` : ''}`;
   }
-  const active = post || isWriting ? '/writing' : project || isProjects ? '/projects' : path;
+  const active = post || isWriting ? '/writing' : project || isProjects ? '/projects' : gallery && 'category' in gallery && gallery.category === 'race' ? '/races' : gallery ? '/photos' : path;
   return <div className="apex-site" data-theme={dark ? 'night' : 'day'} ref={scroll} style={reading.style} inert={loading || undefined}>
     <ImageViewer routeKey={path + route.search}>
       <a className="skip" href="#main">본문으로 건너뛰기</a>
@@ -136,6 +139,7 @@ export function ApexPage({ route, go, loading = false }: { route: Route; go: Nav
         </div> : post ? <ApexArticle post={post} go={go} scroll={scroll} search={route.search} query={search}/>
           : project ? <ApexProject project={project} go={go} scroll={scroll}/>
           : isAbout ? <ApexAbout go={go}/>
+          : gallery ? <GalleryPage gallery={gallery} route={route} go={go}/>
             : <div className="wrap missing-page"><h1 tabIndex={-1}>페이지를 찾을 수 없습니다.</h1><p>주소가 바뀌었거나 아직 없는 페이지입니다.</p><RouteLink className="text-link" to="/writing" go={go}>개발 기록으로</RouteLink></div>}
       </main>
       <footer className="wrap footer"><div className="footer-top"><RouteLink className="wordmark" to="/" go={go}>hangyu<span className="slash">/</span>apex</RouteLink><button className="text-link" onClick={() => scroll.current?.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' })}>맨 위로</button></div><div className="footer-bottom"><span>© {new Date().getFullYear()} HANGYU / APEX</span><span>만들고 배우는 과정을 기록합니다.</span><nav aria-label="연락처"><a href="/room">3D 방 ↗</a><a href={profile.github} target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href={`mailto:${profile.email}`}>이메일 ↗</a></nav></div></footer>

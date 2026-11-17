@@ -1,0 +1,13 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    { "source": "/api/:path+", "destination": "/api?route=:path+" },
+    { "source": "/races/:slug", "destination": "/races/_album/index.html" },
+    { "source": "/photos/general/:slug", "destination": "/photos/general/_album/index.html" },
+    { "source": "/admin/:path*", "destination": "/admin/index.html" }
+  ],
+  "headers": [
+    { "source": "/admin/(.*)", "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }] },
+    { "source": "/admin", "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }] }
+  ]
+}

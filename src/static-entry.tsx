@@ -8,9 +8,11 @@ import { ApexPage } from './ApexApp';
 import { apexProjects } from './apex-data';
 
 export { posts, apexProjects, pageMetadata, metadataTags, siteUrl };
-export const staticRoutes = ['/', '/room', '/room/projects', '/room/journal', '/room/journal/projects', '/room/about', '/about', '/writing', '/races', '/races/n1', '/races/wec', '/races/tcr', '/races/f1', '/journal', '/posts', '/projects', '/journal/projects', ...apexProjects.flatMap(project => [`/projects/${project.slug}`, `/journal/projects/${project.slug}`]), ...projects.map(project => `/room/projects/${project.slug}`), ...posts.flatMap(post => [`/writing/${post.slug}`, `/journal/posts/${post.slug}`, `/posts/${post.slug}`, `/room/journal/posts/${post.slug}`])];
+export const staticRoutes = ['/', '/room', '/room/projects', '/room/journal', '/room/journal/projects', '/room/about', '/about', '/writing', '/races', '/races/_album', '/photos', '/photos/general', '/photos/general/_album', '/photos/space', '/admin', '/journal', '/posts', '/projects', '/journal/projects', ...apexProjects.flatMap(project => [`/projects/${project.slug}`, `/journal/projects/${project.slug}`]), ...projects.map(project => `/room/projects/${project.slug}`), ...posts.flatMap(post => [`/writing/${post.slug}`, `/journal/posts/${post.slug}`, `/posts/${post.slug}`, `/room/journal/posts/${post.slug}`])];
 
 export function renderPage(path: string) {
+  // The admin is client-only; its shell stays empty.
+  if (path === '/admin') return '';
   if (!/^\/(room|posts)(\/|$)/.test(path)) return renderToStaticMarkup(<ApexPage route={{ path, search: '' }} go={() => {}}/>);
   path = path.replace(/^\/room(?=\/|$)/, '') || '/';
   const post = posts.find(item => path === `/journal/posts/${item.slug}` || path === `/posts/${item.slug}`);

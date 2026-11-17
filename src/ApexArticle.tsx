@@ -35,7 +35,7 @@ export function ApexToc({ sections, scroll }: { sections: Post['sections']; scro
   }}>{section.title}</a>)}</nav></details></aside>;
 }
 
-function ShareLink() {
+export function ShareLink() {
   const [status, setStatus] = useState('');
   const [fallback, setFallback] = useState('');
   return <><button className="text-link" onClick={async () => {
