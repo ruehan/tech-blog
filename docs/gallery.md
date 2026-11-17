@@ -10,7 +10,7 @@
 
 ## 구조
 
-- **API:** `server/api.mjs`. Vercel에서는 `api/index.js` 함수 하나가 받고(`vercel.json`이 `/api/*`를 넘김), 개발 서버에서는 Vite 미들웨어가 같은 핸들러를 씁니다.
+- **API:** `server/api.mjs`. Vercel에서는 `api/index.js` 함수 하나가 받고(`vercel.json`이 `/api/*`를 넘기며 원래 경로는 URL에 그대로 남음), 개발 서버에서는 Vite 미들웨어가 같은 핸들러를 씁니다.
 - **DB:** Neon Postgres, 스키마는 `db/migrations/*.sql`. 테이블은 `albums`(general·race, 같은 형식)와 `photos`(general·race·space; space는 앨범 없음)입니다.
 - **파일:** Cloudflare R2.
   - 공개 버킷에는 EXIF를 지운 WebP 사본(`photos/<id>/{lg,md,thumb}.webp`, 2560/1280/480px)을 둡니다.

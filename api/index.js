@@ -1,4 +1,4 @@
-// Vercel Function for every /api/* path (vercel.json rewrites /api/<path> → /api?route=<path>).
+// Vercel Function for every /api/* path (vercel.json rewrites them here; the URL keeps the original path).
 import { productionApi } from '../server/runtime.mjs';
 
 let api;

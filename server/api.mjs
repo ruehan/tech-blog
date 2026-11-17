@@ -365,8 +365,10 @@ export function createApi({ query, storage, auth, devAdmin = false, log = consol
   return async function handle(request) {
     try {
       const url = new URL(request.url);
-      // Vercel rewrites /api/<path> to /api?route=<path>; the dev server passes the path directly.
-      const path = url.searchParams.get('route') ?? url.pathname.replace(/^\/api\/?/, '');
+      // Vercel keeps the original /api/<path> in the URL after its rewrite to the single function;
+      // `route` is only a fallback for direct calls to /api.
+      const fromPath = url.pathname.replace(/^\/api(?:\/index(?:\.js)?)?\/?/, '');
+      const path = fromPath || (url.searchParams.get('route') ?? '').trim();
       const segments = path.split('/').filter(Boolean).map(decodeURIComponent);
       const mutating = !['GET', 'HEAD', 'OPTIONS'].includes(request.method);
       // Cookie-authenticated writes must come from this site's own pages.
