@@ -34,6 +34,35 @@
 
 .apex-site .gallery-album-end{display:flex;gap:22px;align-items:center;margin-top:48px;padding-top:22px;border-top:1px solid var(--line);font-size:13px}
 
+/* Full-screen lightbox: the photo takes the whole viewport; controls float over it. */
+.gallery-lightbox{position:fixed;inset:0;width:100vw;height:100dvh;max-width:none;max-height:none;margin:0;padding:0;border:0;border-radius:0;background:#05090b;color:#edf3f4;overflow:hidden}
+.gallery-lightbox[open]{display:block}
+.gallery-lightbox::backdrop{background:#05090b}
+.gallery-lightbox-frame{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:clamp(8px,2vw,24px);overflow:hidden;touch-action:pan-y pinch-zoom}
+/* Fit to the screen in both directions, scaling small images up as well. */
+.gallery-lightbox-frame img{display:block;width:100%;height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none}
+/* Zoomed: natural pixels, scrollable; margin:auto keeps it centred without clipping the scroll start. */
+.gallery-lightbox-frame.is-zoomed{justify-content:flex-start;align-items:flex-start;padding:0;overflow:auto;overscroll-behavior:contain;touch-action:auto}
+.gallery-lightbox-frame img.can-zoom{cursor:zoom-in}
+.gallery-lightbox-frame.is-zoomed img{width:auto;height:auto;max-width:none;max-height:none;margin:auto;cursor:zoom-out}
+.gallery-lightbox-top,.gallery-lightbox-bottom{position:absolute;left:0;right:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px clamp(14px,3vw,28px);pointer-events:none}
+.gallery-lightbox-top{top:0;background:linear-gradient(#05090bd9,#05090b00)}
+.gallery-lightbox-bottom{bottom:0;flex-direction:column;align-items:flex-start;gap:4px;padding-top:28px;background:linear-gradient(#05090b00,#05090bd9);font-size:12px;color:#c3d0d4}
+.gallery-lightbox-top>*,.gallery-lightbox-bottom>*{pointer-events:auto}
+.gallery-lightbox-top p{margin:0;font-size:14px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gallery-lightbox-top>div{display:flex;align-items:center;gap:14px;flex:none;font-size:12px}
+.gallery-lightbox-top #photo-position{color:#aabcc3;font-variant-numeric:tabular-nums}
+.gallery-lightbox-top button:not(.icon-button){font-size:12px;border:1px solid #ffffff40;border-radius:3px;padding:5px 10px}
+.gallery-lightbox .icon-button:hover{background:#ffffff1a}
+.gallery-lightbox-bottom p{margin:0;max-width:900px}
+.gallery-lightbox-bottom a{text-decoration:underline;text-underline-offset:3px}
+.gallery-lightbox-nav{position:absolute;top:50%;z-index:2;transform:translateY(-50%);width:48px;height:72px;display:flex;align-items:center;justify-content:center;border-radius:4px;background:#05090b80;color:#edf3f4;font-size:34px;line-height:1;opacity:.75;transition:opacity .2s,background .2s}
+.gallery-lightbox-nav:hover,.gallery-lightbox-nav:focus-visible{opacity:1;background:#1c2b31d0}
+.gallery-lightbox-nav.is-prev{left:clamp(6px,1.5vw,20px)}
+.gallery-lightbox-nav.is-next{right:clamp(6px,1.5vw,20px)}
+.gallery-lightbox :focus-visible{outline:2px solid #badbe8;outline-offset:2px}
+@media(max-width:720px){.gallery-lightbox-nav{width:36px;height:56px;font-size:28px;background:#05090b55}.gallery-lightbox-frame{padding:0}}
+
 .apex-site .gallery-status{margin:20px 0 40px}
 .apex-site .gallery-loading{display:flex;gap:8px;justify-content:center;padding:60px 0}
 .apex-site .gallery-loading i{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:gallery-pulse 1s infinite ease-in-out}

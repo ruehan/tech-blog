@@ -113,7 +113,7 @@ test('race records are albums: album list first, then a mosaic of photos', async
   await expect(page.locator('.prose, .article-toc')).toHaveCount(0);
   await page.locator('.mosaic-photo').click();
   await expect(page.getByRole('dialog', { name: '사진 확대 보기' })).toBeVisible();
-  await expect(page.locator('#photo-dialog .lightbox-frame img')).toHaveAttribute('src', '/apex/assets/tcr.jpg');
+  await expect(page.locator('#photo-dialog img')).toHaveAttribute('src', '/apex/assets/tcr.jpg');
   await expect(page.locator('#photo-source')).toHaveAttribute('href', /hyundai\.com/);
   await page.getByRole('button', { name: '사진 닫기' }).click();
   await page.goto('/races/no-such-race');

@@ -40,6 +40,7 @@ export function Mosaic<T>({ items, ratio, render, label, keyOf }: {
 export function PhotoLightbox({ photos, index, onIndex, onClose }: { photos: GalleryPhoto[]; index: number; onIndex: (index: number) => void; onClose: () => void }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const frame = useRef<HTMLDivElement>(null);
+  const swipe = useRef<{ x: number; y: number } | null>(null);
   const [zoomed, setZoomed] = useState(false);
   const photo = photos[index];
   useEffect(() => {
@@ -51,28 +52,49 @@ export function PhotoLightbox({ photos, index, onIndex, onClose }: { photos: Gal
     element.showModal();
     return () => { element.close(); if (site) site.style.overflow = overflow; trigger?.focus({ preventScroll: true }); };
   }, []);
-  useEffect(() => { setZoomed(false); frame.current?.scrollTo(0, 0); }, [index]);
+  useEffect(() => {
+    setZoomed(false);
+    frame.current?.scrollTo(0, 0);
+    // Warm the neighbours so stepping through feels instant.
+    for (const offset of [1, -1]) {
+      const neighbour = photos[(index + offset + photos.length) % photos.length];
+      if (neighbour && neighbour !== photos[index]) new Image().src = neighbour.src.lg;
+    }
+  }, [index, photos]);
   if (!photo) return null;
+  const many = photos.length > 1;
+  // The lg variant is at most 2560px on its long edge; zooming only helps when that exceeds the screen.
+  const scale = Math.min(1, 2560 / Math.max(photo.width, photo.height));
+  const canZoom = photo.width * scale > window.innerWidth || photo.height * scale > window.innerHeight;
   const step = (delta: number) => onIndex((index + delta + photos.length) % photos.length);
+  const toggleZoom = () => {
+    setZoomed(value => !value);
+    // Open the zoomed view around the middle of the photo.
+    requestAnimationFrame(() => { const element = frame.current; if (element) element.scrollTo((element.scrollWidth - element.clientWidth) / 2, (element.scrollHeight - element.clientHeight) / 2); });
+  };
   const caption = [photo.caption, photo.takenAt && new Date(photo.takenAt).toLocaleDateString('ko-KR'), photo.credit && `사진: ${photo.credit}`].filter(Boolean).join(' · ');
-  return <dialog ref={dialog} id="photo-dialog" className="lightbox" aria-label="사진 확대 보기" onCancel={event => { event.preventDefault(); onClose(); }}
-    onKeyDown={event => { if (photos.length > 1 && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) { event.preventDefault(); step(event.key === 'ArrowLeft' ? -1 : 1); } }}
-    onClick={event => { if (event.target === event.currentTarget) onClose(); }}>
-    <div className="lightbox-top"><p id="photo-title">{photo.title || photo.album?.title || '사진'}</p><div>
-      <button type="button" aria-pressed={zoomed} onClick={() => setZoomed(value => !value)}>{zoomed ? '축소' : '확대'}</button>
+  return <dialog ref={dialog} id="photo-dialog" className="gallery-lightbox" aria-label="사진 확대 보기" onCancel={event => { event.preventDefault(); onClose(); }}
+    onKeyDown={event => { if (many && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) { event.preventDefault(); step(event.key === 'ArrowLeft' ? -1 : 1); } }}>
+    <div ref={frame} className={`gallery-lightbox-frame${zoomed ? ' is-zoomed' : ''}`}
+      onClick={event => { if (event.target === event.currentTarget && !zoomed) onClose(); }}
+      onPointerDown={event => { if (!zoomed && event.pointerType !== 'mouse') swipe.current = { x: event.clientX, y: event.clientY }; }}
+      onPointerUp={event => {
+        const start = swipe.current; swipe.current = null;
+        if (!start || !many) return;
+        const dx = event.clientX - start.x, dy = event.clientY - start.y;
+        if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) step(dx < 0 ? 1 : -1);
+      }}>
+      <img key={photo.id} src={photo.src.lg} alt={photo.alt || photo.title || ''} width={photo.width} height={photo.height}
+        className={canZoom ? 'can-zoom' : undefined} onClick={canZoom ? toggleZoom : undefined} title={canZoom ? (zoomed ? '클릭하면 화면에 맞춥니다' : '클릭하면 원본 크기로 봅니다') : undefined}/>
+    </div>
+    <div className="gallery-lightbox-top"><p id="photo-title">{photo.title || photo.album?.title || '사진'}</p><div>
+      <span id="photo-position" role="status">{index + 1} / {photos.length}</span>
+      {canZoom && <button type="button" aria-pressed={zoomed} onClick={toggleZoom}>{zoomed ? '화면에 맞추기' : '원본 크기'}</button>}
       <button type="button" className="icon-button" aria-label="사진 닫기" onClick={onClose}><Icon name="close"/></button>
     </div></div>
-    <div className="lightbox-stage">
-      <button id="photo-prev" type="button" className="photo-nav" aria-label="이전 사진" hidden={photos.length < 2} onClick={() => step(-1)}>이전</button>
-      <div ref={frame} className={`lightbox-frame${zoomed ? ' zoomed' : ''}`}><button type="button" aria-label={zoomed ? '사진 축소' : '사진 확대'} onClick={() => setZoomed(value => !value)}>
-        <img key={photo.id} src={photo.src.lg} alt={photo.alt || photo.title || ''} style={photo.color ? { backgroundColor: photo.color } : undefined}/>
-      </button></div>
-      <button id="photo-next" type="button" className="photo-nav" aria-label="다음 사진" hidden={photos.length < 2} onClick={() => step(1)}>다음</button>
-    </div>
-    <div className="lightbox-bottom">
-      <div>{caption && <p id="photo-caption">{caption}</p>}{photo.sourceUrl && <a id="photo-source" href={photo.sourceUrl} target="_blank" rel="noopener noreferrer">사진 출처</a>}</div>
-      <div className="photo-links"><span id="photo-position" role="status">{index + 1} / {photos.length}</span></div>
-    </div>
+    {many && <><button id="photo-prev" type="button" className="gallery-lightbox-nav is-prev" aria-label="이전 사진" onClick={() => step(-1)}><span aria-hidden="true">‹</span></button>
+      <button id="photo-next" type="button" className="gallery-lightbox-nav is-next" aria-label="다음 사진" onClick={() => step(1)}><span aria-hidden="true">›</span></button></>}
+    {(caption || photo.sourceUrl) && <div className="gallery-lightbox-bottom">{caption && <p id="photo-caption">{caption}</p>}{photo.sourceUrl && <a id="photo-source" href={photo.sourceUrl} target="_blank" rel="noopener noreferrer">사진 출처</a>}</div>}
   </dialog>;
 }
 
